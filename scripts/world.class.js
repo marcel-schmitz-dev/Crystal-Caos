@@ -1,8 +1,17 @@
 class World {
     character = new Character();
-    enemies = [new Golem(), new Golem(), new Golem(), new Ghost()];
+    enemies = [
+        new Golem(),
+        new Golem(),
+        new Golem(),
+        new Golem(),
+        new Golem(),
+        new Ghost(),
+    ];
 
     backgroundObjects = [new BackgroundObjekt("assets/img/Background.png", 0)];
+
+    quallen = [new Qualle(), new Qualle(), new Qualle(), new Qualle(), new Qualle(), new Qualle(), ];
     canvas;
     ctx;
 
@@ -17,6 +26,16 @@ class World {
 
         this.backgroundObjects.forEach((bg) => {
             this.ctx.drawImage(bg.img, bg.x, bg.y, bg.width, bg.height);
+        });
+
+        this.quallen.forEach((qualle) => {
+            this.ctx.drawImage(
+                qualle.img,
+                qualle.x,
+                qualle.y,
+                qualle.width,
+                qualle.height,
+            );
         });
 
         this.ctx.drawImage(
