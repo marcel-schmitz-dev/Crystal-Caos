@@ -1,6 +1,6 @@
 class World {
     character = new Character();
-    enemies = [new Golem(), new Golem(), new Golem()];
+    enemies = [new Golem(), new Golem(), new Golem(), new Ghost()];
 
     backgroundObjects = [new BackgroundObjekt("assets/img/Background.png", 0)];
     canvas;

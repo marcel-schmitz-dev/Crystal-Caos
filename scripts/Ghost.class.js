@@ -1,8 +1,11 @@
 class Ghost extends MovableObject {
+    height = 350;
+    width = 300;
     constructor() {
         super().loadImage("assets/img/Ghost.png");
 
-        this.x = 200 + Math.random() * 500;
+        this.x = 1000;
+        this.y = 250;
     }
 
     werfen() {}

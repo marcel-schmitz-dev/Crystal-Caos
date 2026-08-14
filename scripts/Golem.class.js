@@ -1,9 +1,10 @@
 class Golem extends MovableObject {
+    height = 60;
+    width = 80;
     constructor() {
         super().loadImage("assets/img/golem-left.png");
 
-        this.x = 300 + Math.random() * 500;
+        this.x = 400 + Math.random() * 500;
+        this.y = 530;
     }
-
-    werfen() {}
 }
