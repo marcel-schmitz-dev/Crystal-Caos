@@ -1,10 +1,12 @@
 let canvas;
-let character = new Image();
+let ctx;
+let character = new MovableObject();
 
+function init() {
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
 
-
-function init(){
-    canvas = document.getElementById();
-    character.src = "assets\img\Character.png";
-
+    console.log("My Character is" , character);
+    
+    
 }
