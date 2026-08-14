@@ -6,16 +6,8 @@ class MovableObject {
     moveRight() {
     console.log("moving right");
     } 
-}
 
-class Character extends MovableObject{
-
-}
-
-class Golem extends MovableObject{
-
-}
-
-class Ghost extends MovableObject{
-    
+    moveLeft(){
+        
+    }
 }
