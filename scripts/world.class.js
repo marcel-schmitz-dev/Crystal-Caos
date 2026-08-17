@@ -9,9 +9,18 @@ class World {
         new Ghost(),
     ];
 
-    backgroundObjects = [new BackgroundObjekt("assets/img/Background.png", 0)];
+    backgroundObjects = [
+        new BackgroundObjekt("assets/background-img/background-new.png", 0),
+    ];
 
-    quallen = [new Qualle(), new Qualle(), new Qualle(), new Qualle(), new Qualle(), new Qualle(), ];
+    quallen = [
+        new Qualle(),
+        new Qualle(),
+        new Qualle(),
+        new Qualle(),
+        new Qualle(),
+        new Qualle(),
+    ];
     canvas;
     ctx;
 
