@@ -10,17 +10,10 @@ class World {
     ];
 
     backgroundObjects = [
-        new BackgroundObjekt("assets/background-img/background-new.png", 0),
+        new BackgroundObjekt("assets/img/background/background.png", 0),
     ];
 
-    quallen = [
-        new Qualle(),
-        new Qualle(),
-        new Qualle(),
-        new Qualle(),
-        new Qualle(),
-        new Qualle(),
-    ];
+    clouds = [new cloud(), new cloud(), new cloud()];
     canvas;
     ctx;
 
@@ -37,13 +30,13 @@ class World {
             this.ctx.drawImage(bg.img, bg.x, bg.y, bg.width, bg.height);
         });
 
-        this.quallen.forEach((qualle) => {
+        this.clouds.forEach((cloud) => {
             this.ctx.drawImage(
-                qualle.img,
-                qualle.x,
-                qualle.y,
-                qualle.width,
-                qualle.height,
+                cloud.img,
+                cloud.x,
+                cloud.y,
+                cloud.width,
+                cloud.height,
             );
         });
 
