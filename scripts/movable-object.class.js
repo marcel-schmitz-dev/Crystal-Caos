@@ -5,6 +5,28 @@ class MovableObject {
     height = 150;
     width = 150;
     imgCache = {};
+    speedY = 0;
+    acceleration = 2.5;
+    otherDirection = false;
+
+    applyGravity() {
+        setInterval(() => {
+            if (this.isAboveGround() || this.speedY > 0) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            } else {
+                this.y = 450;
+                this.speedY = 0;
+            }
+        }, 1000 / 25);
+    }
+
+    isAboveGround() {
+        if (this instanceof Character) {
+            return this.y < 450;
+        }
+        return true;
+    }
 
     loadImage(path) {
         if (this.imgCache[path]) {
