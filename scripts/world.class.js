@@ -7,11 +7,14 @@ class World {
 
     backgroundObjects = [
         new BackgroundObjekt("assets/img/background/background1.png", 0),
+        new BackgroundObjekt("assets/img/background/background1.png", 1280),
+        new BackgroundObjekt("assets/img/background/background1.png", -1280),
     ];
 
     clouds = [new cloud(), new cloud(), new cloud()];
     canvas;
     ctx;
+    camera_x = 0;
 
     constructor(canvas) {
         this.ctx = canvas.getContext("2d");
@@ -41,6 +44,8 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.translate(-this.camera_x, 0);
 
         this.backgroundObjects.forEach((bg) => {
             this.ctx.drawImage(bg.img, bg.x, bg.y, bg.width, bg.height);
@@ -86,7 +91,6 @@ class World {
         }
         this.ctx.restore();
 
-        // Gegner zeichnen
         this.enemies.forEach((enemy) => {
             if (
                 enemy.img &&
@@ -102,6 +106,8 @@ class World {
                 );
             }
         });
+
+        this.ctx.translate(this.camera_x, 0);
 
         let self = this;
         requestAnimationFrame(function () {

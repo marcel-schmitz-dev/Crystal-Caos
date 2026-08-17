@@ -12,9 +12,7 @@ class Character extends MovableObject {
 
     IMAGES_JUMPING = ["assets/img/character/springen.png"];
 
-    IMAGES_DODGING = [
-        "assets/img/character/ausweichen.png"
-    ];
+    IMAGES_DODGING = ["assets/img/character/ausweichen.png"];
 
     currentImage = 0;
     world;
@@ -24,7 +22,7 @@ class Character extends MovableObject {
         this.loadImage(this.IMAGES_STANDING[0]);
         this.loadImages(this.IMAGES_STANDING);
         this.loadImages(this.IMAGES_WALKING);
-        this.loadImages(this.IMAGES_JUMPING); 
+        this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DODGING);
 
         this.applyGravity();
@@ -36,11 +34,11 @@ class Character extends MovableObject {
             let keyboard = this.world?.keyboard;
             if (!keyboard) return;
 
-            if (keyboard.RIGHT) {
+            if (keyboard.RIGHT && this.x < 1800) {
                 this.x += 5;
                 this.otherDirection = false;
             }
-            if (keyboard.LEFT) {
+            if (keyboard.LEFT && this.x > -500) {
                 this.x -= 5;
                 this.otherDirection = true;
             }
@@ -50,12 +48,18 @@ class Character extends MovableObject {
             if (keyboard.DOWN) {
                 this.ausweichen();
             }
+
+            if (this.x > 400) {
+                this.world.camera_x = Math.floor(this.x - 400);
+            } else {
+                this.world.camera_x = 0;
+            }
         }, 1000 / 60);
 
         setInterval(() => {
             let keyboard = this.world?.keyboard;
             if (!keyboard) return;
-            
+
             if (this.isAboveGround()) {
                 this.loadImage(this.IMAGES_JUMPING[0]);
             } else if (keyboard.DOWN) {
@@ -69,13 +73,13 @@ class Character extends MovableObject {
                 this.loadImage(this.IMAGES_STANDING[0]);
                 this.currentImage = 0;
             }
+
         }, 1000 / 8);
     }
 
     jump() {
-        this.speedY = 25; 
+        this.speedY = 25;
     }
 
-    ausweichen() {
-    }
+    ausweichen() {}
 }
