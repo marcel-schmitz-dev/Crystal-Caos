@@ -20,7 +20,11 @@ class World {
     constructor(canvas) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
+        this.keyboard = keyboard;
+
         this.draw();
+
+        this.character.world = this;
     }
 
     draw() {
@@ -49,13 +53,20 @@ class World {
         );
 
         this.enemies.forEach((enemy) => {
-            this.ctx.drawImage(
-                enemy.img,
-                enemy.x,
-                enemy.y,
-                enemy.width,
-                enemy.height,
-            );
+            // Prüfen, ob das Bild geladen ist und existiert, bevor es gezeichnet wird
+            if (
+                enemy.img &&
+                enemy.img.complete &&
+                enemy.img.naturalWidth !== 0
+            ) {
+                this.ctx.drawImage(
+                    enemy.img,
+                    enemy.x,
+                    enemy.y,
+                    enemy.width,
+                    enemy.height,
+                );
+            }
         });
 
         let self = this;
