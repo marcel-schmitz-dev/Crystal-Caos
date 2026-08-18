@@ -10,6 +10,7 @@ class World {
     canvas;
     ctx;
     camera_x = 0;
+    throwableObjects = [];
 
     constructor(canvas) {
         this.ctx = canvas.getContext("2d");
@@ -21,21 +22,36 @@ class World {
         this.backgroundObjects = this.level.backgroundObjacts;
         this.clouds = this.level.clouds;
 
-        this.draw();
         this.character.world = this;
-
         this.level.setGolemSpawner();
+
+        // Gib dem Ghost die Welt-Referenz mit:
+        this.enemies.forEach((enemy) => {
+            if (enemy instanceof Ghost) enemy.world = this;
+        });
+
+        this.draw();
     }
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.camera_x = -this.character.x + 100; 
+        this.camera_x = -this.character.x + 100;
 
         this.ctx.translate(this.camera_x, 0);
 
         this.backgroundObjects.forEach((bg) => {
             this.ctx.drawImage(bg.img, bg.x, bg.y, bg.width, bg.height);
+        });
+
+        this.throwableObjects.forEach((bowl) => {
+            this.ctx.drawImage(
+                bowl.img,
+                bowl.x,
+                bowl.y,
+                bowl.width,
+                bowl.height,
+            );
         });
 
         this.clouds.forEach((cloud) => {
