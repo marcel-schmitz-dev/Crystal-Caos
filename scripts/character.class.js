@@ -8,6 +8,8 @@ class Character extends MovableObject {
         "assets/img/character/bewegung8.png",
         "assets/img/character/bewegung11.png",
         "assets/img/character/bewegung12.png",
+        "assets/img/character/bewegung11.png",
+        "assets/img/character/bewegung12.png",
     ];
 
     IMAGES_JUMPING = ["assets/img/character/springen.png"];

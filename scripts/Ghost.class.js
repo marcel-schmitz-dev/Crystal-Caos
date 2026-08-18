@@ -35,7 +35,7 @@ class Ghost extends MovableObject {
             }
 
             this.lastImageIndex = currentIndex;
-        }, 400);
+        }, 500);
     }
 
     throwCrystal() {
@@ -43,7 +43,7 @@ class Ghost extends MovableObject {
 
         this.attackToggle = !this.attackToggle;
 
-        let crystalY = this.attackToggle ? this.y + 260 : this.y + 340;
+        let crystalY = this.attackToggle ? this.y + 280 : this.y + 340;
         let crystalX = this.x - 40;
 
         let crystal = new CrystalProjectile(crystalX, crystalY);

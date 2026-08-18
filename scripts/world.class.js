@@ -11,6 +11,7 @@ class World {
     ctx;
     camera_x = 0;
     throwableObjects = [];
+    crystalDrops = [];
 
     constructor(canvas) {
         this.ctx = canvas.getContext("2d");
@@ -25,12 +26,75 @@ class World {
         this.character.world = this;
         this.level.setGolemSpawner();
 
-        // Gib dem Ghost die Welt-Referenz mit:
         this.enemies.forEach((enemy) => {
             if (enemy instanceof Ghost) enemy.world = this;
         });
 
+        this.run();
+
         this.draw();
+    }
+
+    run() {
+        setInterval(() => {
+            this.checkCollisionsWithEnemies();
+            this.checkCollisionsWithProjectiles();
+        }, 1000 / 60);
+    }
+
+    checkCollisionsWithEnemies() {
+        this.enemies.forEach((enemy, index) => {
+            if (enemy instanceof Golem) {
+
+                let isJumpingOnGolem =
+                    this.character.isColliding(enemy) &&
+                    this.character.speedY < 0 &&
+                    this.character.y + this.character.height - 30 <=
+                        enemy.y + 20;
+
+                if (isJumpingOnGolem) {
+                    let drop = new CrystalDrop(enemy.x, enemy.y + 20);
+                    this.crystalDrops.push(drop);
+
+                    // Golem entfernen
+                    this.enemies.splice(index, 1);
+
+                    // Bounce-Sprung
+                    this.character.speedY = 15;
+                }
+                else if (this.character.isColliding(enemy)) {
+                    console.log(
+                        "Character wurde von Golem seitlich getroffen!",
+                    );
+                }
+            }
+        });
+    }
+
+    checkCollisionsWithProjectiles() {
+        this.throwableObjects.forEach((projectile, index) => {
+            let charBox = {
+                x: this.character.x,
+                y: this.character.y,
+                width: this.character.width,
+                height: this.character.height,
+            };
+
+            if (this.keyboard.DOWN) {
+                charBox.y += 60;
+                charBox.height = 90;
+            }
+
+            if (
+                charBox.x + charBox.width > projectile.x &&
+                charBox.y + charBox.height > projectile.y &&
+                charBox.x < projectile.x + projectile.width &&
+                charBox.y < projectile.y + projectile.height
+            ) {
+                console.log("Character wurde von Kristall getroffen!");
+                this.throwableObjects.splice(index, 1);
+            }
+        });
     }
 
     draw() {
@@ -71,6 +135,16 @@ class World {
                 portal.y,
                 portal.width,
                 portal.height,
+            );
+        });
+
+        this.crystalDrops.forEach((drop) => {
+            this.ctx.drawImage(
+                drop.img,
+                drop.x,
+                drop.y,
+                drop.width,
+                drop.height,
             );
         });
 

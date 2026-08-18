@@ -58,4 +58,21 @@ class MovableObject {
         this.img = this.imgCache[path];
         this.currentImage++;
     }
+
+    isColliding(mo) {
+    return (
+        this.x + this.width > mo.x &&
+        this.y + this.height > mo.y &&
+        this.x < mo.x + mo.width &&
+        this.y < mo.y + mo.height
+    );
+}
+
+isCollidingTop(mo) {
+    return (
+        this.isColliding(mo) &&
+        this.speedY < 0 &&
+        this.y + this.height - 20 <= mo.y + 30
+    );
+}
 }
