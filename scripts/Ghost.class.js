@@ -3,10 +3,10 @@ class Ghost extends MovableObject {
     width = 400;
 
     IMAGES_WALKING = [
-        "assets/img/monster/ghost_walk_01.png",
-        "assets/img/monster/ghost_walk_02.png",
-        "assets/img/monster/ghost_walk_03.png",
-        "assets/img/monster/ghost_walk_04.png",
+        "assets/img/monster/new_ghost.png",
+        "assets/img/monster/new_ghost3.png",
+        "assets/img/monster/new_ghost1.png",
+        "assets/img/monster/new_ghost2.png",
     ];
 
     attackToggle = false;
@@ -18,7 +18,7 @@ class Ghost extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImage("assets/img/monster/ghost_walk_01.png");
 
-        this.x = 2700;
+        this.x = 3300;
         this.y = 180;
 
         this.animate();
@@ -43,7 +43,7 @@ class Ghost extends MovableObject {
 
         this.attackToggle = !this.attackToggle;
 
-        let crystalY = this.attackToggle ? this.y + 260 : this.y + 320;
+        let crystalY = this.attackToggle ? this.y + 260 : this.y + 340;
         let crystalX = this.x - 40;
 
         let crystal = new CrystalProjectile(crystalX, crystalY);

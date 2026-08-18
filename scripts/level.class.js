@@ -19,7 +19,7 @@ class Level {
                     (e) => e instanceof Golem,
                 ).length;
 
-                if (golemCount < 8) {
+                if (golemCount < 10) {
                     let newGolem = new Golem();
                     newGolem.x = portal.x + 20;
                     newGolem.y = portal.y + 140;

@@ -1,7 +1,7 @@
 const level1 = new Level(
     [new Ghost()],
 
-    [new Portal(1100, 380), new Portal(2200, 380)],
+    [new Portal(900, 380), new Portal(2200, 380)],
 
     [
         new Cloud(),
@@ -13,10 +13,10 @@ const level1 = new Level(
     ],
 
     [
-        new BackgroundObjekt("assets/img/background/background1.png", -1280),
-        new BackgroundObjekt("assets/img/background/background1.png", 0),
-        new BackgroundObjekt("assets/img/background/background1.png", 1280),
-        new BackgroundObjekt("assets/img/background/background1.png", 2560),
-        new BackgroundObjekt("assets/img/background/background1.png", 3840),
+        new BackgroundObjekt("assets/img/background/background_lvl1.png", -1280),
+        new BackgroundObjekt("assets/img/background/background_lvl1.png", 0),
+        new BackgroundObjekt("assets/img/background/background_lvl1.png", 1280),
+        new BackgroundObjekt("assets/img/background/background_boss.png", 2560),
+        new BackgroundObjekt("assets/img/background/background_boss.png", 3840),
     ],
 );
