@@ -1,11 +1,11 @@
-class cloud extends MovableObject {
+class Cloud extends MovableObject {
     width = 120;
     height = 120;
 
-    constructor() {
+    constructor(startX) {
         super().loadImage("assets/img/monster/qualle.png");
 
-        this.x = Math.random() * 1200;
+        this.x = startX !== undefined ? startX : Math.random() * 1200;
 
         this.y = 50 + Math.random() * 200;
 
@@ -16,7 +16,7 @@ class cloud extends MovableObject {
         setInterval(() => {
             this.x -= 0.15;
             if (this.x < -this.width) {
-                this.x = 1200;
+                this.x = 2900;
             }
         }, 1000 / 60);
     }

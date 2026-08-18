@@ -1,9 +1,16 @@
 const level1 = new Level(
     [new Ghost()],
 
-    new Portal(1100, 380),
+    [new Portal(1100, 380), new Portal(2200, 380)],
 
-    [new cloud(), new cloud(), new cloud()],
+    [
+        new Cloud(),
+        new Cloud(),
+        new Cloud(),
+        new Cloud(1500), 
+        new Cloud(2000), 
+        new Cloud(2600), 
+    ],
 
     [
         new BackgroundObjekt("assets/img/background/background1.png", 0),

@@ -34,11 +34,11 @@ class Character extends MovableObject {
             let keyboard = this.world?.keyboard;
             if (!keyboard) return;
 
-            if (keyboard.RIGHT && this.x < 1800) {
+            if (keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.x += 5;
                 this.otherDirection = false;
             }
-            if (keyboard.LEFT && this.x > -500) {
+            if (keyboard.LEFT && this.x > 0) {
                 this.x -= 5;
                 this.otherDirection = true;
             }
@@ -73,7 +73,6 @@ class Character extends MovableObject {
                 this.loadImage(this.IMAGES_STANDING[0]);
                 this.currentImage = 0;
             }
-
         }, 1000 / 8);
     }
 

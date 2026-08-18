@@ -1,27 +1,31 @@
 class Level {
     enemies;
-    portal;
+    portals;
     clouds;
     backgroundObjacts;
+    level_end_x = 2900;
 
-    constructor(enemies, portal, clouds, backgroundObjacts) { 
+    constructor(enemies, portals, clouds, backgroundObjacts) {
         this.enemies = enemies;
-        this.portal = portal;
+        this.portals = portals;
         this.clouds = clouds;
         this.backgroundObjacts = backgroundObjacts;
     }
+
     setGolemSpawner() {
         setInterval(() => {
-            let golemCount = this.enemies.filter(
-                (e) => e instanceof Golem,
-            ).length;
+            this.portals.forEach((portal) => {
+                let golemCount = this.enemies.filter(
+                    (e) => e instanceof Golem,
+                ).length;
 
-            if (golemCount < 8) {
-                let newGolem = new Golem();
-                newGolem.x = this.portal.x + 20;
-                newGolem.y = this.portal.y + 140;
-                this.enemies.push(newGolem);
-            }
+                if (golemCount < 8) {
+                    let newGolem = new Golem();
+                    newGolem.x = portal.x + 20;
+                    newGolem.y = portal.y + 140;
+                    this.enemies.push(newGolem);
+                }
+            });
         }, 5000);
     }
 }

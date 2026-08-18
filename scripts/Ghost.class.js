@@ -4,7 +4,7 @@ class Ghost extends MovableObject {
     constructor() {
         super().loadImage("assets/img/monster/Ghost.png");
 
-        this.x = 1000;
+        this.x = 2500;
         this.y = 250;
     }
 

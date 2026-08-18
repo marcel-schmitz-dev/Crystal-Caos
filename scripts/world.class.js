@@ -30,7 +30,9 @@ class World {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.translate(-this.camera_x, 0);
+        this.camera_x = -this.character.x + 100; 
+
+        this.ctx.translate(this.camera_x, 0);
 
         this.backgroundObjects.forEach((bg) => {
             this.ctx.drawImage(bg.img, bg.x, bg.y, bg.width, bg.height);
@@ -46,13 +48,15 @@ class World {
             );
         });
 
-        this.ctx.drawImage(
-            this.portal.img,
-            this.portal.x,
-            this.portal.y,
-            this.portal.width,
-            this.portal.height,
-        );
+        this.level.portals.forEach((portal) => {
+            this.ctx.drawImage(
+                portal.img,
+                portal.x,
+                portal.y,
+                portal.width,
+                portal.height,
+            );
+        });
 
         this.ctx.save();
         if (this.character.otherDirection) {
@@ -92,7 +96,7 @@ class World {
             }
         });
 
-        this.ctx.translate(this.camera_x, 0);
+        this.ctx.translate(-this.camera_x, 0);
 
         let self = this;
         requestAnimationFrame(function () {
