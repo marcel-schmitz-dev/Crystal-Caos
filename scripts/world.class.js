@@ -13,6 +13,9 @@ class World {
     throwableObjects = [];
     crystalDrops = [];
 
+    startScreen = new StartScreen(1280, 720);
+    gameStarted = false;
+
     constructor(canvas) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
@@ -24,19 +27,41 @@ class World {
         this.clouds = this.level.clouds;
 
         this.character.world = this;
-        this.level.setGolemSpawner();
 
         this.enemies.forEach((enemy) => {
             if (enemy instanceof Ghost) enemy.world = this;
         });
 
-        this.run();
+        let menuClickListener = (event) => {
+            if (!this.gameStarted) {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
 
+                let action = this.startScreen.handleClick(clickX, clickY);
+
+                if (action === "start") {
+                    this.gameStarted = true;
+                    this.level.setGolemSpawner();
+                    canvas.removeEventListener("click", menuClickListener);
+                } else if (action === "options") {
+                    console.log("Optionen geöffnet");
+                } else if (action === "exit") {
+                    window.location.reload();
+                }
+            }
+        };
+
+        canvas.addEventListener("click", menuClickListener);
+
+        this.run();
         this.draw();
     }
 
     run() {
         setInterval(() => {
+            if (!this.gameStarted) return;
+
             this.checkCollisionsWithEnemies();
             this.checkCollisionsWithProjectiles();
         }, 1000 / 60);
@@ -45,7 +70,6 @@ class World {
     checkCollisionsWithEnemies() {
         this.enemies.forEach((enemy, index) => {
             if (enemy instanceof Golem) {
-
                 let isJumpingOnGolem =
                     this.character.isColliding(enemy) &&
                     this.character.speedY < 0 &&
@@ -61,8 +85,7 @@ class World {
 
                     // Bounce-Sprung
                     this.character.speedY = 15;
-                }
-                else if (this.character.isColliding(enemy)) {
+                } else if (this.character.isColliding(enemy)) {
                     console.log(
                         "Character wurde von Golem seitlich getroffen!",
                     );
@@ -187,6 +210,10 @@ class World {
         });
 
         this.ctx.translate(-this.camera_x, 0);
+
+        if (!this.gameStarted) {
+            this.startScreen.draw(this.ctx);
+        }
 
         let self = this;
         requestAnimationFrame(function () {

@@ -3,10 +3,10 @@ class Ghost extends MovableObject {
     width = 400;
 
     IMAGES_WALKING = [
-        "assets/img/monster/new_ghost.png",
-        "assets/img/monster/new_ghost3.png",
-        "assets/img/monster/new_ghost1.png",
-        "assets/img/monster/new_ghost2.png",
+        "assets/img/monster/ghost_boss1.png",
+        "assets/img/monster/ghost_boss2.png",
+        "assets/img/monster/ghost_boss3.png",
+        "assets/img/monster/ghost_boss.png",
     ];
 
     attackToggle = false;
@@ -16,7 +16,7 @@ class Ghost extends MovableObject {
     constructor(x, y) {
         super();
         this.loadImages(this.IMAGES_WALKING);
-        this.loadImage("assets/img/monster/ghost_walk_01.png");
+        this.loadImage("assets/img/monster/ghost_boss.png");
 
         this.x = 3300;
         this.y = 180;
@@ -26,6 +26,8 @@ class Ghost extends MovableObject {
 
     animate() {
         setInterval(() => {
+            if (!this.world || !this.world.gameStarted) return;
+
             this.playAnimation(this.IMAGES_WALKING);
 
             let currentIndex = this.currentImage % this.IMAGES_WALKING.length;
@@ -35,7 +37,7 @@ class Ghost extends MovableObject {
             }
 
             this.lastImageIndex = currentIndex;
-        }, 500);
+        }, 600);
     }
 
     throwCrystal() {
@@ -46,7 +48,7 @@ class Ghost extends MovableObject {
         let crystalY = this.attackToggle ? this.y + 280 : this.y + 340;
         let crystalX = this.x - 40;
 
-        let crystal = new CrystalProjectile(crystalX, crystalY);
+        let crystal = new CrystalProjectile(crystalX, crystalY, this.world);
         this.world.throwableObjects.push(crystal);
     }
 }

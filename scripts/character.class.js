@@ -5,7 +5,6 @@ class Character extends MovableObject {
     IMAGES_STANDING = ["assets/img/character/bewegung1.png"];
 
     IMAGES_WALKING = [
-        "assets/img/character/bewegung8.png",
         "assets/img/character/bewegung11.png",
         "assets/img/character/bewegung12.png",
         "assets/img/character/bewegung11.png",
@@ -33,7 +32,9 @@ class Character extends MovableObject {
 
     animate() {
         setInterval(() => {
-            let keyboard = this.world?.keyboard;
+            if (!this.world || !this.world.gameStarted) return;
+
+            let keyboard = this.world.keyboard;
             if (!keyboard) return;
 
             if (
@@ -63,7 +64,9 @@ class Character extends MovableObject {
         }, 1000 / 60);
 
         setInterval(() => {
-            let keyboard = this.world?.keyboard;
+            if (!this.world || !this.world.gameStarted) return;
+
+            let keyboard = this.world.keyboard;
             if (!keyboard) return;
 
             if (this.isAboveGround()) {
@@ -79,7 +82,7 @@ class Character extends MovableObject {
                 this.loadImage(this.IMAGES_STANDING[0]);
                 this.currentImage = 0;
             }
-        }, 1000 / 8);
+        }, 1000 / 4);
     }
 
     jump() {
