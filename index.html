@@ -25,7 +25,14 @@
         <script src="./scripts/cloud.class.js"></script>
         <script src="./scripts/background.class.js"></script>
         <script src="./scripts/portal.class.js"></script>
+
+        <!-- ERST die Level-Klasse und das Level laden -->
+        <script src="./scripts/level.class.js"></script>
+        <script src="./levels/level1.js"></script>
+
+        <!-- DANACH erst die World-Klasse, weil sie level1 kennt -->
         <script src="./scripts/world.class.js"></script>
+
         <script src="./scripts/game.js"></script>
     </body>
 </html>

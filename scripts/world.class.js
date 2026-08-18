@@ -1,17 +1,12 @@
 class World {
     character = new Character();
+    level = level1;
 
-    portal = new Portal(1100, 380);
+    portal = level1.portal;
+    enemies = level1.enemies;
+    backgroundObjects = level1.backgroundObjacts;
+    clouds = level1.clouds;
 
-    enemies = [new Ghost()];
-
-    backgroundObjects = [
-        new BackgroundObjekt("assets/img/background/background1.png", 0),
-        new BackgroundObjekt("assets/img/background/background1.png", 1280),
-        new BackgroundObjekt("assets/img/background/background1.png", -1280),
-    ];
-
-    clouds = [new cloud(), new cloud(), new cloud()];
     canvas;
     ctx;
     camera_x = 0;
@@ -21,25 +16,15 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
 
+        this.portal = this.level.portal;
+        this.enemies = this.level.enemies;
+        this.backgroundObjects = this.level.backgroundObjacts;
+        this.clouds = this.level.clouds;
+
         this.draw();
         this.character.world = this;
 
-        this.setGolemSpawner();
-    }
-
-    setGolemSpawner() {
-        setInterval(() => {
-            let golemCount = this.enemies.filter(
-                (e) => e instanceof Golem,
-            ).length;
-
-            if (golemCount < 8) {
-                let newGolem = new Golem();
-                newGolem.x = this.portal.x + 20;
-                newGolem.y = this.portal.y + 140;
-                this.enemies.push(newGolem);
-            }
-        }, 5000);
+        this.level.setGolemSpawner();
     }
 
     draw() {
