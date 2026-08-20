@@ -26,10 +26,19 @@ class Character extends MovableObject {
         "assets/img/character/springen/sprung8.png",
     ];
 
-    IMAGES_DODGING = ["assets/img/character/ausweichen.png"];
+    IMAGES_DODGING = [
+        "assets/img/character/dodge/dodge1.png",
+        "assets/img/character/dodge/dodge2.png",  
+        "assets/img/character/dodge/dodge3.png",
+        "assets/img/character/dodge/dodge4.png",
+        "assets/img/character/dodge/dodge5.png",
+        "assets/img/character/dodge/dodge6.png",
+    ];
 
     currentImage = 0;
-    currentJumpImage = 0; // Neu: Zähler für die Sprungbilder
+    currentJumpImage = 0;
+    currentDodgeImage = 0;
+    isDodgeEnding = false;  
     world;
 
     constructor() {
@@ -54,20 +63,24 @@ class Character extends MovableObject {
             if (
                 keyboard.RIGHT &&
                 !keyboard.DOWN &&
+                !this.isDodgeEnding &&
                 this.x < this.world.level.level_end_x
             ) {
                 this.x += 5;
                 this.otherDirection = false;
             }
-            if (keyboard.LEFT && !keyboard.DOWN && this.x > 0) {
+            if (keyboard.LEFT && !keyboard.DOWN && !this.isDodgeEnding && this.x > 0) {
                 this.x -= 5;
                 this.otherDirection = true;
             }
-            if (keyboard.UP && !this.isAboveGround()) {
+            if (keyboard.UP && !this.isAboveGround() && !this.isDodgeEnding) {
                 this.jump();
             }
-            if (keyboard.DOWN) {
+
+            if (keyboard.DOWN && !this.isAboveGround()) {
                 this.ausweichen();
+            } else if (!keyboard.DOWN && this.currentDodgeImage > 0 && !this.isDodgeEnding) {
+                this.startDodgeEnd();
             }
 
             if (this.x > 400) {
@@ -84,22 +97,27 @@ class Character extends MovableObject {
             if (!keyboard) return;
 
             if (this.isAboveGround()) {
-                // Sprung-Animation der Reihe nach durchgehen
                 let path = this.IMAGES_JUMPING[this.currentJumpImage];
                 this.loadImage(path);
-
-                // Hochzählen, aber beim letzten Bild (Index 7) anhalten oder loopen,
-                // damit es nicht abstürzt
                 if (this.currentJumpImage < this.IMAGES_JUMPING.length - 1) {
                     this.currentJumpImage++;
                 }
-            } else {
-                // Wenn er wieder am Boden ist, den Sprung-Zähler zurücksetzen
-                this.currentJumpImage = 0;
+            } else if (this.isDodgeEnding) {
+                this.loadImage(this.IMAGES_DODGING[5]);
+                this.currentDodgeImage = 0;
+                this.isDodgeEnding = false;
+            } else if (keyboard.DOWN) {
+                let path = this.IMAGES_DODGING[this.currentDodgeImage];
+                this.loadImage(path);
 
-                if (keyboard.DOWN) {
-                    this.loadImage(this.IMAGES_DODGING[0]);
-                } else if (keyboard.RIGHT || keyboard.LEFT) {
+                if (this.currentDodgeImage < 4) { 
+                    this.currentDodgeImage++;
+                }
+            } else {
+                this.currentJumpImage = 0;
+                this.currentDodgeImage = 0;
+
+                if (keyboard.RIGHT || keyboard.LEFT) {
                     let path = this.IMAGES_WALKING[this.currentImage];
                     this.loadImage(path);
                     this.currentImage =
@@ -109,13 +127,18 @@ class Character extends MovableObject {
                     this.currentImage = 0;
                 }
             }
-        }, 1000 / 12); // Auf 12 FPS angepasst, damit der Sprung geschmeidig abläuft
+        }, 1000 / 12);
     }
 
     jump() {
-        this.speedY = 25; // Wichtig: Muss negativ sein, damit er nach oben springt!
-        this.currentJumpImage = 0; // Bei jedem neuen Sprung von vorne beginnen
+        this.speedY = 25;
+        this.currentJumpImage = 0;
     }
 
-    ausweichen() {}
+    ausweichen() {
+    }
+
+    startDodgeEnd() {
+        this.isDodgeEnding = true;
+    }
 }
