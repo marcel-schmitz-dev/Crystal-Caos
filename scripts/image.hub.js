@@ -31,5 +31,32 @@ export const ImageHub = {
             "assets/img/character/dodge/dodge5.png",
             "assets/img/character/dodge/dodge6.png",
         ],
+        HURT: [
+            "assets/img/character/hurt/hurt1.png",
+            "assets/img/character/hurt/hurt2.png",
+            "assets/img/character/hurt/hurt3.png",
+            "assets/img/character/hurt/hurt4.png",
+            "assets/img/character/hurt/hurt5.png",
+        ],
+        HUD: {
+            HP_BARS: [
+                "assets/img/hp/hp_leer.png",
+                "assets/img/hp/hp_one.png",
+                "assets/img/hp/hp_two.png",
+                "assets/img/hp/hp_three.png",
+                "assets/img/hp/hp_four.png",
+                "assets/img/hp/hp_five.png",
+            ],
+        },
+        DEAD: [
+            "assets/img/character/dead/dead.png",
+            "assets/img/character/dead/dead1.png",
+            "assets/img/character/dead/dead2.png",
+            "assets/img/character/dead/dead3.png",
+            "assets/img/character/dead/dead4.png",
+            "assets/img/character/dead/dead5.png",
+            "assets/img/character/dead/dead6.png",
+            "assets/img/character/dead/dead7.png",
+        ],
     },
 };

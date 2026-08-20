@@ -2,14 +2,16 @@ import { Character } from "./character.class.js";
 import { Level } from "./level.class.js";
 import { Keyboard } from "./keyboard.class.js";
 import { level1 } from "../levels/level1.js";
-import { Golem } from "./Golem.class.js";
 import { Ghost } from "./Ghost.class.js";
 import { StartScreen } from "./start-screen.class.js";
-import { CrystalDrop } from "./crystal-dropp.class.js";
+import { CollisionManager } from "./collision-manager.class.js";
+import { ImageHub } from "./image.hub.js";
 
 export class World {
     character = new Character();
     level = level1;
+
+    hpLoadedImages = [];
 
     portal = level1.portal;
     enemies = level1.enemies;
@@ -24,11 +26,19 @@ export class World {
 
     startScreen = new StartScreen(1280, 720);
     gameStarted = false;
+    collisionManager;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
         this.keyboard = keyboard;
+
+        // HP-Bilder aus dem ImageHub vorladen
+        this.hpLoadedImages = ImageHub.CHARACTER.HUD.HP_BARS.map((path) => {
+            let img = new Image();
+            img.src = path;
+            return img;
+        });
 
         this.portal = this.level.portal;
         this.enemies = this.level.enemies;
@@ -36,6 +46,7 @@ export class World {
         this.clouds = this.level.clouds;
 
         this.character.world = this;
+        this.collisionManager = new CollisionManager(this);
 
         this.enemies.forEach((enemy) => {
             if (enemy instanceof Ghost) enemy.world = this;
@@ -70,63 +81,8 @@ export class World {
     run() {
         setInterval(() => {
             if (!this.gameStarted) return;
-
-            this.checkCollisionsWithEnemies();
-            this.checkCollisionsWithProjectiles();
+            this.collisionManager.checkAllCollisions();
         }, 1000 / 60);
-    }
-
-    checkCollisionsWithEnemies() {
-        this.enemies.forEach((enemy, index) => {
-            if (enemy instanceof Golem) {
-                let isJumpingOnGolem =
-                    this.character.isColliding(enemy) &&
-                    this.character.speedY < 0 &&
-                    this.character.y + this.character.height - 30 <=
-                        enemy.y + 20;
-
-                if (isJumpingOnGolem) {
-                    let drop = new CrystalDrop(enemy.x, enemy.y + 20);
-                    this.crystalDrops.push(drop);
-
-                    // Golem entfernen
-                    this.enemies.splice(index, 1);
-
-                    // Bounce-Sprung
-                    this.character.speedY = 15;
-                } else if (this.character.isColliding(enemy)) {
-                    console.log(
-                        "Character wurde von Golem seitlich getroffen!",
-                    );
-                }
-            }
-        });
-    }
-
-    checkCollisionsWithProjectiles() {
-        this.throwableObjects.forEach((projectile, index) => {
-            let charBox = {
-                x: this.character.x,
-                y: this.character.y,
-                width: this.character.width,
-                height: this.character.height,
-            };
-
-            if (this.keyboard.DOWN) {
-                charBox.y += 60;
-                charBox.height = 90;
-            }
-
-            if (
-                charBox.x + charBox.width > projectile.x &&
-                charBox.y + charBox.height > projectile.y &&
-                charBox.x < projectile.x + projectile.width &&
-                charBox.y < projectile.y + projectile.height
-            ) {
-                console.log("Character wurde von Kristall getroffen!");
-                this.throwableObjects.splice(index, 1);
-            }
-        });
     }
 
     draw() {
@@ -219,6 +175,21 @@ export class World {
         });
 
         this.ctx.translate(-this.camera_x, 0);
+
+        // Neues HP-HUD basierend auf der Energie (0 bis 5)
+        if (this.gameStarted) {
+            let startX = 20;
+            let startY = 20;
+            let barWidth = 220; // Breite des HUD-Bildes auf dem Canvas anpassen
+            let barHeight = 60; // Höhe des HUD-Bildes auf dem Canvas anpassen
+
+            let currentEnergy = Math.max(0, Math.min(this.character.energy, 5));
+            let hpImg = this.hpLoadedImages[currentEnergy];
+
+            if (hpImg && hpImg.complete && hpImg.naturalWidth !== 0) {
+                this.ctx.drawImage(hpImg, startX, startY, barWidth, barHeight);
+            }
+        }
 
         if (!this.gameStarted) {
             this.startScreen.draw(this.ctx);
