@@ -1,4 +1,6 @@
-class StartScreen {
+import { ImageHub } from './image.hub.js';
+
+export class StartScreen {
     activeSubMenu = null;
     bgImage = new Image();
 

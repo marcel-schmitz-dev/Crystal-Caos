@@ -1,4 +1,8 @@
-class Ghost extends MovableObject {
+import { ImageHub } from "./image.hub.js";
+import { MovableObject } from "./movable-object.class.js";
+import { CrystalProjectile } from "./crystal-projectile.class.js";
+
+export class Ghost extends MovableObject {
     height = 450;
     width = 400;
 

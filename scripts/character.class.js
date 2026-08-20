@@ -1,40 +1,14 @@
-class Character extends MovableObject {
+import { MovableObject } from "./movable-object.class.js";
+import { ImageHub } from "./image.hub.js";
+
+export class Character extends MovableObject {
     width = 150;
     height = 200;
 
-    IMAGES_STANDING = ["assets/img/character/dodge/stehen.png"];
-
-    IMAGES_WALKING = [
-        "assets/img/character/walk/walk1.png",
-        "assets/img/character/walk/walk2.png",
-        "assets/img/character/walk/walk3.png",
-        "assets/img/character/walk/walk4.png",
-        "assets/img/character/walk/walk5.png",
-        "assets/img/character/walk/walk6.png",
-        "assets/img/character/walk/walk7.png",
-        "assets/img/character/walk/walk8.png",
-        "assets/img/character/walk/walk9.png",
-    ];
-
-    IMAGES_JUMPING = [
-        "assets/img/character/springen/sprung1.png",
-        "assets/img/character/springen/sprung2.png",
-        "assets/img/character/springen/sprung3.png",
-        "assets/img/character/springen/sprung4.png",
-        "assets/img/character/springen/sprung5.png",
-        "assets/img/character/springen/sprung6.png",
-        "assets/img/character/springen/sprung7.png",
-        "assets/img/character/springen/sprung8.png",
-    ];
-
-    IMAGES_DODGING = [
-        "assets/img/character/dodge/dodge1.png",
-        "assets/img/character/dodge/dodge2.png",
-        "assets/img/character/dodge/dodge3.png",
-        "assets/img/character/dodge/dodge4.png",
-        "assets/img/character/dodge/dodge5.png",
-        "assets/img/character/dodge/dodge6.png",
-    ];
+    IMAGES_STANDING = ImageHub.CHARACTER.STANDING;
+    IMAGES_WALKING = ImageHub.CHARACTER.WALKING;
+    IMAGES_JUMPING = ImageHub.CHARACTER.JUMPING;
+    IMAGES_DODGING = ImageHub.CHARACTER.DODGING;
 
     currentImage = 0;
     currentJumpImage = 0;

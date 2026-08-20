@@ -1,4 +1,4 @@
-class MovableObject {
+export class MovableObject {
     x = 120;
     y = 420;
     img;
@@ -23,7 +23,7 @@ class MovableObject {
     }
 
     isAboveGround() {
-        if (this instanceof Character) {
+        if (this.constructor.name === "Character") {
             return this.y < 420;
         }
         return true;

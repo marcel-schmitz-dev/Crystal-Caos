@@ -1,4 +1,7 @@
-class Golem extends MovableObject {
+import { ImageHub } from './image.hub.js';
+import { MovableObject } from './movable-object.class.js';
+
+export class Golem extends MovableObject {
     height = 80;
     width = 80;
 

@@ -1,4 +1,7 @@
-class Level {
+import { ImageHub } from "./image.hub.js";
+import { Golem } from "./Golem.class.js";
+
+export class Level {
     enemies;
     portals;
     clouds;
@@ -13,26 +16,27 @@ class Level {
     }
 
     setGolemSpawner() {
-        
-    this.spawnGolem();
-
-    setInterval(() => {
         this.spawnGolem();
-    }, 8000);
-}
 
-spawnGolem() {
-    this.portals.forEach((portal) => {
-        let golemCount = this.enemies.filter(
-            (e) => e instanceof Golem,
-        ).length;
+        setInterval(() => {
+            this.spawnGolem();
+        }, 8000);
+    }
 
-        if (golemCount < 10) {
+    spawnGolem() {
+        this.portals.forEach((portal) => {
+            let golemCount = this.enemies.filter(
+                (e) => e instanceof Golem,
+            ).length;
+
             let newGolem = new Golem();
-            newGolem.x = portal.x + 20;
-            newGolem.y = portal.y + 140;
-            this.enemies.push(newGolem);
-        }
-    });
-}
+
+            if (golemCount < 10) {
+                let newGolem = new Golem();
+                newGolem.x = portal.x + 20;
+                newGolem.y = portal.y + 140;
+                this.enemies.push(newGolem);
+            }
+        });
+    }
 }

@@ -1,4 +1,7 @@
-class Cloud extends MovableObject {
+import { ImageHub } from './image.hub.js';
+import { MovableObject } from './movable-object.class.js';
+
+export class Cloud extends MovableObject {
     width = 120;
     height = 120;
 

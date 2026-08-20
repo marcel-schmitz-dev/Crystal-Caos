@@ -1,4 +1,13 @@
-class World {
+import { Character } from "./character.class.js";
+import { Level } from "./level.class.js";
+import { Keyboard } from "./keyboard.class.js";
+import { level1 } from "../levels/level1.js";
+import { Golem } from "./Golem.class.js";
+import { Ghost } from "./Ghost.class.js";
+import { StartScreen } from "./start-screen.class.js";
+import { CrystalDrop } from "./crystal-dropp.class.js";
+
+export class World {
     character = new Character();
     level = level1;
 
@@ -16,7 +25,7 @@ class World {
     startScreen = new StartScreen(1280, 720);
     gameStarted = false;
 
-    constructor(canvas) {
+    constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
         this.keyboard = keyboard;

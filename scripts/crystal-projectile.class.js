@@ -1,4 +1,7 @@
-class CrystalProjectile extends MovableObject {
+import { ImageHub } from './image.hub.js';
+import { MovableObject } from './movable-object.class.js';
+
+export class CrystalProjectile extends MovableObject {
     width = 80;
     height = 50;
     speedX = 10;
