@@ -1,6 +1,6 @@
 class MovableObject {
     x = 120;
-    y = 450;
+    y = 420;
     img;
     height = 150;
     width = 150;
@@ -16,7 +16,7 @@ class MovableObject {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
-                this.y = 450;
+                this.y = 420;
                 this.speedY = 0;
             }
         }, 1000 / 25);
@@ -24,7 +24,7 @@ class MovableObject {
 
     isAboveGround() {
         if (this instanceof Character) {
-            return this.y < 450;
+            return this.y < 420;
         }
         return true;
     }
@@ -60,19 +60,19 @@ class MovableObject {
     }
 
     isColliding(mo) {
-    return (
-        this.x + this.width > mo.x &&
-        this.y + this.height > mo.y &&
-        this.x < mo.x + mo.width &&
-        this.y < mo.y + mo.height
-    );
-}
+        return (
+            this.x + this.width > mo.x &&
+            this.y + this.height > mo.y &&
+            this.x < mo.x + mo.width &&
+            this.y < mo.y + mo.height
+        );
+    }
 
-isCollidingTop(mo) {
-    return (
-        this.isColliding(mo) &&
-        this.speedY < 0 &&
-        this.y + this.height - 20 <= mo.y + 30
-    );
-}
+    isCollidingTop(mo) {
+        return (
+            this.isColliding(mo) &&
+            this.speedY < 0 &&
+            this.y + this.height - 20 <= mo.y + 30
+        );
+    }
 }

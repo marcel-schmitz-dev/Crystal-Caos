@@ -1,18 +1,19 @@
 class Character extends MovableObject {
     width = 150;
-    height = 150;
+    height = 200;
 
-    IMAGES_STANDING = ["assets/img/character/Stehen3.png"];
+    IMAGES_STANDING = ["assets/img/character/dodge/stehen.png"];
 
     IMAGES_WALKING = [
-        "assets/img/character/B1.png",
-        "assets/img/character/B2.png",
-        "assets/img/character/B15.png",
-        "assets/img/character/B5.png",
-        "assets/img/character/B1.png",
-        "assets/img/character/B2.png",
-        "assets/img/character/B15.png",
-        "assets/img/character/B5.png",
+        "assets/img/character/walk/walk1.png",
+        "assets/img/character/walk/walk2.png",
+        "assets/img/character/walk/walk3.png",
+        "assets/img/character/walk/walk4.png",
+        "assets/img/character/walk/walk5.png",
+        "assets/img/character/walk/walk6.png",
+        "assets/img/character/walk/walk7.png",
+        "assets/img/character/walk/walk8.png",
+        "assets/img/character/walk/walk9.png",
     ];
 
     IMAGES_JUMPING = [
@@ -28,7 +29,7 @@ class Character extends MovableObject {
 
     IMAGES_DODGING = [
         "assets/img/character/dodge/dodge1.png",
-        "assets/img/character/dodge/dodge2.png",  
+        "assets/img/character/dodge/dodge2.png",
         "assets/img/character/dodge/dodge3.png",
         "assets/img/character/dodge/dodge4.png",
         "assets/img/character/dodge/dodge5.png",
@@ -38,7 +39,7 @@ class Character extends MovableObject {
     currentImage = 0;
     currentJumpImage = 0;
     currentDodgeImage = 0;
-    isDodgeEnding = false;  
+    isDodgeEnding = false;
     world;
 
     constructor() {
@@ -69,7 +70,12 @@ class Character extends MovableObject {
                 this.x += 5;
                 this.otherDirection = false;
             }
-            if (keyboard.LEFT && !keyboard.DOWN && !this.isDodgeEnding && this.x > 0) {
+            if (
+                keyboard.LEFT &&
+                !keyboard.DOWN &&
+                !this.isDodgeEnding &&
+                this.x > 0
+            ) {
                 this.x -= 5;
                 this.otherDirection = true;
             }
@@ -79,7 +85,11 @@ class Character extends MovableObject {
 
             if (keyboard.DOWN && !this.isAboveGround()) {
                 this.ausweichen();
-            } else if (!keyboard.DOWN && this.currentDodgeImage > 0 && !this.isDodgeEnding) {
+            } else if (
+                !keyboard.DOWN &&
+                this.currentDodgeImage > 0 &&
+                !this.isDodgeEnding
+            ) {
                 this.startDodgeEnd();
             }
 
@@ -110,7 +120,7 @@ class Character extends MovableObject {
                 let path = this.IMAGES_DODGING[this.currentDodgeImage];
                 this.loadImage(path);
 
-                if (this.currentDodgeImage < 4) { 
+                if (this.currentDodgeImage < 4) {
                     this.currentDodgeImage++;
                 }
             } else {
@@ -135,8 +145,7 @@ class Character extends MovableObject {
         this.currentJumpImage = 0;
     }
 
-    ausweichen() {
-    }
+    ausweichen() {}
 
     startDodgeEnd() {
         this.isDodgeEnding = true;
