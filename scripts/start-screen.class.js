@@ -102,14 +102,13 @@ class StartScreen {
             );
             ctx.shadowBlur = 0;
         } else {
-
             let titleGradient = ctx.createLinearGradient(
                 this.width / 2 - 150,
                 panelY + 40,
                 this.width / 2 + 150,
                 panelY + 100,
             );
-            titleGradient.addColorStop(0, "#00f0ff"); 
+            titleGradient.addColorStop(0, "#00f0ff");
             titleGradient.addColorStop(1.0, "#ff00ff");
 
             ctx.shadowColor = "#000000";
@@ -119,7 +118,7 @@ class StartScreen {
 
             ctx.font = "bold 52px Arial";
             ctx.fillStyle = titleGradient;
-            ctx.fillText("CRYSTAL CHAOS", this.width / 2, panelY + 90);
+            ctx.fillText("CRYSTAL CAOS", this.width / 2, panelY + 90);
 
             let buttonGradient = ctx.createLinearGradient(
                 this.width / 2 - 100,
