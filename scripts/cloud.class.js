@@ -1,12 +1,12 @@
-import { ImageHub } from './image.hub.js';
-import { MovableObject } from './movable-object.class.js';
+import { ImageHub } from "./image.hub.js";
+import { MovableObject } from "./movable-object.class.js";
 
 export class Cloud extends MovableObject {
     width = 120;
     height = 120;
 
     constructor(startX) {
-        super().loadImage("assets/img/monster/qualle.png");
+        super().loadImage("./assets/img/monster/qualle.png");
 
         this.x = startX !== undefined ? startX : Math.random() * 1200;
 

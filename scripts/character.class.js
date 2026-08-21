@@ -11,13 +11,13 @@ export class Character extends MovableObject {
     IMAGES_JUMPING = ImageHub.CHARACTER.JUMPING;
     IMAGES_DODGING = ImageHub.CHARACTER.DODGING;
     IMAGES_HURT = ImageHub.CHARACTER.HURT;
-    IMAGES_DEAD = ImageHub.CHARACTER.DEAD; // Neu: Sterbe-Animation
+    IMAGES_DEAD = ImageHub.CHARACTER.DEAD;
 
     currentImage = 0;
     currentJumpImage = 0;
     currentDodgeImage = 0;
-    currentDeadImage = 0; // Neu: Zähler für die Toten-Frames
-    deadAnimationStarted = false; // Neu: Verhindert Schleifenwiederholung
+    currentDeadImage = 0;
+    deadAnimationStarted = false;
     isDodgeEnding = false;
     world;
 
@@ -29,17 +29,16 @@ export class Character extends MovableObject {
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DODGING);
         this.loadImages(this.IMAGES_HURT);
-        this.loadImages(this.IMAGES_DEAD); // Neu: Toten-Bilder vorladen
+        this.loadImages(this.IMAGES_DEAD);
 
         this.applyGravity();
         this.animate();
     }
 
     animate() {
-        // 1. Logik-Schleife (60 FPS)
         setInterval(() => {
             if (!this.world || !this.world.gameStarted) return;
-            if (this.energy <= 0) return; // Wenn tot, keine Bewegung mehr
+            if (this.energy <= 0) return;
 
             let keyboard = this.world.keyboard;
             if (!keyboard) return;
@@ -83,31 +82,32 @@ export class Character extends MovableObject {
             }
         }, 1000 / 60);
 
-        // 2. Animations-Schleife (12 FPS)
         setInterval(() => {
             if (!this.world || !this.world.gameStarted) return;
 
             let keyboard = this.world.keyboard;
             if (!keyboard) return;
 
-            // --- NEU: TOT-ANIMATION EINMALIG ABSETZEN ---
             if (this.energy <= 0) {
                 if (!this.deadAnimationStarted) {
                     this.currentDeadImage = 0;
                     this.deadAnimationStarted = true;
                 }
 
-                let path = this.IMAGES_DEAD[this.currentDeadImage];
-                this.loadImage(path);
+                if (
+                    this.IMAGES_DEAD &&
+                    this.IMAGES_DEAD[this.currentDeadImage]
+                ) {
+                    let path = this.IMAGES_DEAD[this.currentDeadImage];
+                    this.loadImage(path);
 
-                // Durchläuft alle Frames bis zum letzten (dead9.png) und bleibt dort stehen
-                if (this.currentDeadImage < this.IMAGES_DEAD.length - 1) {
-                    this.currentDeadImage++;
+                    if (this.currentDeadImage < this.IMAGES_DEAD.length - 1) {
+                        this.currentDeadImage++;
+                    }
                 }
-                return; // Stoppt alle anderen Animationen absolut zuverlässig!
+                return;
             }
 
-            // --- NORMALE ANIMATIONEN ---
             if (
                 this.isHurt() &&
                 this.IMAGES_HURT &&
@@ -151,7 +151,6 @@ export class Character extends MovableObject {
     lastHit = 0;
 
     hit(damage = 1) {
-        // Wenn der Charakter bereits tot ist, passiert gar nichts mehr!
         if (this.energy <= 0) return;
 
         let timePassed = (new Date().getTime() - this.lastHit) / 1000;

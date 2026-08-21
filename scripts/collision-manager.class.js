@@ -6,9 +6,7 @@ export class CollisionManager {
         this.world = world;
     }
 
-    // Alle Kollisionsprüfungen bündeln
     checkAllCollisions() {
-        // Wenn der Charakter tot ist, keine Kollisionen mehr prüfen!
         if (this.world.character.energy <= 0) return;
 
         this.checkCollisionsWithEnemies();
@@ -28,13 +26,11 @@ export class CollisionManager {
                     let drop = new CrystalDrop(enemy.x, enemy.y + 20);
                     this.world.crystalDrops.push(drop);
 
-                    // Golem entfernen
                     this.world.enemies.splice(index, 1);
 
-                    // Bounce-Sprung
                     this.world.character.speedY = 15;
                 } else if (this.world.character.isColliding(enemy)) {
-                    this.world.character.hit(1); // 1 Schaden durch Golem
+                    this.world.character.hit(1);
                     console.log(
                         "Character wurde von Golem seitlich getroffen!",
                     );
@@ -63,7 +59,7 @@ export class CollisionManager {
                 charBox.x < projectile.x + projectile.width &&
                 charBox.y < projectile.y + projectile.height
             ) {
-                this.world.character.hit(2); // 2 Schaden durch Boss-Projektil
+                this.world.character.hit(2);
                 console.log("Character wurde von Kristall getroffen!");
                 this.world.throwableObjects.splice(index, 1);
             }

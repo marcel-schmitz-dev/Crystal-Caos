@@ -33,7 +33,6 @@ export class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
 
-        // HP-Bilder aus dem ImageHub vorladen
         this.hpLoadedImages = ImageHub.CHARACTER.HUD.HP_BARS.map((path) => {
             let img = new Image();
             img.src = path;
@@ -176,12 +175,11 @@ export class World {
 
         this.ctx.translate(-this.camera_x, 0);
 
-        // Neues HP-HUD basierend auf der Energie (0 bis 5)
         if (this.gameStarted) {
             let startX = 20;
             let startY = 20;
-            let barWidth = 220; // Breite des HUD-Bildes auf dem Canvas anpassen
-            let barHeight = 60; // Höhe des HUD-Bildes auf dem Canvas anpassen
+            let barWidth = 220;
+            let barHeight = 60;
 
             let currentEnergy = Math.max(0, Math.min(this.character.energy, 5));
             let hpImg = this.hpLoadedImages[currentEnergy];

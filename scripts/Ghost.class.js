@@ -7,10 +7,10 @@ export class Ghost extends MovableObject {
     width = 400;
 
     IMAGES_WALKING = [
-        "assets/img/monster/ghost_boss1.png",
-        "assets/img/monster/ghost_boss2.png",
-        "assets/img/monster/ghost_boss3.png",
-        "assets/img/monster/ghost_boss.png",
+        "./assets/img/monster/ghost_boss1.png",
+        "./assets/img/monster/ghost_boss2.png",
+        "./assets/img/monster/ghost_boss3.png",
+        "./assets/img/monster/ghost_boss.png",
     ];
 
     attackToggle = false;
@@ -20,7 +20,7 @@ export class Ghost extends MovableObject {
     constructor(x, y) {
         super();
         this.loadImages(this.IMAGES_WALKING);
-        this.loadImage("assets/img/monster/ghost_boss.png");
+        this.loadImage("./assets/img/monster/ghost_boss.png");
 
         this.x = 3300;
         this.y = 180;

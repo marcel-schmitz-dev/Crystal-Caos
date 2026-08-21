@@ -1,5 +1,5 @@
-import { ImageHub } from './image.hub.js';
-import { MovableObject } from './movable-object.class.js';
+import { ImageHub } from "./image.hub.js";
+import { MovableObject } from "./movable-object.class.js";
 
 export class CrystalProjectile extends MovableObject {
     width = 80;
@@ -8,7 +8,7 @@ export class CrystalProjectile extends MovableObject {
     world;
 
     constructor(x, y, world) {
-        super().loadImage("assets/img/waffen/crystal_geschoss.png");
+        super().loadImage("./assets/img/waffen/crystal_geschoss.png");
         this.x = x;
         this.y = y;
         this.world = world;

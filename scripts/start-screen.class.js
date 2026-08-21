@@ -1,4 +1,4 @@
-import { ImageHub } from './image.hub.js';
+import { ImageHub } from "./image.hub.js";
 
 export class StartScreen {
     activeSubMenu = null;
@@ -7,7 +7,7 @@ export class StartScreen {
     constructor(canvasWidth, canvasHeight) {
         this.width = canvasWidth;
         this.height = canvasHeight;
-        this.bgImage.src = "assets/img/icon/Matzemon3.png";
+        this.bgImage.src = "./assets/img/icon/Matzemon3.png";
     }
 
     draw(ctx) {
@@ -70,14 +70,32 @@ export class StartScreen {
         ctx.textAlign = "center";
 
         if (this.activeSubMenu === "options") {
-            ctx.fillStyle = "#00f0ff";
+            let titleGradient = ctx.createLinearGradient(
+                this.width / 2 - 200,
+                panelY + 40,
+                this.width / 2 + 200,
+                panelY + 90,
+            );
+            titleGradient.addColorStop(0, "#ffffff");
+            titleGradient.addColorStop(1, "#00f0ff");
+
+            ctx.fillStyle = titleGradient;
             ctx.font = "bold 38px Arial";
             ctx.shadowColor = "#000";
             ctx.shadowBlur = 8;
             ctx.fillText("TASTENBELEGUNG", this.width / 2, panelY + 70);
 
+            let textGradient = ctx.createLinearGradient(
+                this.width / 2 - 150,
+                panelY + 120,
+                this.width / 2 + 150,
+                panelY + 300,
+            );
+            textGradient.addColorStop(0, "#ffffff");
+            textGradient.addColorStop(1, "#00f0ff");
+
             ctx.font = "20px Arial";
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = textGradient;
             ctx.fillText(
                 "A / D - Nach links / rechts gehen",
                 this.width / 2,
@@ -138,7 +156,7 @@ export class StartScreen {
             ctx.font = "bold 32px Arial";
             ctx.fillStyle = buttonGradient;
             ctx.fillText("SPIEL STARTEN", this.width / 2, panelY + 200);
-            ctx.fillText("OPTIONEN", this.width / 2, panelY + 280);
+            ctx.fillText("STEUERUNG", this.width / 2, panelY + 280);
 
             ctx.shadowBlur = 0;
             ctx.shadowOffsetX = 0;

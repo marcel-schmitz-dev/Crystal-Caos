@@ -1,19 +1,19 @@
-import { ImageHub } from './image.hub.js';
-import { MovableObject } from './movable-object.class.js';
+import { ImageHub } from "./image.hub.js";
+import { MovableObject } from "./movable-object.class.js";
 
 export class Golem extends MovableObject {
     height = 80;
     width = 80;
 
     IMAGES_WALKING = [
-        "assets/img/monster/golem1.png",
-        "assets/img/monster/golem2.png",
-        "assets/img/monster/golem3.png",
-        "assets/img/monster/golem4.png",
-        "assets/img/monster/golem5.png",
-        "assets/img/monster/golem6.png",
-        "assets/img/monster/golem7.png",
-        "assets/img/monster/golem8.png",
+        "./assets/img/monster/golem1.png",
+        "./assets/img/monster/golem2.png",
+        "./assets/img/monster/golem3.png",
+        "./assets/img/monster/golem4.png",
+        "./assets/img/monster/golem5.png",
+        "./assets/img/monster/golem6.png",
+        "./assets/img/monster/golem7.png",
+        "./assets/img/monster/golem8.png",
     ];
 
     currentImage = 0;
@@ -21,7 +21,7 @@ export class Golem extends MovableObject {
     constructor() {
         super();
         this.loadImages(this.IMAGES_WALKING);
-        this.loadImage("assets/img/monster/golem1.png");
+        this.loadImage("./assets/img/monster/golem1.png");
 
         this.x = 400 + Math.random() * 500;
         this.y = 530;
