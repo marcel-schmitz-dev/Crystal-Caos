@@ -17,6 +17,17 @@ export class CollisionManager {
 
     checkCollisionsWithEnemies() {
         this.world.enemies.forEach((enemy, index) => {
+            if (enemy instanceof Ghost) {
+                let distanceToBoss = enemy.x - this.world.character.x;
+                if (distanceToBoss < 900 && distanceToBoss > -200) {
+                    enemy.isActivated = true;
+                }
+
+                if (this.world.character.isColliding(enemy)) {
+                    this.world.character.hit(1);
+                }
+            }
+
             if (enemy instanceof Golem) {
                 let isJumpingOnGolem =
                     this.world.character.isColliding(enemy) &&
@@ -47,14 +58,23 @@ export class CollisionManager {
                 this.world.enemies.forEach((enemy, eIndex) => {
                     if (
                         enemy instanceof Ghost &&
+                        enemy.isActivated &&
                         projectile.isColliding(enemy)
                     ) {
                         console.log("Boss wurde mit Core getroffen!");
-                        this.world.enemies.splice(eIndex, 1);
+
+                        enemy.hit(1);
+
                         this.world.throwableObjects.splice(pIndex, 1);
+
+                        if (enemy.energy <= 0) {
+                            console.log("Boss wurde endgültig besiegt!");
+                            this.world.enemies.splice(eIndex, 1);
+                        }
                         return;
                     }
                 });
+                return;
             }
 
             if (projectile.isPlayerCore) return;

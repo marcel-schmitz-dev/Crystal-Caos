@@ -1,5 +1,7 @@
 import { MovableObject } from "./movable-object.class.js";
 import { ImageHub } from "./image.hub.js";
+import { CrystalProjectile } from "./crystal-projectile.class.js";
+import { Ghost } from "./Ghost.class.js";
 
 /**
  * Represents the main player character in the game.
@@ -285,6 +287,26 @@ export class Character extends MovableObject {
                 }, 400);
             }
         }, 180);
+    }
+
+    /**
+     * Spawns a crystal projectile aimed at the center of the boss.
+     */
+    throwCrystalAtBoss() {
+        let boss = this.world.enemies.find((e) => e instanceof Ghost);
+
+        let targetX = boss
+            ? boss.x + boss.width / 2
+            : this.x + (this.otherDirection ? -500 : 500);
+        let targetY = boss ? boss.y + boss.height / 2 : this.y;
+
+        let startX = this.otherDirection ? this.x - 20 : this.x + this.width;
+        let startY = this.y + 70;
+
+        let crystal = new CrystalProjectile(startX, startY, targetX, targetY);
+        crystal.loadImage("./assets/img/waffen/crystal_geschoss.png");
+
+        this.world.throwableObjects.push(crystal);
     }
 
     /**

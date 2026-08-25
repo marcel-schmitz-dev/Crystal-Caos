@@ -14,6 +14,7 @@ export class World {
     character = new Character();
     level = level1;
     hpLoadedImages = [];
+    bossHpLoadedImages = [];
 
     portal = level1.portal;
     enemies = level1.enemies;
@@ -42,6 +43,7 @@ export class World {
         this.keyboard = keyboard;
 
         this.initHpImages();
+        this.initBossHpImages();
         this.initLevelEntities();
         this.initCrystalIcon();
         this.initGameSystems();
@@ -55,8 +57,18 @@ export class World {
      * Loads the HP bar images from the image hub.
      */
     initHpImages() {
-        const hpPaths = ImageHub?.CHARACTER?.HUD?.HP_BARS || [];
-        this.hpLoadedImages = hpPaths.map((path) => {
+        this.hpLoadedImages = ImageHub.CHARACTER.HUD.HP_BARS.map((path) => {
+            let img = new Image();
+            img.src = path;
+            return img;
+        });
+    }
+
+    /**
+     * Loads the Boss HP bar images from the image hub.
+     */
+    initBossHpImages() {
+        this.bossHpLoadedImages = ImageHub.BOSS_HP_BARS.map((path) => {
             let img = new Image();
             img.src = path;
             return img;
@@ -225,6 +237,7 @@ export class World {
         if (!this.gameStarted) return;
         this.drawHpBar();
         this.drawCrystalCounter();
+        this.drawBossHpBar();
     }
 
     /**
@@ -235,6 +248,31 @@ export class World {
         let hpImg = this.hpLoadedImages[currentEnergy];
         if (hpImg && hpImg.complete && hpImg.naturalWidth !== 0) {
             this.ctx.drawImage(hpImg, 20, 20, 220, 60);
+        }
+    }
+
+    /**
+     * Draws the boss health status bar once activated.
+     */
+    drawBossHpBar() {
+        let boss = this.enemies.find((e) => e instanceof Ghost);
+
+        if (boss && boss.isActivated) {
+            let currentBossEnergy = Math.max(0, Math.min(boss.energy, 5));
+            let bossHpImg = this.bossHpLoadedImages[currentBossEnergy];
+
+            if (
+                bossHpImg &&
+                bossHpImg.complete &&
+                bossHpImg.naturalWidth !== 0
+            ) {
+                let barWidth = 300;
+                let barHeight = 60;
+                let barX = this.canvas.width / 2 - barWidth / 2;
+                let barY = 20;
+
+                this.ctx.drawImage(bossHpImg, barX, barY, barWidth, barHeight);
+            }
         }
     }
 

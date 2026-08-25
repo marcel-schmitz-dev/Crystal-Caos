@@ -62,4 +62,13 @@ export const ImageHub = {
             "./assets/img/character/angreifen/angriff.png",
         ],
     },
+
+    BOSS_HP_BARS: [
+        "./assets/img/hp/hp_bar_boss0.png",
+        "./assets/img/hp/hp_bar_boss1.png",
+        "./assets/img/hp/hp_bar_boss2.png",
+        "./assets/img/hp/hp_bar_boss3.png",
+        "./assets/img/hp/hp_bar_boss4.png",
+        "./assets/img/hp/hp_bar_boss5.png",
+    ],
 };

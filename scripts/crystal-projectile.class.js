@@ -6,11 +6,13 @@ export class CrystalProjectile extends MovableObject {
     height = 50;
     speedX = 10;
     world;
+    isPlayerCore = false; 
 
     constructor(x, y, world, direction = -1, isPlayerCore = false) {
         super();
+        this.isPlayerCore = isPlayerCore; 
 
-        if (isPlayerCore) {
+        if (this.isPlayerCore) {
             this.loadImage("./assets/img/character/angreifen/core_flug.png");
             this.width = 150;
             this.height = 150;
