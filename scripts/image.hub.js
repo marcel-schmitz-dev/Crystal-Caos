@@ -57,5 +57,9 @@ export const ImageHub = {
             "./assets/img/character/dead/dead6.png",
             "./assets/img/character/dead/dead7.png",
         ],
+        ATTACK: [
+            "./assets/img/character/angreifen/ausholen2.png",
+            "./assets/img/character/angreifen/angriff.png",
+        ],
     },
 };

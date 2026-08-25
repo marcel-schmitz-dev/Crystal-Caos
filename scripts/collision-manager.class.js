@@ -1,5 +1,6 @@
 import { Golem } from "./Golem.class.js";
 import { CrystalDrop } from "./crystal-dropp.class.js";
+import { Ghost } from "./Ghost.class.js";
 
 export class CollisionManager {
     constructor(world) {
@@ -11,6 +12,7 @@ export class CollisionManager {
 
         this.checkCollisionsWithEnemies();
         this.checkCollisionsWithProjectiles();
+        this.checkCollisionsWithDrops();
     }
 
     checkCollisionsWithEnemies() {
@@ -40,7 +42,23 @@ export class CollisionManager {
     }
 
     checkCollisionsWithProjectiles() {
-        this.world.throwableObjects.forEach((projectile, index) => {
+        this.world.throwableObjects.forEach((projectile, pIndex) => {
+            if (projectile.isPlayerCore) {
+                this.world.enemies.forEach((enemy, eIndex) => {
+                    if (
+                        enemy instanceof Ghost &&
+                        projectile.isColliding(enemy)
+                    ) {
+                        console.log("Boss wurde mit Core getroffen!");
+                        this.world.enemies.splice(eIndex, 1);
+                        this.world.throwableObjects.splice(pIndex, 1);
+                        return;
+                    }
+                });
+            }
+
+            if (projectile.isPlayerCore) return;
+
             let charBox = {
                 x: this.world.character.x,
                 y: this.world.character.y,
@@ -59,9 +77,22 @@ export class CollisionManager {
                 charBox.x < projectile.x + projectile.width &&
                 charBox.y < projectile.y + projectile.height
             ) {
-                this.world.character.hit(2);
-                console.log("Character wurde von Kristall getroffen!");
-                this.world.throwableObjects.splice(index, 1);
+                this.world.character.hit(1);
+                console.log("Character wurde vom Boss-Kristall getroffen!");
+                this.world.throwableObjects.splice(pIndex, 1);
+            }
+        });
+    }
+
+    checkCollisionsWithDrops() {
+        this.world.crystalDrops.forEach((drop, index) => {
+            if (this.world.character.isColliding(drop)) {
+                this.world.character.crystals++;
+                console.log(
+                    "Kristall eingesammelt! Anz.:",
+                    this.world.character.crystals,
+                );
+                this.world.crystalDrops.splice(index, 1);
             }
         });
     }

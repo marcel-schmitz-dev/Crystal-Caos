@@ -1,5 +1,6 @@
 import { World } from "./world.class.js";
 import { Keyboard } from "./keyboard.class.js";
+import { CrystalProjectile } from "./crystal-projectile.class.js";
 
 let canvas;
 let world;
@@ -21,6 +22,33 @@ window.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         e.preventDefault();
         keyboard.ENTER = true;
+    }
+
+    if (e.key === "e" || e.key === "E") {
+        if (world && world.character) {
+            let success = world.character.throwCrystal();
+            if (success) {
+                setTimeout(() => {
+                    let direction = world.character.otherDirection ? -1 : 1;
+
+                    let projectileX =
+                        direction === 1
+                            ? world.character.x + world.character.width + 20
+                            : world.character.x - 70;
+                    let projectileY = world.character.y + 60;
+
+                    let throwable = new CrystalProjectile(
+                        projectileX,
+                        projectileY,
+                        world,
+                        direction,
+                        true,
+                    );
+
+                    world.throwableObjects.push(throwable);
+                }, 250);
+            }
+        }
     }
 });
 

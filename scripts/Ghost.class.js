@@ -52,7 +52,9 @@ export class Ghost extends MovableObject {
         let crystalY = this.attackToggle ? this.y + 250 : this.y + 340;
         let crystalX = this.x - 40;
 
-        let crystal = new CrystalProjectile(crystalX, crystalY, this.world);
+        let crystal = new CrystalProjectile(crystalX, crystalY, this.world, -1);
+        crystal.loadImage("./assets/img/waffen/crystal_geschoss.png");
+
         this.world.throwableObjects.push(crystal);
     }
 }

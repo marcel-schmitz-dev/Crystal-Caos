@@ -1,6 +1,10 @@
 import { MovableObject } from "./movable-object.class.js";
 import { ImageHub } from "./image.hub.js";
 
+/**
+ * Represents the main player character in the game.
+ * Handles movement, animations, gravity, health, and actions.
+ */
 export class Character extends MovableObject {
     width = 150;
     height = 200;
@@ -12,17 +16,33 @@ export class Character extends MovableObject {
     IMAGES_DODGING = ImageHub.CHARACTER.DODGING;
     IMAGES_HURT = ImageHub.CHARACTER.HURT;
     IMAGES_DEAD = ImageHub.CHARACTER.DEAD;
+    IMAGES_ATTACK = ImageHub.CHARACTER.ATTACK;
 
     currentImage = 0;
     currentJumpImage = 0;
     currentDodgeImage = 0;
     currentDeadImage = 0;
+    crystals = 3;
     deadAnimationStarted = false;
     isDodgeEnding = false;
+    isThrowing = false;
     world;
+    lastHit = 0;
 
+    /**
+     * Initializes the character, loads images, applies gravity and starts loops.
+     */
     constructor() {
         super();
+        this.loadAllCharacterImages();
+        this.applyGravity();
+        this.animate();
+    }
+
+    /**
+     * Loads all sprite arrays required for the character animations.
+     */
+    loadAllCharacterImages() {
         this.loadImage(this.IMAGES_STANDING[0]);
         this.loadImages(this.IMAGES_STANDING);
         this.loadImages(this.IMAGES_WALKING);
@@ -30,155 +50,269 @@ export class Character extends MovableObject {
         this.loadImages(this.IMAGES_DODGING);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-
-        this.applyGravity();
-        this.animate();
+        this.loadImages(this.IMAGES_ATTACK);
     }
 
+    /**
+     * Starts the main animation and control loops.
+     */
     animate() {
-        setInterval(() => {
-            if (!this.world || !this.world.gameStarted) return;
-            if (this.energy <= 0) return;
-
-            let keyboard = this.world.keyboard;
-            if (!keyboard) return;
-
-            if (
-                keyboard.RIGHT &&
-                !keyboard.DOWN &&
-                !this.isDodgeEnding &&
-                this.x < this.world.level.level_end_x
-            ) {
-                this.x += 5;
-                this.otherDirection = false;
-            }
-            if (
-                keyboard.LEFT &&
-                !keyboard.DOWN &&
-                !this.isDodgeEnding &&
-                this.x > 0
-            ) {
-                this.x -= 5;
-                this.otherDirection = true;
-            }
-            if (keyboard.UP && !this.isAboveGround() && !this.isDodgeEnding) {
-                this.jump();
-            }
-
-            if (keyboard.DOWN && !this.isAboveGround()) {
-                this.ausweichen();
-            } else if (
-                !keyboard.DOWN &&
-                this.currentDodgeImage > 0 &&
-                !this.isDodgeEnding
-            ) {
-                this.startDodgeEnd();
-            }
-
-            if (this.x > 400) {
-                this.world.camera_x = Math.floor(this.x - 400);
-            } else {
-                this.world.camera_x = 0;
-            }
-        }, 1000 / 60);
-
-        setInterval(() => {
-            if (!this.world || !this.world.gameStarted) return;
-
-            let keyboard = this.world.keyboard;
-            if (!keyboard) return;
-
-            if (this.energy <= 0) {
-                if (!this.deadAnimationStarted) {
-                    this.currentDeadImage = 0;
-                    this.deadAnimationStarted = true;
-                }
-
-                if (
-                    this.IMAGES_DEAD &&
-                    this.IMAGES_DEAD[this.currentDeadImage]
-                ) {
-                    let path = this.IMAGES_DEAD[this.currentDeadImage];
-                    this.loadImage(path);
-
-                    if (this.currentDeadImage < this.IMAGES_DEAD.length - 1) {
-                        this.currentDeadImage++;
-                    }
-                }
-                return;
-            }
-
-            if (
-                this.isHurt() &&
-                this.IMAGES_HURT &&
-                this.IMAGES_HURT.length > 0
-            ) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.isAboveGround()) {
-                let path = this.IMAGES_JUMPING[this.currentJumpImage];
-                this.loadImage(path);
-                if (this.currentJumpImage < this.IMAGES_JUMPING.length - 1) {
-                    this.currentJumpImage++;
-                }
-            } else if (this.isDodgeEnding) {
-                this.loadImage(this.IMAGES_DODGING[5]);
-                this.currentDodgeImage = 0;
-                this.isDodgeEnding = false;
-            } else if (keyboard.DOWN) {
-                let path = this.IMAGES_DODGING[this.currentDodgeImage];
-                this.loadImage(path);
-
-                if (this.currentDodgeImage < 4) {
-                    this.currentDodgeImage++;
-                }
-            } else {
-                this.currentJumpImage = 0;
-                this.currentDodgeImage = 0;
-
-                if (keyboard.RIGHT || keyboard.LEFT) {
-                    let path = this.IMAGES_WALKING[this.currentImage];
-                    this.loadImage(path);
-                    this.currentImage =
-                        (this.currentImage + 1) % this.IMAGES_WALKING.length;
-                } else {
-                    this.loadImage(this.IMAGES_STANDING[0]);
-                    this.currentImage = 0;
-                }
-            }
-        }, 1000 / 12);
+        setInterval(() => this.runGameLoop(), 1000 / 60);
+        setInterval(() => this.runAnimationLoop(), 1000 / 12);
     }
 
-    lastHit = 0;
+    /**
+     * Handles movement and input logic per frame.
+     */
+    runGameLoop() {
+        if (!this.isGameActive()) return;
 
-    hit(damage = 1) {
-        if (this.energy <= 0) return;
+        let keyboard = this.world.keyboard;
+        if (!keyboard) return;
 
-        let timePassed = (new Date().getTime() - this.lastHit) / 1000;
+        this.handleHorizontalMovement(keyboard);
+        this.handleVerticalMovement(keyboard);
+        this.updateCamera();
+    }
 
-        if (timePassed > 1) {
-            this.energy -= damage;
-            this.lastHit = new Date().getTime();
+    /**
+     * Checks if the game is active and character can move.
+     * @returns {boolean} True if game has started and character is alive.
+     */
+    isGameActive() {
+        return this.world && this.world.gameStarted && this.energy > 0;
+    }
 
-            if (this.energy < 0) {
-                this.energy = 0;
+    /**
+     * Processes left and right movement and direction changes.
+     * @param {Object} keyboard - The current keyboard state.
+     */
+    handleHorizontalMovement(keyboard) {
+        if (keyboard.RIGHT && !this.isDodgeEnding) {
+            this.otherDirection = false;
+            if (!this.isThrowing && this.x < this.world.level.level_end_x) {
+                this.x += 5;
+            }
+        }
+        if (keyboard.LEFT && !this.isDodgeEnding) {
+            this.otherDirection = true;
+            if (!this.isThrowing && this.x > 0) {
+                this.x -= 5;
             }
         }
     }
 
+    /**
+     * Processes jumping and dodging inputs.
+     * @param {Object} keyboard - The current keyboard state.
+     */
+    handleVerticalMovement(keyboard) {
+        if (this.isThrowing) return;
+
+        if (keyboard.UP && !this.isAboveGround() && !this.isDodgeEnding) {
+            this.jump();
+        }
+
+        if (keyboard.DOWN && !this.isAboveGround()) {
+            this.ausweichen();
+        } else if (
+            !keyboard.DOWN &&
+            this.currentDodgeImage > 0 &&
+            !this.isDodgeEnding
+        ) {
+            this.startDodgeEnd();
+        }
+    }
+
+    /**
+     * Updates the camera position based on character coordinates.
+     */
+    updateCamera() {
+        if (this.x > 400) {
+            this.world.camera_x = Math.floor(this.x - 400);
+        } else {
+            this.world.camera_x = 0;
+        }
+    }
+
+    /**
+     * Selects and plays the correct animation based on character state.
+     */
+    runAnimationLoop() {
+        if (!this.world || !this.world.gameStarted) return;
+
+        let keyboard = this.world.keyboard;
+        if (!keyboard || this.isThrowing) return;
+
+        if (this.energy <= 0) {
+            this.playDeadAnimation();
+        } else if (this.isHurtAnimationActive()) {
+            this.playAnimation(this.IMAGES_HURT);
+        } else if (this.isAboveGround()) {
+            this.playJumpAnimation();
+        } else if (this.isDodgeEnding) {
+            this.finishDodgeAnimation();
+        } else if (keyboard.DOWN) {
+            this.playDodgeAnimation();
+        } else {
+            this.playStandardAnimation(keyboard);
+        }
+    }
+
+    /**
+     * Checks if the hurt animation should be shown.
+     * @returns {boolean} True if character is currently hurt.
+     */
+    isHurtAnimationActive() {
+        return this.isHurt() && this.IMAGES_HURT && this.IMAGES_HURT.length > 0;
+    }
+
+    /**
+     * Handles the sequence of death animations.
+     */
+    playDeadAnimation() {
+        if (!this.deadAnimationStarted) {
+            this.currentDeadImage = 0;
+            this.deadAnimationStarted = true;
+        }
+        if (this.IMAGES_DEAD && this.IMAGES_DEAD[this.currentDeadImage]) {
+            this.loadImage(this.IMAGES_DEAD[this.currentDeadImage]);
+            if (this.currentDeadImage < this.IMAGES_DEAD.length - 1) {
+                this.currentDeadImage++;
+            }
+        }
+    }
+
+    /**
+     * Progresses through the jumping animation frames.
+     */
+    playJumpAnimation() {
+        let path = this.IMAGES_JUMPING[this.currentJumpImage];
+        this.loadImage(path);
+        if (this.currentJumpImage < this.IMAGES_JUMPING.length - 1) {
+            this.currentJumpImage++;
+        }
+    }
+
+    /**
+     * Resets state after dodge sequence completes.
+     */
+    finishDodgeAnimation() {
+        this.loadImage(this.IMAGES_DODGING[5]);
+        this.currentDodgeImage = 0;
+        this.isDodgeEnding = false;
+    }
+
+    /**
+     * Progresses through the dodging animation frames.
+     */
+    playDodgeAnimation() {
+        let path = this.IMAGES_DODGING[this.currentDodgeImage];
+        this.loadImage(path);
+        if (this.currentDodgeImage < 4) {
+            this.currentDodgeImage++;
+        }
+    }
+
+    /**
+     * Plays walking or standing animations depending on input.
+     * @param {Object} keyboard - The current keyboard state.
+     */
+    playStandardAnimation(keyboard) {
+        this.currentJumpImage = 0;
+        this.currentDodgeImage = 0;
+
+        if (keyboard.RIGHT || keyboard.LEFT) {
+            if (this.IMAGES_WALKING && this.IMAGES_WALKING.length > 0) {
+                let path = this.IMAGES_WALKING[this.currentImage];
+                if (path) {
+                    this.loadImage(path);
+                    this.currentImage =
+                        (this.currentImage + 1) % this.IMAGES_WALKING.length;
+                }
+            }
+        } else {
+            if (this.IMAGES_STANDING && this.IMAGES_STANDING[0]) {
+                this.loadImage(this.IMAGES_STANDING[0]);
+            }
+            this.currentImage = 0;
+        }
+    }
+
+    /**
+     * Applies damage to the character if cooldown allows it.
+     * @param {number} [damage=1] - The amount of damage to take.
+     */
+    hit(damage = 1) {
+        if (this.energy <= 0) return;
+
+        let timePassed = (new Date().getTime() - this.lastHit) / 1000;
+        if (timePassed > 1) {
+            this.energy -= damage;
+            this.lastHit = new Date().getTime();
+            if (this.energy < 0) this.energy = 0;
+        }
+    }
+
+    /**
+     * Triggers the crystal throwing action if available.
+     * @returns {boolean} True if throw was successfully executed.
+     */
+    throwCrystal() {
+        if (this.crystals > 0 && !this.isThrowing) {
+            this.isThrowing = true;
+            this.crystals--;
+            this.executeThrowSequence();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Iterates through attack images during a crystal throw.
+     */
+    executeThrowSequence() {
+        let currentThrowImage = 0;
+        let throwInterval = setInterval(() => {
+            let path = this.IMAGES_ATTACK[currentThrowImage];
+            this.loadImage(path);
+            currentThrowImage++;
+
+            if (currentThrowImage >= this.IMAGES_ATTACK.length) {
+                clearInterval(throwInterval);
+                setTimeout(() => {
+                    this.isThrowing = false;
+                }, 400);
+            }
+        }, 180);
+    }
+
+    /**
+     * Checks if character is currently in a hurt state window.
+     * @returns {boolean} True if hurt timer is active.
+     */
     isHurt() {
         if (this.energy <= 0) return false;
-        let timepassed = new Date().getTime() - this.lastHit;
-        timepassed = timepassed / 1000;
+        let timepassed = (new Date().getTime() - this.lastHit) / 1000;
         return timepassed < 0.5;
     }
 
+    /**
+     * Initiates a jump action.
+     */
     jump() {
         this.speedY = 25;
         this.currentJumpImage = 0;
     }
 
+    /**
+     * Placeholder method for dodging behavior.
+     */
     ausweichen() {}
 
+    /**
+     * Flags the end of a dodge action.
+     */
     startDodgeEnd() {
         this.isDodgeEnding = true;
     }
