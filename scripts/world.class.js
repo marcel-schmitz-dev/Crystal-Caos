@@ -119,7 +119,6 @@ export class World {
             if (!this.gameStarted) return;
             this.collisionManager.checkAllCollisions();
             this.checkCoinCollisions();
-            this.checkThrowObjects(); // Aktualisiert auf Leertaste (SPACE)
         }, 1000 / 60);
     }
 

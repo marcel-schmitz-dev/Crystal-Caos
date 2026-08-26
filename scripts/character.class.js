@@ -86,20 +86,24 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Processes left and right movement and direction changes.
+     * Processes left and right movement and direction changes, including crawling.
      * @param {Object} keyboard - The current keyboard state.
      */
     handleHorizontalMovement(keyboard) {
+        // Prüfen, ob geduckt + Bewegung (Krabbeln)
+        let isCrawling = keyboard.DOWN && !this.isAboveGround();
+        let moveSpeed = isCrawling ? 2 : 5; // Krabbeln ist langsamer
+
         if (keyboard.RIGHT && !this.isDodgeEnding) {
             this.otherDirection = false;
             if (!this.isThrowing && this.x < this.world.level.level_end_x) {
-                this.x += 5;
+                this.x += moveSpeed;
             }
         }
         if (keyboard.LEFT && !this.isDodgeEnding) {
             this.otherDirection = true;
             if (!this.isThrowing && this.x > 0) {
-                this.x -= 5;
+                this.x -= moveSpeed;
             }
         }
     }
@@ -154,6 +158,8 @@ export class Character extends MovableObject {
             this.playJumpAnimation();
         } else if (this.isDodgeEnding) {
             this.finishDodgeAnimation();
+        } else if (keyboard.DOWN && (keyboard.LEFT || keyboard.RIGHT)) {
+            this.playCrawlAnimation();
         } else if (keyboard.DOWN) {
             this.playDodgeAnimation();
         } else {
@@ -194,6 +200,23 @@ export class Character extends MovableObject {
         if (this.currentJumpImage < this.IMAGES_JUMPING.length - 1) {
             this.currentJumpImage++;
         }
+    }
+
+    /**
+     * Progresses through the crawling animation frames.
+     */
+    playCrawlAnimation() {
+        if (!this.IMAGES_CROUCHING || this.IMAGES_CROUCHING.length === 0) {
+            this.IMAGES_CROUCHING = ImageHub.CHARACTER.CROUCHING;
+        }
+
+        let path =
+            this.IMAGES_CROUCHING[
+                this.currentImage % this.IMAGES_CROUCHING.length
+            ];
+        this.loadImage(path);
+        this.currentImage =
+            (this.currentImage + 1) % this.IMAGES_CROUCHING.length;
     }
 
     /**

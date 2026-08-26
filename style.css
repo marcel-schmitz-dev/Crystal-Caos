@@ -1,5 +1,9 @@
 body {
-    background: linear-gradient(135deg, #0b0f19, #1a0b2e);
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url("./assets/img/background/background_lvl1.png") no-repeat center
+            center fixed;
+    background-size: cover;
     color: white;
     font-family: sans-serif;
     height: 100vh;
@@ -10,6 +14,20 @@ body {
     justify-content: center;
 }
 
+h1 {
+    background: linear-gradient(135deg, #00f0ff, #ff00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 48px;
+    color: transparent;
+}
+
 canvas {
     background-color: grey;
+    border: 4px solid transparent;
+    border-image: linear-gradient(135deg, #00f0ff, #ff00ff) 1;
+    box-shadow:
+        0 0 15px rgba(0, 240, 255, 0.4),
+        0 0 30px rgba(255, 0, 255, 0.3);
 }

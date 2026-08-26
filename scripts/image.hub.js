@@ -34,7 +34,13 @@ export const ImageHub = {
             "./assets/img/character/crawling/crawl0.png",
             "./assets/img/character/crawling/crawl1.png",
             "./assets/img/character/crawling/crawl2.png",
+            "./assets/img/character/crawling/crawl3.png",
+            "./assets/img/character/crawling/crawl4.png",
+            "./assets/img/character/crawling/crawl5.png",
+            "./assets/img/character/crawling/crawl6.png",
+            "./assets/img/character/crawling/crawl7.png",
         ],
+
         HURT: [
             "./assets/img/character/hurt/hurt1.png",
             "./assets/img/character/hurt/hurt2.png",
