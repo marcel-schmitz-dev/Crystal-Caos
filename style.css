@@ -42,7 +42,7 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100; 
+    z-index: 100;
 }
 
 .overlay-content {
@@ -83,4 +83,29 @@ canvas {
     background: #00f0ff;
     color: #0b0f19;
     box-shadow: 0 0 20px #00f0ff;
+}
+
+/* Die Schlange absolut im Body positionieren */
+#body-snake {
+    position: fixed; /* Bleibt beim Scrollen an Ort und Stelle */
+    left: 20px; /* Abstand vom linken Bildschirmrand */
+    bottom: 20px; /* Abstand vom unteren Bildschirmrand */
+    width: 2000px; /* Größe der Schlange anpassen */
+    z-index: -1; /* Hinter dem Canvas, aber sichtbar auf dem Body */
+    pointer-events: none; /* Man klickt einfach durch die Schlange hindurch */
+
+    /* Animation für das Schlängeln / Atmen */
+    animation: snakeSlither 6s ease-in-out infinite;
+    transform-origin: left center;
+}
+
+/* Die Schlängel-Animation */
+@keyframes snakeSlither {
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: translateY(-8px) rotate(1.5deg) scale(1.02);
+    }
 }

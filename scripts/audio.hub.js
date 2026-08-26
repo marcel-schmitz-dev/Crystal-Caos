@@ -2,10 +2,10 @@ export class AudioHub {
     constructor() {
         this.gameOverSound = new Audio("./assets/audio/character_death.mp3");
         this.gameOverSound.loop = true;
-        this.gameOverSound.volume = 0.5;
+        this.gameOverSound.volume = 0.4;
 
         this.backgroundMusic = new Audio(
-            "./assets/audio/background_sound1.mp3",
+            "./assets/audio/background_sound5.wav",
         );
         this.backgroundMusic.loop = true;
         this.backgroundMusic.volume = 0.5; // 30% Lautstärke, damit sie angenehm im Hintergrund läuft
