@@ -1,12 +1,15 @@
 import { Level } from "../scripts/level.class.js";
 import { Ghost } from "../scripts/Ghost.class.js";
-import { Portal } from "../scripts/portal.class.js";
+import { Golem } from "../scripts/Golem.class.js"; // Neu statt Portal
 import { Cloud } from "../scripts/cloud.class.js";
 import { BackgroundObjekt } from "../scripts/background.class.js";
 
 export const level1 = new Level(
     [new Ghost()],
-    [new Portal(900, 380), new Portal(2200, 380)],
+    [
+        Golem.createPortal(900, 380), 
+        Golem.createPortal(2200, 380)
+    ],
     [
         new Cloud(),
         new Cloud(),

@@ -72,53 +72,63 @@ export class StartScreen {
         if (this.activeSubMenu === "options") {
             let titleGradient = ctx.createLinearGradient(
                 this.width / 2 - 200,
-                panelY + 40,
+                panelY + 25,
                 this.width / 2 + 200,
-                panelY + 90,
+                panelY + 65,
             );
             titleGradient.addColorStop(0, "#ffffff");
             titleGradient.addColorStop(1, "#00f0ff");
 
             ctx.fillStyle = titleGradient;
-            ctx.font = "bold 38px Arial";
+            ctx.font = "bold 32px Arial";
             ctx.shadowColor = "#000";
             ctx.shadowBlur = 8;
-            ctx.fillText("TASTENBELEGUNG", this.width / 2, panelY + 70);
+            ctx.fillText("TASTENBELEGUNG", this.width / 2, panelY + 50);
 
             let textGradient = ctx.createLinearGradient(
                 this.width / 2 - 150,
-                panelY + 120,
+                panelY + 80,
                 this.width / 2 + 150,
-                panelY + 300,
+                panelY + 330,
             );
             textGradient.addColorStop(0, "#ffffff");
             textGradient.addColorStop(1, "#00f0ff");
 
-            ctx.font = "20px Arial";
+            ctx.font = "16px Arial";
             ctx.fillStyle = textGradient;
             ctx.fillText(
                 "A / D - Nach links / rechts gehen",
                 this.width / 2,
-                panelY + 150,
+                panelY + 85,
             );
-            ctx.fillText("W - Springen", this.width / 2, panelY + 200);
+            ctx.fillText("W - Springen", this.width / 2, panelY + 120);
             ctx.fillText(
                 "S - Ducken / Ausweichen",
                 this.width / 2,
-                panelY + 250,
+                panelY + 155,
+            );
+            ctx.fillText(
+                "E - Core-Projektil werfen",
+                this.width / 2,
+                panelY + 190,
             );
             ctx.fillText(
                 "Auf Golems springen - Golem besiegen",
                 this.width / 2,
-                panelY + 300,
+                panelY + 225,
+            );
+            ctx.fillText(
+                "Core auf Ghost-Boss werfen - Boss besiegen",
+                this.width / 2,
+                panelY + 260,
             );
 
-            ctx.font = "16px Arial";
+            ctx.font = "14px Arial";
             ctx.fillStyle = "#a0e0e5";
             ctx.fillText(
                 "Klicke irgendwo, um zurückzugehen",
                 this.width / 2,
-                panelY + 360,
+                panelY + 315,
             );
             ctx.shadowBlur = 0;
         } else {

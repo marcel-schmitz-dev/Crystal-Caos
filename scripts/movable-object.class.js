@@ -1,14 +1,9 @@
-export class MovableObject {
-    x = 120;
-    y = 420;
-    img;
-    height = 150;
-    width = 150;
-    imgCache = {};
+import { DrawableObject } from "./drawable-object.class.js";
+
+export class MovableObject extends DrawableObject {
     speedY = 0;
     acceleration = 2.5;
     otherDirection = false;
-    currentImage = 0;
 
     applyGravity() {
         setInterval(() => {
@@ -27,23 +22,6 @@ export class MovableObject {
             return this.y < 420;
         }
         return true;
-    }
-
-    loadImage(path) {
-        if (this.imgCache[path]) {
-            this.img = this.imgCache[path];
-        } else {
-            this.img = new Image();
-            this.img.src = path;
-        }
-    }
-
-    loadImages(arr) {
-        arr.forEach((path) => {
-            let img = new Image();
-            img.src = path;
-            this.imgCache[path] = img;
-        });
     }
 
     moveRight() {

@@ -1,6 +1,6 @@
 import { Golem } from "./Golem.class.js";
-import { CrystalDrop } from "./crystal-dropp.class.js";
 import { Ghost } from "./Ghost.class.js";
+// (CrystalDrop Import wurde hier entfernt, da es die Datei nicht mehr gibt!)
 
 export class CollisionManager {
     constructor(world) {
@@ -36,7 +36,8 @@ export class CollisionManager {
                         enemy.y + 20;
 
                 if (isJumpingOnGolem) {
-                    let drop = new CrystalDrop(enemy.x, enemy.y + 20);
+                    // HIER GEÄNDERT: Wir nutzen jetzt die Methode direkt vom Golem-Objekt!
+                    let drop = enemy.createDrop();
                     this.world.crystalDrops.push(drop);
 
                     this.world.enemies.splice(index, 1);
