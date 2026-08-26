@@ -6,7 +6,7 @@ export class Level {
     portals;
     clouds;
     backgroundObjacts;
-    coins; // Neu: Coins-Property deklariert
+    coins;
     level_end_x = 2900;
 
     constructor(enemies, portals, clouds, backgroundObjacts, coins = []) {
@@ -14,7 +14,7 @@ export class Level {
         this.portals = portals;
         this.clouds = clouds;
         this.backgroundObjacts = backgroundObjacts;
-        this.coins = coins; // Neu: Coins-Array zugewiesen
+        this.coins = coins;
     }
 
     setGolemSpawner() {

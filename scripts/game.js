@@ -24,7 +24,7 @@ window.addEventListener("keydown", (e) => {
         keyboard.ENTER = true;
     }
 
-    if (e.key === "e" || e.key === "E") {
+    if (e.key === "l" || e.key === "L") {
         if (world && world.character) {
             let success = world.character.throwCrystal();
             if (success) {

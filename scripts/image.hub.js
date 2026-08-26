@@ -30,6 +30,11 @@ export const ImageHub = {
             "./assets/img/character/dodge/dodge5.png",
             "./assets/img/character/dodge/dodge6.png",
         ],
+        CROUCHING: [
+            "./assets/img/character/crawling/crawl0.png",
+            "./assets/img/character/crawling/crawl1.png",
+            "./assets/img/character/crawling/crawl2.png",
+        ],
         HURT: [
             "./assets/img/character/hurt/hurt1.png",
             "./assets/img/character/hurt/hurt2.png",
@@ -71,10 +76,18 @@ export const ImageHub = {
             "./assets/img/hud/hp_bar_boss4.png",
             "./assets/img/hud/hp_bar_boss5.png",
         ],
-        HURT: ["./assets/img/monster/dmg_reaction_boss.png"],
+        HURT: "./assets/img/monster/dmg_reaction_boss.png",
+        DEAD: [
+            "./assets/img/monster/final_death0.png",
+            "./assets/img/monster/final_death1.png",
+            "./assets/img/monster/final_death2.png",
+            "./assets/img/monster/final_death3.png",
+            "./assets/img/monster/final_death4.png",
+            "./assets/img/monster/final_death5.png",
+            "./assets/img/monster/final_death6.png",
+        ],
     },
 
-    // Zentrales HUD-Objekt für alle Statusleisten im Spiel
     HUD: {
         CORE_BARS: [
             "./assets/img/hud/core_bar0.png",

@@ -1,6 +1,5 @@
 import { Golem } from "./Golem.class.js";
 import { Ghost } from "./Ghost.class.js";
-// (CrystalDrop Import wurde hier entfernt, da es die Datei nicht mehr gibt!)
 
 export class CollisionManager {
     constructor(world) {
@@ -18,6 +17,9 @@ export class CollisionManager {
     checkCollisionsWithEnemies() {
         this.world.enemies.forEach((enemy, index) => {
             if (enemy instanceof Ghost) {
+                // Wenn der Boss tot ist, ignorieren wir Kollisionen komplett
+                if (enemy.isDead) return;
+
                 let distanceToBoss = enemy.x - this.world.character.x;
                 if (distanceToBoss < 900 && distanceToBoss > -200) {
                     enemy.isActivated = true;
@@ -59,6 +61,7 @@ export class CollisionManager {
                     if (
                         enemy instanceof Ghost &&
                         enemy.isActivated &&
+                        !enemy.isDead && // Verhindert Treffer, während er stirbt
                         projectile.isColliding(enemy)
                     ) {
                         console.log("Boss wurde mit Core getroffen!");
@@ -67,10 +70,10 @@ export class CollisionManager {
 
                         this.world.throwableObjects.splice(pIndex, 1);
 
-                        if (enemy.energy <= 0) {
-                            console.log("Boss wurde endgültig besiegt!");
-                            this.world.enemies.splice(eIndex, 1);
-                        }
+                        // HINWEIS: Das sofortige Löschen über splice(eIndex, 1)
+                        // wurde entfernt, da die Ghost-Klasse das Löschen nach
+                        // Beendigung der Todes-Animation nun selbst übernimmt.
+
                         return;
                     }
                 });
@@ -105,7 +108,6 @@ export class CollisionManager {
     }
 
     checkCollisionsWithDrops() {
-        // 1. Bestehende Kristall-Kollisionen prüfen
         this.world.crystalDrops.forEach((drop, index) => {
             if (this.world.character.isColliding(drop)) {
                 this.world.character.crystals++;
@@ -117,19 +119,21 @@ export class CollisionManager {
             }
         });
 
-        // 2. NEU: Coin-Kollisionen direkt hier im CollisionManager prüfen
         if (this.world.level && this.world.level.coins) {
             this.world.level.coins.forEach((coin, index) => {
                 if (this.world.character.isColliding(coin)) {
-                    this.world.character.coins = (this.world.character.coins || 0) + 1;
-                    
-                    // Begrenzung für die Coin-Bar auf maximal 5
+                    this.world.character.coins =
+                        (this.world.character.coins || 0) + 1;
+
                     if (this.world.character.coins > 5) {
                         this.world.character.coins = 5;
                     }
 
-                    console.log("Coin eingesammelt! Anz.:", this.world.character.coins);
-                    this.world.level.coins.splice(index, 1); // Coin von der Map entfernen
+                    console.log(
+                        "Coin eingesammelt! Anz.:",
+                        this.world.character.coins,
+                    );
+                    this.world.level.coins.splice(index, 1);
                 }
             });
         }

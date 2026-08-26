@@ -7,7 +7,8 @@ export class Ghost extends MovableObject {
     width = 400;
     energy = 5;
     isActivated = false;
-    isHurt = false; // Neu: Flag, um zu prüfen, ob er gerade getroffen wurde
+    isHurt = false;
+    isDead = false;
 
     IMAGES_WALKING = [
         "./assets/img/monster/ghost_boss1.png",
@@ -15,6 +16,8 @@ export class Ghost extends MovableObject {
         "./assets/img/monster/ghost_boss3.png",
         "./assets/img/monster/ghost_boss.png",
     ];
+
+    IMAGES_DEAD = ImageHub.BOSS.DEAD;
 
     attackToggle = false;
     world;
@@ -24,6 +27,7 @@ export class Ghost extends MovableObject {
     constructor(x, y) {
         super();
         this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_DEAD);
         this.loadImage("./assets/img/monster/ghost_boss.png");
 
         this.x = 3300;
@@ -35,11 +39,12 @@ export class Ghost extends MovableObject {
     animate() {
         this.intervalId = setInterval(() => {
             if (!this.world || !this.world.gameStarted) return;
+            if (this.isDead) return;
 
-            // Wenn er gerade getroffen wurde, überspringen wir die Laufanimation kurz
             if (!this.isHurt) {
                 this.playAnimation(this.IMAGES_WALKING);
-                let currentIndex = this.currentImage % this.IMAGES_WALKING.length;
+                let currentIndex =
+                    this.currentImage % this.IMAGES_WALKING.length;
 
                 if (currentIndex === 2 && this.lastImageIndex !== 2) {
                     this.throwCrystal();
@@ -50,7 +55,7 @@ export class Ghost extends MovableObject {
     }
 
     throwCrystal() {
-        if (!this.world) return;
+        if (!this.world || this.isDead) return;
 
         this.attackToggle = !this.attackToggle;
 
@@ -64,27 +69,56 @@ export class Ghost extends MovableObject {
     }
 
     hit(damage = 1) {
-        if (!this.isActivated) return;
+        // Wenn er schon tot ist oder gerade stirbt, keine Treffer mehr annehmen!
+        if (!this.isActivated || this.isDead) return;
 
         this.energy -= damage;
+        console.log("Boss HP:", this.energy);
+
         if (this.energy <= 0) {
             this.energy = 0;
-            this.stopAnimation();
+            this.isDead = true; // Wichtig: Ab jetzt ignoriert er Treffer und Kollisionen
+            this.playDeathAnimation();
         } else {
-            this.playHurtAnimation(); // Neu: Aktiviert den Treffer-Effekt
+            this.playHurtAnimation();
         }
-        console.log("Boss HP:", this.energy);
     }
 
-    // Neu: Methode für die Schadensreaktion
     playHurtAnimation() {
         this.isHurt = true;
-        this.loadImage(ImageHub.BOSS.HURT); // Lädt das neue dmg_reaction_boss.png
+        this.loadImage(ImageHub.BOSS.HURT);
 
-        // Nach 300ms wechselt er wieder zurück in den normalen Modus
         setTimeout(() => {
             this.isHurt = false;
         }, 300);
+    }
+
+    playDeathAnimation() {
+        this.stopAnimation(); // Stoppt das normale Laufen
+
+        let currentFrame = 0;
+
+        // Spielt die Bilder nacheinander ab
+        let deathInterval = setInterval(() => {
+            if (currentFrame < this.IMAGES_DEAD.length) {
+                this.loadImage(this.IMAGES_DEAD[currentFrame]);
+                currentFrame++;
+            } else {
+                // Animation ist komplett fertig! Erst jetzt wird der Boss gelöscht.
+                clearInterval(deathInterval);
+
+                if (
+                    this.world &&
+                    this.world.level &&
+                    this.world.level.enemies
+                ) {
+                    let index = this.world.level.enemies.indexOf(this);
+                    if (index > -1) {
+                        this.world.level.enemies.splice(index, 1);
+                    }
+                }
+            }
+        }, 150); // 150ms pro Bild – passe den Wert an, falls es schneller/langsamer sein soll
     }
 
     stopAnimation() {

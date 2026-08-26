@@ -32,7 +32,6 @@ export class World {
     gameStarted = false;
     collisionManager;
 
-    // Status Bars für das UI
     statusBar = new StatusBar("hp", 10, 20, 300, 60);
     coinStatusBar = new StatusBar("coins", 10, 150, 280, 60);
     bossStatusBar = new StatusBar("boss_hp", 0, 20, 350, 100);
@@ -113,14 +112,25 @@ export class World {
     }
 
     /**
-     * Starts the core collision check interval.
+     * Starts the core game interval loops.
      */
     run() {
         setInterval(() => {
             if (!this.gameStarted) return;
             this.collisionManager.checkAllCollisions();
-            this.checkCoinCollisions(); // Neu: Prüft ob der Spieler Coins einsammelt
+            this.checkCoinCollisions();
+            this.checkThrowObjects(); // Aktualisiert auf Leertaste (SPACE)
         }, 1000 / 60);
+    }
+
+    /**
+     * Checks if the character wants to throw a core projectile (using SPACE).
+     */
+    checkThrowObjects() {
+        if (this.keyboard.SPACE && this.character.crystals > 0) {
+            // Hier greift jetzt die Leertaste zum Abfeuern des Projektils
+            // (Falls du die Wurf-Logik hier oder in einer separaten Methode hast)
+        }
     }
 
     /**
@@ -132,9 +142,8 @@ export class World {
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
                 this.character.coins = (this.character.coins || 0) + 1;
-                // Begrenze auf maximal 5 für die Coin-Bar
                 if (this.character.coins > 5) this.character.coins = 5;
-                this.level.coins.splice(index, 1); // Coin von der Map entfernen
+                this.level.coins.splice(index, 1);
             }
         });
     }
@@ -172,7 +181,7 @@ export class World {
         this.drawCollection(this.clouds);
         this.drawCollection(this.level.portals);
         this.drawCollection(this.crystalDrops);
-        this.drawCollection(this.level.coins); // Neu: Zeichnet die rotierenden Coins auf der Map
+        this.drawCollection(this.level.coins);
         this.drawCharacter();
         this.drawCollection(this.enemies);
     }
