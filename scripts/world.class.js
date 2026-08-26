@@ -7,6 +7,7 @@ import { StartScreen } from "./start-screen.class.js";
 import { CollisionManager } from "./collision-manager.class.js";
 import { ImageHub } from "./image.hub.js";
 import { StatusBar } from "./status-bar.class.js";
+import { AudioHub } from "./audio.hub.js";
 
 /**
  * Manages the game world, rendering loop, entities, and UI elements.
@@ -16,6 +17,7 @@ export class World {
     level = level1;
     hpLoadedImages = [];
     bossHpLoadedImages = [];
+    audioHub = new AudioHub();
 
     portal = level1.portal;
     enemies = level1.enemies;
@@ -109,6 +111,9 @@ export class World {
         this.gameStarted = true;
         this.level.setGolemSpawner();
         this.canvas.removeEventListener("click", listener);
+
+        // NEU: Hintergrundmusik starten, sobald das Spiel beginnt!
+        this.audioHub.playBackgroundMusic();
     }
 
     /**
@@ -119,6 +124,8 @@ export class World {
             if (!this.gameStarted) return;
             this.collisionManager.checkAllCollisions();
             this.checkCoinCollisions();
+            this.checkGameWin();
+            this.checkGameOver();
         }, 1000 / 60);
     }
 
@@ -127,8 +134,6 @@ export class World {
      */
     checkThrowObjects() {
         if (this.keyboard.SPACE && this.character.crystals > 0) {
-            // Hier greift jetzt die Leertaste zum Abfeuern des Projektils
-            // (Falls du die Wurf-Logik hier oder in einer separaten Methode hast)
         }
     }
 
@@ -261,5 +266,53 @@ export class World {
         if (!this.gameStarted) {
             this.startScreen.draw(this.ctx);
         }
+    }
+
+    /**
+     * Shows the win screen overlay when the boss is defeated.
+     */
+    checkGameWin() {
+        let boss = this.level.enemies.find((e) => e instanceof Ghost);
+        if (boss && boss.energy <= 0) {
+            let winScreen = document.getElementById("win-screen");
+            if (winScreen) {
+                winScreen.style.display = "flex";
+            }
+        }
+    }
+
+    checkGameOver() {
+        if (this.character && this.character.energy <= 0) {
+            let gameOverScreen = document.getElementById("game-over-screen");
+            if (gameOverScreen) {
+                gameOverScreen.style.display = "flex";
+            }
+            this.audioHub.backgroundMusic.pause();
+            this.audioHub.playGameOver();
+        }
+    }
+
+    /**
+     * Resets the game state seamlessly without showing the start screen.
+     */
+    resetGame() {
+        let gameOverScreen = document.getElementById("game-over-screen");
+        let winScreen = document.getElementById("win-screen");
+        if (gameOverScreen) gameOverScreen.style.display = "none";
+        if (winScreen) winScreen.style.display = "none";
+
+        this.audioHub.stopAll();
+
+        this.character.energy = 100;
+        this.character.x = 100;
+        this.character.y = 220;
+        this.character.coins = 0;
+        this.character.crystals = 0;
+
+        this.level = level1;
+        this.initLevelEntities();
+        this.initGameSystems();
+
+        this.gameStarted = true;
     }
 }

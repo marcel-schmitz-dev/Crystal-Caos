@@ -62,3 +62,14 @@ window.addEventListener("keyup", (e) => {
         keyboard.ENTER = false;
     }
 });
+
+function restartGame() {
+    location.reload();
+}
+
+function nextLevel() {
+    alert("Next Level kommt bald!");
+}
+
+window.restartGame = restartGame;
+window.nextLevel = nextLevel;

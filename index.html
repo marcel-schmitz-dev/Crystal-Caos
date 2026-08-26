@@ -17,6 +17,21 @@
 
         <canvas id="canvas" width="1280" height="720"></canvas>
 
+        <div id="win-screen" class="game-overlay" style="display: none">
+            <div class="overlay-content">
+                <h1>YOU WIN!</h1>
+                <button onclick="restartGame()">Neustart</button>
+                <button onclick="nextLevel()">Next Lvl</button>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="game-overlay" style="display: none">
+            <div class="overlay-content">
+                <h1>GAME OVER</h1>
+                <button onclick="restartGame()">Neustart</button>
+            </div>
+        </div>
+
         <script src="./scripts/game.js" type="module"></script>
     </body>
 </html>
