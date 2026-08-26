@@ -7,6 +7,7 @@ export class Ghost extends MovableObject {
     width = 400;
     energy = 5;
     isActivated = false;
+    isHurt = false; // Neu: Flag, um zu prüfen, ob er gerade getroffen wurde
 
     IMAGES_WALKING = [
         "./assets/img/monster/ghost_boss1.png",
@@ -35,13 +36,16 @@ export class Ghost extends MovableObject {
         this.intervalId = setInterval(() => {
             if (!this.world || !this.world.gameStarted) return;
 
-            this.playAnimation(this.IMAGES_WALKING);
-            let currentIndex = this.currentImage % this.IMAGES_WALKING.length;
+            // Wenn er gerade getroffen wurde, überspringen wir die Laufanimation kurz
+            if (!this.isHurt) {
+                this.playAnimation(this.IMAGES_WALKING);
+                let currentIndex = this.currentImage % this.IMAGES_WALKING.length;
 
-            if (currentIndex === 2 && this.lastImageIndex !== 2) {
-                this.throwCrystal();
+                if (currentIndex === 2 && this.lastImageIndex !== 2) {
+                    this.throwCrystal();
+                }
+                this.lastImageIndex = currentIndex;
             }
-            this.lastImageIndex = currentIndex;
         }, 600);
     }
 
@@ -66,8 +70,21 @@ export class Ghost extends MovableObject {
         if (this.energy <= 0) {
             this.energy = 0;
             this.stopAnimation();
+        } else {
+            this.playHurtAnimation(); // Neu: Aktiviert den Treffer-Effekt
         }
         console.log("Boss HP:", this.energy);
+    }
+
+    // Neu: Methode für die Schadensreaktion
+    playHurtAnimation() {
+        this.isHurt = true;
+        this.loadImage(ImageHub.BOSS.HURT); // Lädt das neue dmg_reaction_boss.png
+
+        // Nach 300ms wechselt er wieder zurück in den normalen Modus
+        setTimeout(() => {
+            this.isHurt = false;
+        }, 300);
     }
 
     stopAnimation() {

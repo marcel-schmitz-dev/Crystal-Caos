@@ -36,7 +36,6 @@ export class CollisionManager {
                         enemy.y + 20;
 
                 if (isJumpingOnGolem) {
-                    // HIER GEÄNDERT: Wir nutzen jetzt die Methode direkt vom Golem-Objekt!
                     let drop = enemy.createDrop();
                     this.world.crystalDrops.push(drop);
 
@@ -106,6 +105,7 @@ export class CollisionManager {
     }
 
     checkCollisionsWithDrops() {
+        // 1. Bestehende Kristall-Kollisionen prüfen
         this.world.crystalDrops.forEach((drop, index) => {
             if (this.world.character.isColliding(drop)) {
                 this.world.character.crystals++;
@@ -116,5 +116,22 @@ export class CollisionManager {
                 this.world.crystalDrops.splice(index, 1);
             }
         });
+
+        // 2. NEU: Coin-Kollisionen direkt hier im CollisionManager prüfen
+        if (this.world.level && this.world.level.coins) {
+            this.world.level.coins.forEach((coin, index) => {
+                if (this.world.character.isColliding(coin)) {
+                    this.world.character.coins = (this.world.character.coins || 0) + 1;
+                    
+                    // Begrenzung für die Coin-Bar auf maximal 5
+                    if (this.world.character.coins > 5) {
+                        this.world.character.coins = 5;
+                    }
+
+                    console.log("Coin eingesammelt! Anz.:", this.world.character.coins);
+                    this.world.level.coins.splice(index, 1); // Coin von der Map entfernen
+                }
+            });
+        }
     }
 }

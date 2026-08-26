@@ -26,11 +26,11 @@ export class StatusBar extends DrawableObject {
         if (this.type === "hp") {
             return ImageHub.CHARACTER.HUD.HP_BARS[val];
         } else if (this.type === "boss_hp") {
-            return ImageHub.BOSS_HP_BARS[val];
+            return ImageHub.BOSS.BOSS_HP_BARS[val];
         } else if (this.type === "cores") {
-            return ImageHub.CORE_BARS[val];
+            return ImageHub.HUD.CORE_BARS[val];
         } else if (this.type === "coins") {
-            return ImageHub.COIN_BARS[val];
+            return ImageHub.HUD.COIN_BARS[val];  
         }
     }
 }

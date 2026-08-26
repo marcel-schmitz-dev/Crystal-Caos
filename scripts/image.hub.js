@@ -62,32 +62,37 @@ export const ImageHub = {
         ],
     },
 
-    BOSS_HP_BARS: [
-        "./assets/img/hud/hp_bar_boss0.png",
-        "./assets/img/hud/hp_bar_boss1.png",
-        "./assets/img/hud/hp_bar_boss2.png",
-        "./assets/img/hud/hp_bar_boss3.png",
-        "./assets/img/hud/hp_bar_boss4.png",
-        "./assets/img/hud/hp_bar_boss5.png",
-    ],
+    BOSS: {
+        BOSS_HP_BARS: [
+            "./assets/img/hud/hp_bar_boss0.png",
+            "./assets/img/hud/hp_bar_boss1.png",
+            "./assets/img/hud/hp_bar_boss2.png",
+            "./assets/img/hud/hp_bar_boss3.png",
+            "./assets/img/hud/hp_bar_boss4.png",
+            "./assets/img/hud/hp_bar_boss5.png",
+        ],
+        HURT: ["./assets/img/monster/dmg_reaction_boss.png"],
+    },
 
-    CORE_BARS: [
-        "./assets/img/hud/core_bar0.png",
-        "./assets/img/hud/core_bar1.png",
-        "./assets/img/hud/core_bar2.png",
-        "./assets/img/hud/core_bar3.png",
-        "./assets/img/hud/core_bar4.png",
-        "./assets/img/hud/core_bar5.png",
-    ],
-
-    COIN_BARS: [
-        "./assets/img/hud/coin_bar0.png",
-        "./assets/img/hud/coin_bar1.png",
-        "./assets/img/hud/coin_bar2.png",
-        "./assets/img/hud/coin_bar3.png",
-        "./assets/img/hud/coin_bar4.png",
-        "./assets/img/hud/coin_bar5.png",
-    ],
+    // Zentrales HUD-Objekt für alle Statusleisten im Spiel
+    HUD: {
+        CORE_BARS: [
+            "./assets/img/hud/core_bar0.png",
+            "./assets/img/hud/core_bar1.png",
+            "./assets/img/hud/core_bar2.png",
+            "./assets/img/hud/core_bar3.png",
+            "./assets/img/hud/core_bar4.png",
+            "./assets/img/hud/core_bar5.png",
+        ],
+        COIN_BARS: [
+            "./assets/img/hud/coin_bar0.png",
+            "./assets/img/hud/coin_bar1.png",
+            "./assets/img/hud/coin_bar2.png",
+            "./assets/img/hud/coin_bar3.png",
+            "./assets/img/hud/coin_bar4.png",
+            "./assets/img/hud/coin_bar5.png",
+        ],
+    },
 
     COINS: [
         "./assets/img/drops/coin0.png",
@@ -95,5 +100,5 @@ export const ImageHub = {
         "./assets/img/drops/coin2.png",
         "./assets/img/drops/coin3.png",
         "./assets/img/drops/coin4.png",
-    ]
+    ],
 };
