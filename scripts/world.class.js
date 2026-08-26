@@ -6,7 +6,7 @@ import { Ghost } from "./Ghost.class.js";
 import { StartScreen } from "./start-screen.class.js";
 import { CollisionManager } from "./collision-manager.class.js";
 import { ImageHub } from "./image.hub.js";
-import { StatusBar } from "./status-bar.class.js"; // Neu hinzugefügt
+import { StatusBar } from "./status-bar.class.js";
 
 /**
  * Manages the game world, rendering loop, entities, and UI elements.
@@ -119,7 +119,24 @@ export class World {
         setInterval(() => {
             if (!this.gameStarted) return;
             this.collisionManager.checkAllCollisions();
+            this.checkCoinCollisions(); // Neu: Prüft ob der Spieler Coins einsammelt
         }, 1000 / 60);
+    }
+
+    /**
+     * Checks if the character collects any coins on the map.
+     */
+    checkCoinCollisions() {
+        if (!this.level.coins) return;
+
+        this.level.coins.forEach((coin, index) => {
+            if (this.character.isColliding(coin)) {
+                this.character.coins = (this.character.coins || 0) + 1;
+                // Begrenze auf maximal 5 für die Coin-Bar
+                if (this.character.coins > 5) this.character.coins = 5;
+                this.level.coins.splice(index, 1); // Coin von der Map entfernen
+            }
+        });
     }
 
     /**
@@ -155,6 +172,7 @@ export class World {
         this.drawCollection(this.clouds);
         this.drawCollection(this.level.portals);
         this.drawCollection(this.crystalDrops);
+        this.drawCollection(this.level.coins); // Neu: Zeichnet die rotierenden Coins auf der Map
         this.drawCharacter();
         this.drawCollection(this.enemies);
     }
@@ -164,6 +182,7 @@ export class World {
      * @param {Array} collection - Array of renderable objects.
      */
     drawCollection(collection) {
+        if (!collection) return;
         collection.forEach((item) => {
             if (item.img && item.img.complete && item.img.naturalWidth !== 0) {
                 this.ctx.drawImage(

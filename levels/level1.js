@@ -1,15 +1,28 @@
 import { Level } from "../scripts/level.class.js";
 import { Ghost } from "../scripts/Ghost.class.js";
-import { Golem } from "../scripts/Golem.class.js"; // Neu statt Portal
+import { Golem } from "../scripts/Golem.class.js";
 import { Cloud } from "../scripts/cloud.class.js";
 import { BackgroundObjekt } from "../scripts/background.class.js";
+import { Coin } from "../scripts/coin.class.js";
+
+/**
+ * Generates a random set of coins distributed across the map.
+ * @param {number} count - Number of coins to generate.
+ * @returns {Coin[]} Array of Coin instances.
+ */
+function createRandomCoins(count = 7) {
+    let coinsArray = [];
+    for (let i = 0; i < count; i++) {
+        let randomX = Math.floor(Math.random() * 1900) + 400;
+        let fixedY = 550;
+        coinsArray.push(new Coin(randomX, fixedY));
+    }
+    return coinsArray;
+}
 
 export const level1 = new Level(
     [new Ghost()],
-    [
-        Golem.createPortal(900, 380), 
-        Golem.createPortal(2200, 380)
-    ],
+    [Golem.createPortal(900, 380), Golem.createPortal(2200, 380)],
     [
         new Cloud(),
         new Cloud(),
@@ -28,4 +41,5 @@ export const level1 = new Level(
         new BackgroundObjekt("assets/img/background/background_boss.png", 2560),
         new BackgroundObjekt("assets/img/background/background_boss.png", 3840),
     ],
+    createRandomCoins(7),
 );

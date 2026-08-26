@@ -88,4 +88,12 @@ export const ImageHub = {
         "./assets/img/hud/coin_bar4.png",
         "./assets/img/hud/coin_bar5.png",
     ],
+
+    COINS: [
+        "./assets/img/drops/coin0.png",
+        "./assets/img/drops/coin1.png",
+        "./assets/img/drops/coin2.png",
+        "./assets/img/drops/coin3.png",
+        "./assets/img/drops/coin4.png",
+    ]
 };

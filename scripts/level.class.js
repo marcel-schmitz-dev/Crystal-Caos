@@ -6,13 +6,15 @@ export class Level {
     portals;
     clouds;
     backgroundObjacts;
+    coins; // Neu: Coins-Property deklariert
     level_end_x = 2900;
 
-    constructor(enemies, portals, clouds, backgroundObjacts) {
+    constructor(enemies, portals, clouds, backgroundObjacts, coins = []) {
         this.enemies = enemies;
         this.portals = portals;
         this.clouds = clouds;
         this.backgroundObjacts = backgroundObjacts;
+        this.coins = coins; // Neu: Coins-Array zugewiesen
     }
 
     setGolemSpawner() {
@@ -28,8 +30,6 @@ export class Level {
             let golemCount = this.enemies.filter(
                 (e) => e instanceof Golem,
             ).length;
-
-            let newGolem = new Golem();
 
             if (golemCount < 10) {
                 let newGolem = new Golem();
