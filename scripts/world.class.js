@@ -6,6 +6,7 @@ import { Ghost } from "./Ghost.class.js";
 import { StartScreen } from "./start-screen.class.js";
 import { CollisionManager } from "./collision-manager.class.js";
 import { ImageHub } from "./image.hub.js";
+import { StatusBar } from "./status-bar.class.js"; // Neu hinzugefügt
 
 /**
  * Manages the game world, rendering loop, entities, and UI elements.
@@ -30,7 +31,12 @@ export class World {
     startScreen = new StartScreen(1280, 720);
     gameStarted = false;
     collisionManager;
-    crystalBarIcon;
+
+    // Status Bars für das UI
+    statusBar = new StatusBar("hp", 10, 20, 300, 60);
+    coinStatusBar = new StatusBar("coins", 10, 150, 280, 60);
+    bossStatusBar = new StatusBar("boss_hp", 0, 20, 350, 100);
+    coreStatusBar = new StatusBar("cores", 10, 90, 280, 50);
 
     /**
      * Initializes the world, assets, event listeners, and game loops.
@@ -42,37 +48,12 @@ export class World {
         this.ctx = canvas.getContext("2d");
         this.keyboard = keyboard;
 
-        this.initHpImages();
-        this.initBossHpImages();
         this.initLevelEntities();
-        this.initCrystalIcon();
         this.initGameSystems();
         this.initMenuClickListener();
 
         this.run();
         this.draw();
-    }
-
-    /**
-     * Loads the HP bar images from the image hub.
-     */
-    initHpImages() {
-        this.hpLoadedImages = ImageHub.CHARACTER.HUD.HP_BARS.map((path) => {
-            let img = new Image();
-            img.src = path;
-            return img;
-        });
-    }
-
-    /**
-     * Loads the Boss HP bar images from the image hub.
-     */
-    initBossHpImages() {
-        this.bossHpLoadedImages = ImageHub.BOSS_HP_BARS.map((path) => {
-            let img = new Image();
-            img.src = path;
-            return img;
-        });
     }
 
     /**
@@ -83,14 +64,6 @@ export class World {
         this.enemies = this.level.enemies;
         this.backgroundObjects = this.level.backgroundObjacts;
         this.clouds = this.level.clouds;
-    }
-
-    /**
-     * Loads the UI core icon image.
-     */
-    initCrystalIcon() {
-        this.crystalBarIcon = new Image();
-        this.crystalBarIcon.src = "./assets/img/drops/Core_amBoden.png";
     }
 
     /**
@@ -235,76 +208,23 @@ export class World {
      */
     drawUserInterface() {
         if (!this.gameStarted) return;
-        this.drawHpBar();
-        this.drawCrystalCounter();
-        this.drawBossHpBar();
-    }
 
-    /**
-     * Draws the player's health status bar.
-     */
-    drawHpBar() {
-        let currentEnergy = Math.max(0, Math.min(this.character.energy, 5));
-        let hpImg = this.hpLoadedImages[currentEnergy];
-        if (hpImg && hpImg.complete && hpImg.naturalWidth !== 0) {
-            this.ctx.drawImage(hpImg, 20, 20, 220, 60);
-        }
-    }
+        this.statusBar.setPercentage(this.character.energy);
+        this.statusBar.draw(this.ctx);
 
-    /**
-     * Draws the boss health status bar once activated.
-     */
-    drawBossHpBar() {
+        this.coreStatusBar.setPercentage(this.character.crystals);
+        this.coreStatusBar.draw(this.ctx);
+
+        this.coinStatusBar.setPercentage(this.character.coins || 0);
+        this.coinStatusBar.draw(this.ctx);
+
         let boss = this.enemies.find((e) => e instanceof Ghost);
-
         if (boss && boss.isActivated) {
-            let currentBossEnergy = Math.max(0, Math.min(boss.energy, 5));
-            let bossHpImg = this.bossHpLoadedImages[currentBossEnergy];
-
-            if (
-                bossHpImg &&
-                bossHpImg.complete &&
-                bossHpImg.naturalWidth !== 0
-            ) {
-                let barWidth = 300;
-                let barHeight = 60;
-                let barX = this.canvas.width / 2 - barWidth / 2;
-                let barY = 20;
-
-                this.ctx.drawImage(bossHpImg, barX, barY, barWidth, barHeight);
-            }
+            this.bossStatusBar.x =
+                this.canvas.width / 2 - this.bossStatusBar.width / 2;
+            this.bossStatusBar.setPercentage(boss.energy);
+            this.bossStatusBar.draw(this.ctx);
         }
-    }
-
-    /**
-     * Draws the crystal drop counter HUD element.
-     */
-    drawCrystalCounter() {
-        let iconX = 20;
-        let iconY = 90;
-        let iconSize = 80;
-
-        if (
-            this.crystalBarIcon &&
-            this.crystalBarIcon.complete &&
-            this.crystalBarIcon.naturalWidth !== 0
-        ) {
-            this.ctx.drawImage(
-                this.crystalBarIcon,
-                iconX,
-                iconY,
-                iconSize,
-                iconSize,
-            );
-        }
-
-        this.ctx.font = "32px Arial";
-        this.ctx.fillStyle = "gold";
-        this.ctx.fillText(
-            "x " + this.character.crystals,
-            iconX + iconSize + 10,
-            iconY + iconSize / 2 + 8,
-        );
     }
 
     /**

@@ -1,7 +1,6 @@
 export const ImageHub = {
     CHARACTER: {
         STANDING: ["./assets/img/character/dodge/stehen.png"],
-
         WALKING: [
             "./assets/img/character/walk/walk1.png",
             "./assets/img/character/walk/walk2.png",
@@ -40,12 +39,12 @@ export const ImageHub = {
         ],
         HUD: {
             HP_BARS: [
-                "./assets/img/hp/hp_leer.png",
-                "./assets/img/hp/hp_one.png",
-                "./assets/img/hp/hp_two.png",
-                "./assets/img/hp/hp_three.png",
-                "./assets/img/hp/hp_four.png",
-                "./assets/img/hp/hp_five.png",
+                "./assets/img/hud/hp_bar0.png",
+                "./assets/img/hud/hp_bar1.png",
+                "./assets/img/hud/hp_bar2.png",
+                "./assets/img/hud/hp_bar3.png",
+                "./assets/img/hud/hp_bar4.png",
+                "./assets/img/hud/hp_bar5.png",
             ],
         },
         DEAD: [
@@ -64,11 +63,29 @@ export const ImageHub = {
     },
 
     BOSS_HP_BARS: [
-        "./assets/img/hp/hp_bar_boss0.png",
-        "./assets/img/hp/hp_bar_boss1.png",
-        "./assets/img/hp/hp_bar_boss2.png",
-        "./assets/img/hp/hp_bar_boss3.png",
-        "./assets/img/hp/hp_bar_boss4.png",
-        "./assets/img/hp/hp_bar_boss5.png",
+        "./assets/img/hud/hp_bar_boss0.png",
+        "./assets/img/hud/hp_bar_boss1.png",
+        "./assets/img/hud/hp_bar_boss2.png",
+        "./assets/img/hud/hp_bar_boss3.png",
+        "./assets/img/hud/hp_bar_boss4.png",
+        "./assets/img/hud/hp_bar_boss5.png",
+    ],
+
+    CORE_BARS: [
+        "./assets/img/hud/core_bar0.png",
+        "./assets/img/hud/core_bar1.png",
+        "./assets/img/hud/core_bar2.png",
+        "./assets/img/hud/core_bar3.png",
+        "./assets/img/hud/core_bar4.png",
+        "./assets/img/hud/core_bar5.png",
+    ],
+
+    COIN_BARS: [
+        "./assets/img/hud/coin_bar0.png",
+        "./assets/img/hud/coin_bar1.png",
+        "./assets/img/hud/coin_bar2.png",
+        "./assets/img/hud/coin_bar3.png",
+        "./assets/img/hud/coin_bar4.png",
+        "./assets/img/hud/coin_bar5.png",
     ],
 };
