@@ -189,3 +189,97 @@ canvas {
 .game-footer a:hover {
     text-decoration: underline;
 }
+
+#sound-controls {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(20, 20, 35, 0.85);
+    border: 2px solid #4a3b6c;
+    padding: 6px 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+#mute-btn {
+    background: linear-gradient(135deg, #5c32a6, #3b1d70);
+    color: #ffffff;
+    border: 1px solid #7c4fd6;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+#mute-btn:hover {
+    background: linear-gradient(135deg, #7c4fd6, #5c32a6);
+    border-color: #a275f0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(124, 79, 214, 0.4);
+}
+
+#mute-btn:active {
+    transform: translateY(1px);
+}
+
+#volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100px;
+    height: 6px;
+    background: #221c35;
+    border-radius: 3px;
+    outline: none;
+    border: 1px solid #4a3b6c;
+    cursor: pointer;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #f1c40f;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(241, 196, 15, 0.6);
+    transition:
+        transform 0.1s ease,
+        background 0.1s ease;
+}
+
+#volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: #f39c12;
+}
+
+#volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: none;
+    border-radius: 50%;
+    background: #f1c40f;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(241, 196, 15, 0.6);
+    transition:
+        transform 0.1s ease,
+        background 0.1s ease;
+}
+
+#volume-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    background: #f39c12;
+}
+
+@media (max-width: 768px) {
+    #sound-controls {
+        display: none !important;
+    }
+}

@@ -88,7 +88,7 @@ export class StartScreen {
             ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
         }
 
-        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
         ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
     }
 
@@ -128,37 +128,43 @@ export class StartScreen {
     }
 
     /**
-     * Draws the options/controls menu (updated to Space instead of E).
+     * Draws the options/controls menu with sharp, readable text and clean contrast.
      * @param {CanvasRenderingContext2D} ctx
      * @param {number} panelY
      */
     drawOptionsMenu(ctx, panelY) {
+        ctx.textAlign = "center";
+
         let titleGradient = ctx.createLinearGradient(
             this.width / 2 - 200,
             panelY + 25,
             this.width / 2 + 200,
             panelY + 65,
         );
-        titleGradient.addColorStop(0, "#ffffff");
-        titleGradient.addColorStop(1, "#00f0ff");
+        titleGradient.addColorStop(0, "#00f0ff");
+        titleGradient.addColorStop(1.0, "#ff00ff");
 
-        ctx.fillStyle = titleGradient;
+        ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+        ctx.shadowBlur = 2;
+
         ctx.font = "bold 32px Arial";
-        ctx.shadowColor = "#000";
-        ctx.shadowBlur = 8;
+        ctx.fillStyle = titleGradient;
         ctx.fillText("TASTENBELEGUNG", this.width / 2, panelY + 50);
 
         let textGradient = ctx.createLinearGradient(
-            this.width / 2 - 150,
+            this.width / 2 - 200,
             panelY + 80,
-            this.width / 2 + 150,
+            this.width / 2 + 200,
             panelY + 330,
         );
-        textGradient.addColorStop(0, "#ffffff");
-        textGradient.addColorStop(1, "#00f0ff");
+        textGradient.addColorStop(0, "#00f0ff");
+        textGradient.addColorStop(1.0, "#ff00ff");
 
-        ctx.font = "16px Arial";
+        ctx.font = "bold 16px Arial";
         ctx.fillStyle = textGradient;
+
         ctx.fillText(
             "A / D - Nach links / rechts gehen",
             this.width / 2,
@@ -179,17 +185,20 @@ export class StartScreen {
         );
 
         ctx.font = "14px Arial";
-        ctx.fillStyle = "#a0e0e5";
+        ctx.fillStyle = "#ffffff";
         ctx.fillText(
             "Klicke irgendwo, um zurückzugehen",
             this.width / 2,
             panelY + 315,
         );
+
         ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
     }
 
     /**
-     * Draws the main menu buttons.
+     * Draws the main menu buttons (with text shadow).
      * @param {CanvasRenderingContext2D} ctx
      * @param {number} panelY
      */
@@ -203,7 +212,7 @@ export class StartScreen {
         titleGradient.addColorStop(0, "#00f0ff");
         titleGradient.addColorStop(1.0, "#ff00ff");
 
-        ctx.shadowColor = "#000000";
+        ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
         ctx.shadowOffsetX = 4;
         ctx.shadowOffsetY = 4;
         ctx.shadowBlur = 10;

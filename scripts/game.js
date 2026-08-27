@@ -1,13 +1,38 @@
 import { World } from "./world.class.js";
 import { Keyboard } from "./keyboard.class.js";
 import { CrystalProjectile } from "./crystal-projectile.class.js";
+import { AudioHub } from "./audio.hub.js";
 
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let audioHub;
+
+// Diese Funktionen MÜSSEN bleiben, da dein HTML sie aufruft!
+function changeVolume(val) {
+    if (window.audioHub) {
+        window.audioHub.setVolume(parseFloat(val));
+    }
+}
+
+function toggleMute() {
+    if (window.audioHub) {
+        let muted = window.audioHub.toggleMute();
+        let btn = document.getElementById("mute-btn");
+        if (btn) {
+            btn.innerHTML = muted ? "🔇 Mute" : "🔊 Sound";
+        }
+    }
+}
 
 function init() {
     canvas = document.getElementById("canvas");
+
+    // Zentraler AudioHub für das gesamte Spiel
+    audioHub = new AudioHub();
+    audioHub.setVolume(0.3);
+    window.audioHub = audioHub;
+
     world = new World(canvas, keyboard);
 }
 
@@ -73,3 +98,5 @@ function nextLevel() {
 
 window.restartGame = restartGame;
 window.nextLevel = nextLevel;
+window.changeVolume = changeVolume;
+window.toggleMute = toggleMute;

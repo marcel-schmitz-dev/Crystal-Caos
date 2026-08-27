@@ -17,7 +17,9 @@ export class World {
     level = level1;
     hpLoadedImages = [];
     bossHpLoadedImages = [];
-    audioHub = new AudioHub();
+    get audioHub() {
+    return window.audioHub;
+}
 
     portal = level1.portal;
     enemies = level1.enemies;
