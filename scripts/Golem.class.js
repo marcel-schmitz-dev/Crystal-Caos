@@ -33,6 +33,11 @@ export class Golem extends MovableObject {
     animate() {
         setInterval(() => {
             this.x -= 0.8;
+
+            if (this.world && this.world.audioHub) {
+                let isMoving = this.energy > 0;
+                this.world.audioHub.playGolemWalk(isMoving);
+            }
         }, 1000 / 60);
 
         setInterval(() => {

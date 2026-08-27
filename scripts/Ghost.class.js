@@ -30,7 +30,7 @@ export class Ghost extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.loadImage("./assets/img/monster/ghost_boss.png");
 
-        this.x = 3300;
+        this.x = 4800;
         this.y = 180;
 
         this.animate();
@@ -56,6 +56,7 @@ export class Ghost extends MovableObject {
 
     throwCrystal() {
         if (!this.world || this.isDead) return;
+        this.world.audioHub.playBossShoot();
 
         this.attackToggle = !this.attackToggle;
 
@@ -69,7 +70,6 @@ export class Ghost extends MovableObject {
     }
 
     hit(damage = 1) {
-        // Wenn er schon tot ist oder gerade stirbt, keine Treffer mehr annehmen!
         if (!this.isActivated || this.isDead) return;
 
         this.energy -= damage;
@@ -77,7 +77,7 @@ export class Ghost extends MovableObject {
 
         if (this.energy <= 0) {
             this.energy = 0;
-            this.isDead = true; // Wichtig: Ab jetzt ignoriert er Treffer und Kollisionen
+            this.isDead = true;
             this.playDeathAnimation();
         } else {
             this.playHurtAnimation();
@@ -94,17 +94,14 @@ export class Ghost extends MovableObject {
     }
 
     playDeathAnimation() {
-        this.stopAnimation(); // Stoppt das normale Laufen
-
+        this.stopAnimation();
         let currentFrame = 0;
 
-        // Spielt die Bilder nacheinander ab
         let deathInterval = setInterval(() => {
             if (currentFrame < this.IMAGES_DEAD.length) {
                 this.loadImage(this.IMAGES_DEAD[currentFrame]);
                 currentFrame++;
             } else {
-                // Animation ist komplett fertig! Erst jetzt wird der Boss gelöscht.
                 clearInterval(deathInterval);
 
                 if (
@@ -118,7 +115,7 @@ export class Ghost extends MovableObject {
                     }
                 }
             }
-        }, 150); // 150ms pro Bild – passe den Wert an, falls es schneller/langsamer sein soll
+        }, 150);
     }
 
     stopAnimation() {

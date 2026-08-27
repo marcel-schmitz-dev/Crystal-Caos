@@ -90,9 +90,13 @@ export class Character extends MovableObject {
      * @param {Object} keyboard - The current keyboard state.
      */
     handleHorizontalMovement(keyboard) {
-        // Prüfen, ob geduckt + Bewegung (Krabbeln)
         let isCrawling = keyboard.DOWN && !this.isAboveGround();
-        let moveSpeed = isCrawling ? 2 : 5; // Krabbeln ist langsamer
+        this.world.audioHub.playCrawling(isCrawling);
+        
+        let isMovingHorizontally = (keyboard.RIGHT || keyboard.LEFT) && !this.isAboveGround() && !isCrawling;
+        this.world.audioHub.playCharacterWalk(isMovingHorizontally);
+
+        let moveSpeed = isCrawling ? 2 : 5;
 
         if (keyboard.RIGHT && !this.isDodgeEnding) {
             this.otherDirection = false;
@@ -117,6 +121,9 @@ export class Character extends MovableObject {
 
         if (keyboard.UP && !this.isAboveGround() && !this.isDodgeEnding) {
             this.jump();
+            if (this.world && this.world.audioHub) {
+                this.world.audioHub.playJump();
+            }
         }
 
         if (keyboard.DOWN && !this.isAboveGround()) {
@@ -287,6 +294,11 @@ export class Character extends MovableObject {
         if (this.crystals > 0 && !this.isThrowing) {
             this.isThrowing = true;
             this.crystals--;
+
+            if (this.world && this.world.audioHub) {
+                this.world.audioHub.playPlayerThrow();
+            }
+
             this.executeThrowSequence();
             return true;
         }

@@ -1,15 +1,8 @@
 import { Level } from "../scripts/level.class.js";
-import { Ghost } from "../scripts/Ghost.class.js";
-import { Golem } from "../scripts/Golem.class.js";
 import { Cloud } from "../scripts/cloud.class.js";
 import { BackgroundObjekt } from "../scripts/background.class.js";
 import { Coin } from "../scripts/coin.class.js";
 
-/**
- * Generates a random set of coins distributed across the map.
- * @param {number} count - Number of coins to generate.
- * @returns {Coin[]} Array of Coin instances.
- */
 function createRandomCoins(count = 7) {
     let coinsArray = [];
     for (let i = 0; i < count; i++) {
@@ -19,6 +12,7 @@ function createRandomCoins(count = 7) {
     }
     return coinsArray;
 }
+
 
 export const level1 = new Level(
     [new Ghost()],
@@ -36,11 +30,10 @@ export const level1 = new Level(
             "assets/img/background/background_lvl1.png",
             -1280,
         ),
-        new BackgroundObjekt("assets/img/background/background_lvl1.png", 0),
-        new BackgroundObjekt("assets/img/background/background_lvl1.png", 1280),
-        new BackgroundObjekt("assets/img/background/background_lvl1.png", 2560),
+        new BackgroundObjekt("assets/img/level2/background_lvl2.png", 0),
+        new BackgroundObjekt("assets/img/level2/background_lvl2.png", 1280),
+        new BackgroundObjekt("assets/img/background/background_boss.png", 2560),
         new BackgroundObjekt("assets/img/background/background_boss.png", 3840),
-        new BackgroundObjekt("assets/img/background/background_boss.png", 5120),
     ],
     createRandomCoins(7),
 );

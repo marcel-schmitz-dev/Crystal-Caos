@@ -7,7 +7,7 @@ export class Level {
     clouds;
     backgroundObjacts;
     coins;
-    level_end_x = 2900;
+    level_end_x = 4500;
 
     constructor(enemies, portals, clouds, backgroundObjacts, coins = []) {
         this.enemies = enemies;

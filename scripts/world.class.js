@@ -112,7 +112,6 @@ export class World {
         this.level.setGolemSpawner();
         this.canvas.removeEventListener("click", listener);
 
-        // NEU: Hintergrundmusik starten, sobald das Spiel beginnt!
         this.audioHub.playBackgroundMusic();
     }
 
@@ -122,6 +121,7 @@ export class World {
     run() {
         setInterval(() => {
             if (!this.gameStarted) return;
+            this.audioHub.checkMusicZone(this.character.x);
             this.collisionManager.checkAllCollisions();
             this.checkCoinCollisions();
             this.checkGameWin();
@@ -278,6 +278,8 @@ export class World {
             if (winScreen) {
                 winScreen.style.display = "flex";
             }
+            this.audioHub.stopAll(); 
+            this.audioHub.playWin();
         }
     }
 

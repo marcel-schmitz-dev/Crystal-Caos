@@ -17,7 +17,6 @@ export class CollisionManager {
     checkCollisionsWithEnemies() {
         this.world.enemies.forEach((enemy, index) => {
             if (enemy instanceof Ghost) {
-                // Wenn der Boss tot ist, ignorieren wir Kollisionen komplett
                 if (enemy.isDead) return;
 
                 let distanceToBoss = enemy.x - this.world.character.x;
@@ -27,6 +26,7 @@ export class CollisionManager {
 
                 if (this.world.character.isColliding(enemy)) {
                     this.world.character.hit(1);
+                    this.world.audioHub.playPlayerHit();
                 }
             }
 
@@ -46,6 +46,7 @@ export class CollisionManager {
                     this.world.character.speedY = 15;
                 } else if (this.world.character.isColliding(enemy)) {
                     this.world.character.hit(1);
+                    this.world.audioHub.playPlayerHit();
                     console.log(
                         "Character wurde von Golem seitlich getroffen!",
                     );
@@ -61,18 +62,15 @@ export class CollisionManager {
                     if (
                         enemy instanceof Ghost &&
                         enemy.isActivated &&
-                        !enemy.isDead && // Verhindert Treffer, während er stirbt
+                        !enemy.isDead &&
                         projectile.isColliding(enemy)
                     ) {
                         console.log("Boss wurde mit Core getroffen!");
 
                         enemy.hit(1);
+                        this.world.audioHub.playBossHit();
 
                         this.world.throwableObjects.splice(pIndex, 1);
-
-                        // HINWEIS: Das sofortige Löschen über splice(eIndex, 1)
-                        // wurde entfernt, da die Ghost-Klasse das Löschen nach
-                        // Beendigung der Todes-Animation nun selbst übernimmt.
 
                         return;
                     }
@@ -101,6 +99,7 @@ export class CollisionManager {
                 charBox.y < projectile.y + projectile.height
             ) {
                 this.world.character.hit(1);
+                this.world.audioHub.playPlayerHit();
                 console.log("Character wurde vom Boss-Kristall getroffen!");
                 this.world.throwableObjects.splice(pIndex, 1);
             }
