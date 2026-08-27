@@ -8,7 +8,7 @@ export class AudioHub {
             "./assets/audio/background_sound5.wav",
         );
         this.backgroundMusic.loop = true;
-        this.backgroundMusic.volume = 0.5; // 30% Lautstärke, damit sie angenehm im Hintergrund läuft
+        this.backgroundMusic.volume = 0.4;
     }
 
     playGameOver() {

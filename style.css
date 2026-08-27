@@ -7,11 +7,25 @@ body {
     color: white;
     font-family: sans-serif;
     height: 100vh;
+    width: 100vw;
     margin: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.game-container {
+    position: relative;
+    width: 100vw;
+    max-width: 1280px;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 h1 {
@@ -21,15 +35,61 @@ h1 {
     background-clip: text;
     font-size: 48px;
     color: transparent;
+    margin: 10px 0;
 }
 
 canvas {
     background-color: grey;
+    width: 100%;
+    height: 100%;
     border: 4px solid transparent;
     border-image: linear-gradient(135deg, #00f0ff, #ff00ff) 1;
     box-shadow:
         0 0 15px rgba(0, 240, 255, 0.4),
         0 0 30px rgba(255, 0, 255, 0.3);
+    display: block;
+}
+
+#rotate-device-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0c0c0c;
+    color: #fff;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+@media screen and (orientation: portrait) {
+    #rotate-device-warning {
+        display: flex;
+    }
+}
+
+#mobile-controls {
+    display: none;
+}
+
+@media screen and (max-width: 1024px) {
+    #mobile-controls {
+        display: flex;
+        justify-content: space-between;
+        position: fixed;
+        bottom: 20px;
+        width: 100%;
+        z-index: 100;
+        pointer-events: none;
+    }
+
+    #mobile-controls button {
+        pointer-events: auto;
+    }
 }
 
 .game-overlay {
@@ -85,21 +145,18 @@ canvas {
     box-shadow: 0 0 20px #00f0ff;
 }
 
-/* Die Schlange absolut im Body positionieren */
 #body-snake {
-    position: fixed; /* Bleibt beim Scrollen an Ort und Stelle */
-    left: 20px; /* Abstand vom linken Bildschirmrand */
-    bottom: 20px; /* Abstand vom unteren Bildschirmrand */
-    width: 2000px; /* Größe der Schlange anpassen */
-    z-index: -1; /* Hinter dem Canvas, aber sichtbar auf dem Body */
-    pointer-events: none; /* Man klickt einfach durch die Schlange hindurch */
+    position: fixed;
+    left: -200px;
+    bottom: 20px;
+    width: 2200px;
+    z-index: -1;
+    pointer-events: none;
 
-    /* Animation für das Schlängeln / Atmen */
     animation: snakeSlither 6s ease-in-out infinite;
     transform-origin: left center;
 }
 
-/* Die Schlängel-Animation */
 @keyframes snakeSlither {
     0%,
     100% {

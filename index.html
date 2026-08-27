@@ -15,26 +15,39 @@
     <body onload="init()">
         <h1>Crystal Caos</h1>
 
-        <!-- Die Schlange im Body-Hintergrund -->
-    <img id="body-snake" src="./assets/img/stone_snake.png" alt="Stone Snake">
+        <img
+            id="body-snake"
+            src="./assets/img/stone_snake.png"
+            alt="Stone Snake"
+        />
 
-    <!-- Dein Spiel-Container -->
-    <div class="game-container">
-        <canvas id="canvas" width="1280" height="720"></canvas>
-    </div>
+        <div class="game-container">
+            <canvas id="canvas" width="1280" height="720"></canvas>
 
-        <div id="win-screen" class="game-overlay" style="display: none">
-            <div class="overlay-content">
-                <h1>YOU WIN!</h1>
-                <button onclick="restartGame()">Neustart</button>
-                <button onclick="nextLevel()">Next Lvl</button>
+            <div id="win-screen" class="game-overlay" style="display: none">
+                <div class="overlay-content">
+                    <h1>YOU WIN!</h1>
+                    <button onclick="restartGame()">Neustart</button>
+                    <button onclick="nextLevel()">Next Lvl</button>
+                </div>
+            </div>
+
+            <div
+                id="game-over-screen"
+                class="game-overlay"
+                style="display: none"
+            >
+                <div class="overlay-content">
+                    <h1>GAME OVER</h1>
+                    <button onclick="restartGame()">Neustart</button>
+                </div>
             </div>
         </div>
 
-        <div id="game-over-screen" class="game-overlay" style="display: none">
-            <div class="overlay-content">
-                <h1>GAME OVER</h1>
-                <button onclick="restartGame()">Neustart</button>
+        <div id="rotate-device-warning">
+            <div class="warning-content">
+                <h2>Bitte drehe dein Gerät!</h2>
+                <p>Dieses Spiel funktioniert nur im Querformat (Landscape).</p>
             </div>
         </div>
 
