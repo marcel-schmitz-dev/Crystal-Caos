@@ -1,0 +1,21 @@
+#body-snake {
+    position: fixed;
+    left: -100px;
+    bottom: -120px;
+    width: 2300px;
+    z-index: -1;
+    pointer-events: none;
+
+    animation: snakeSlither 6s ease-in-out infinite;
+    transform-origin: left center;
+}
+
+@keyframes snakeSlither {
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: translateY(-8px) rotate(1.5deg) scale(1.02);
+    }
+}

@@ -1,0 +1,52 @@
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.overlay-content {
+    text-align: center;
+    background: linear-gradient(135deg, #0b0f19, #1a0b2e);
+    padding: 40px;
+    border: 3px solid transparent;
+    border-image: linear-gradient(135deg, #00f0ff, #ff00ff) 1;
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+}
+
+.overlay-content h1 {
+    font-size: 3rem;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #00f0ff, #ff00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.overlay-content button {
+    display: block;
+    width: 200px;
+    margin: 15px auto;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    background: transparent;
+    border: 2px solid #00f0ff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+.overlay-content button:hover {
+    background: #00f0ff;
+    color: #0b0f19;
+    box-shadow: 0 0 20px #00f0ff;
+}
