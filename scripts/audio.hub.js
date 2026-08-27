@@ -1,7 +1,7 @@
 export class AudioHub {
     constructor() {
         this.isMuted = false;
-        this.masterVolume = 0.3;
+        this.masterVolume = 0.1;
 
         this.gameOverSound = new Audio("./assets/audio/character_death.mp3");
         this.gameOverSound.loop = true;
@@ -36,7 +36,7 @@ export class AudioHub {
         this.golemWalkSound = new Audio("./assets/audio/golem_walk.wav");
         this.golemWalkSound.loop = true;
 
-        this.winSound = new Audio("./assets/audio/you_win.wav");
+        this.winSound = new Audio("./assets/audio/you_win.mp3");
 
         this.characterWalkSound = new Audio(
             "./assets/audio/character_walk.wav",
@@ -46,8 +46,20 @@ export class AudioHub {
         this.updateAllVolumes();
     }
 
-    setVolume(volume) {
-        this.masterVolume = volume;
+    /**
+     * Setzt die Lautstärke.
+     * Erwartet entweder 0-100 (vom Slider) oder 0-1 (direkt per Code).
+     */
+    setVolume(value) {
+        if (value > 1) {
+            // Wenn der Wert vom Slider kommt (0 bis 100)
+            let linear = value / 100;
+            // Quadratische Kurve für den "Laptop-Effekt" im leisen Bereich
+            this.masterVolume = linear * linear;
+        } else {
+            // Wenn direkt eine Dezimalzahl (0 bis 1) übergeben wird
+            this.masterVolume = value;
+        }
         this.updateAllVolumes();
     }
 
@@ -237,5 +249,15 @@ export class AudioHub {
         this.gameOverSound.pause();
         this.gameOverSound.currentTime = 0;
         this.stopAllBackgroundMusic();
+
+        // Boss-Hit und andere Effekte sofort stoppen, damit nichts nachhallt oder stottert
+        this.bossHitSound.pause();
+        this.bossHitSound.currentTime = 0;
+        this.playerHitSound.pause();
+        this.playerHitSound.currentTime = 0;
+        this.golemWalkSound.pause();
+        this.golemWalkSound.currentTime = 0;
+        this.crawlingSound.pause();
+        this.crawlingSound.currentTime = 0;
     }
 }
