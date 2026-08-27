@@ -166,3 +166,26 @@ canvas {
         transform: translateY(-8px) rotate(1.5deg) scale(1.02);
     }
 }
+
+.game-footer {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 14px;
+    z-index: 10;
+}
+
+.game-footer a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.game-footer a:hover {
+    text-decoration: underline;
+}
