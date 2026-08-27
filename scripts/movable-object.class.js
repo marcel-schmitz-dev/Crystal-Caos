@@ -11,7 +11,7 @@ export class MovableObject extends DrawableObject {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
-                this.y = 420;
+                this.y = 380;
                 this.speedY = 0;
             }
         }, 1000 / 25);
@@ -19,7 +19,7 @@ export class MovableObject extends DrawableObject {
 
     isAboveGround() {
         if (this.constructor.name === "Character") {
-            return this.y < 420;
+            return this.y < 380;
         }
         return true;
     }

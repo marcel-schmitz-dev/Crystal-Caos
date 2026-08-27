@@ -60,7 +60,7 @@ export class Ghost extends MovableObject {
 
         this.attackToggle = !this.attackToggle;
 
-        let crystalY = this.attackToggle ? this.y + 250 : this.y + 340;
+        let crystalY = this.attackToggle ? this.y + 210 : this.y + 340;
         let crystalX = this.x - 40;
 
         let crystal = new CrystalProjectile(crystalX, crystalY, this.world, -1);

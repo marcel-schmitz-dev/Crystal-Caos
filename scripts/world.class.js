@@ -18,8 +18,8 @@ export class World {
     hpLoadedImages = [];
     bossHpLoadedImages = [];
     get audioHub() {
-    return window.audioHub;
-}
+        return window.audioHub;
+    }
 
     portal = level1.portal;
     enemies = level1.enemies;
@@ -54,9 +54,26 @@ export class World {
         this.initLevelEntities();
         this.initGameSystems();
         this.initMenuClickListener();
+        this.initMouseMoveListener();
 
         this.run();
         this.draw();
+    }
+
+    /**
+     * Sets up the mouse move listener for hover effects on the start screen.
+     */
+    initMouseMoveListener() {
+        this.canvas.addEventListener("mousemove", (event) => {
+            if (this.gameStarted) return;
+            const rect = this.canvas.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            let y = event.clientY - rect.top;
+
+            if (this.startScreen) {
+                this.startScreen.handleMouseMove(x, y);
+            }
+        });
     }
 
     /**
@@ -280,7 +297,7 @@ export class World {
             if (winScreen) {
                 winScreen.style.display = "flex";
             }
-            this.audioHub.stopAll(); 
+            this.audioHub.stopAll();
             this.audioHub.playWin();
         }
     }

@@ -8,7 +8,6 @@ let world;
 let keyboard = new Keyboard();
 let audioHub;
 
-// Diese Funktionen MÜSSEN bleiben, da dein HTML sie aufruft!
 function changeVolume(val) {
     if (window.audioHub) {
         window.audioHub.setVolume(parseFloat(val));
@@ -28,7 +27,6 @@ function toggleMute() {
 function init() {
     canvas = document.getElementById("canvas");
 
-    // Zentraler AudioHub für das gesamte Spiel
     audioHub = new AudioHub();
     audioHub.setVolume(0.3);
     window.audioHub = audioHub;

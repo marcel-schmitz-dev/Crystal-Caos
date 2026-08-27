@@ -80,11 +80,10 @@ export class AudioHub {
         audioObjects.forEach((audio) => {
             if (audio) {
                 audio.volume = currentVol;
-                audio.muted = isMuteActive; // Hartes Muten erzwingen
+                audio.muted = isMuteActive;
             }
         });
 
-        // WICHTIG: Auch den aktuell laufenden Musik-Track direkt zwingen
         if (this.currentMusicTrack) {
             this.currentMusicTrack.volume = currentVol;
             this.currentMusicTrack.muted = isMuteActive;
@@ -217,7 +216,6 @@ export class AudioHub {
                 console.log("Audio play blocked by browser policies:", error);
             });
         } else {
-            // Wenn der Track derselben Zone weiterläuft, Lautstärke dynamisch aktualisieren
             this.currentMusicTrack.volume = this.isMuted
                 ? 0
                 : this.masterVolume;

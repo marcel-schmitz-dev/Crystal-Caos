@@ -8,8 +8,8 @@ import { Ghost } from "./Ghost.class.js";
  * Handles movement, animations, gravity, health, and actions.
  */
 export class Character extends MovableObject {
-    width = 150;
-    height = 200;
+    width = 180;
+    height = 240;
     energy = 5;
 
     IMAGES_STANDING = ImageHub.CHARACTER.STANDING;
@@ -92,8 +92,11 @@ export class Character extends MovableObject {
     handleHorizontalMovement(keyboard) {
         let isCrawling = keyboard.DOWN && !this.isAboveGround();
         this.world.audioHub.playCrawling(isCrawling);
-        
-        let isMovingHorizontally = (keyboard.RIGHT || keyboard.LEFT) && !this.isAboveGround() && !isCrawling;
+
+        let isMovingHorizontally =
+            (keyboard.RIGHT || keyboard.LEFT) &&
+            !this.isAboveGround() &&
+            !isCrawling;
         this.world.audioHub.playCharacterWalk(isMovingHorizontally);
 
         let moveSpeed = isCrawling ? 2 : 5;

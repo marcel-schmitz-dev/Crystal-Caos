@@ -13,6 +13,11 @@ export class StartScreen {
         this.width = canvasWidth;
         this.height = canvasHeight;
         this.bgImage.src = "./assets/img/icon/Matzemon3.png";
+        this.mousePos = { x: -1, y: -1 };
+    }
+
+    handleMouseMove(x, y) {
+        this.mousePos = { x, y };
     }
 
     /**
@@ -221,22 +226,62 @@ export class StartScreen {
         ctx.fillStyle = titleGradient;
         ctx.fillText("CRYSTAL CAOS", this.width / 2, panelY + 90);
 
-        let buttonGradient = ctx.createLinearGradient(
+        // Prüfen, ob die Maus über den Buttons ist
+        const panelX = this.width / 2 - 300;
+        const isHoverStart =
+            this.mousePos.x > panelX + 100 &&
+            this.mousePos.x < panelX + 500 &&
+            this.mousePos.y > panelY + 165 &&
+            this.mousePos.y < panelY + 210;
+
+        const isHoverOptions =
+            this.mousePos.x > panelX + 100 &&
+            this.mousePos.x < panelX + 500 &&
+            this.mousePos.y > panelY + 245 &&
+            this.mousePos.y < panelY + 290;
+
+        // --- Button 1: SPIEL STARTEN ---
+        let startGradient = ctx.createLinearGradient(
             this.width / 2 - 100,
             panelY + 160,
             this.width / 2 + 100,
-            panelY + 290,
+            panelY + 210,
         );
-        buttonGradient.addColorStop(0, "#ffffff");
-        buttonGradient.addColorStop(1, "#00f0ff");
+        if (isHoverStart) {
+            // Neon-Hover-Effekt (z.B. umgedreht oder kräftiges Neongrün/-blau)
+            startGradient.addColorStop(0, "#ff00ff");
+            startGradient.addColorStop(1, "#00f0ff");
+            ctx.shadowBlur = 15; // Stärkeres Leuchten beim Hover
+        } else {
+            startGradient.addColorStop(0, "#ffffff");
+            startGradient.addColorStop(1, "#00f0ff");
+            ctx.shadowBlur = 6;
+        }
 
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
-        ctx.shadowBlur = 6;
-
         ctx.font = "bold 32px Arial";
-        ctx.fillStyle = buttonGradient;
+        ctx.fillStyle = startGradient;
         ctx.fillText("SPIEL STARTEN", this.width / 2, panelY + 200);
+
+        // --- Button 2: STEUERUNG ---
+        let optionsGradient = ctx.createLinearGradient(
+            this.width / 2 - 100,
+            panelY + 240,
+            this.width / 2 + 100,
+            panelY + 290,
+        );
+        if (isHoverOptions) {
+            optionsGradient.addColorStop(0, "#ff00ff");
+            optionsGradient.addColorStop(1, "#00f0ff");
+            ctx.shadowBlur = 15;
+        } else {
+            optionsGradient.addColorStop(0, "#ffffff");
+            optionsGradient.addColorStop(1, "#00f0ff");
+            ctx.shadowBlur = 6;
+        }
+
+        ctx.fillStyle = optionsGradient;
         ctx.fillText("STEUERUNG", this.width / 2, panelY + 280);
 
         ctx.shadowBlur = 0;
