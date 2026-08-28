@@ -1,5 +1,3 @@
-import { ImageHub } from "./image.hub.js";
-
 export class StartScreen {
     activeSubMenu = null;
     bgImage = new Image();
@@ -156,17 +154,19 @@ export class StartScreen {
         ctx.shadowOffsetY = 3;
         ctx.shadowBlur = 2;
 
-        ctx.font = "bold 20px 'Press Start 2P', monospace";
+        ctx.font = "bold 22px 'Press Start 2P', monospace";
         ctx.fillStyle = titleGradient;
         ctx.fillText("TASTENBELEGUNG", this.width / 2, panelY + 45);
 
-        ctx.font = "11px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#00f0ff";
+        ctx.font = "bold 20px sans-serif";
+        ctx.fillStyle = "#ffffff";
 
-        ctx.fillText("A / D - Gehen", this.width / 2, panelY + 85);
-        ctx.fillText("W - Springen", this.width / 2, panelY + 115);
-        ctx.fillText("S - Ducken", this.width / 2, panelY + 145);
-        ctx.fillText("L - Core werfen", this.width / 2, panelY + 175);
+        ctx.fillText("A / D – Gehen", this.width / 2, panelY + 75);
+        ctx.fillText("W – Springen", this.width / 2, panelY + 98);
+        ctx.fillText("S – Ducken", this.width / 2, panelY + 121);
+        ctx.fillText("S + A – Links krabbeln", this.width / 2, panelY + 144);
+        ctx.fillText("S + D – Rechts krabbeln", this.width / 2, panelY + 167);
+        ctx.fillText("L – Core werfen", this.width / 2, panelY + 190);
         ctx.fillText(
             "Auf Golems springen = Core",
             this.width / 2,
@@ -178,8 +178,8 @@ export class StartScreen {
             panelY + 240,
         );
 
-        ctx.font = "10px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#ffffff";
+        ctx.font = "italic 14px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#00f0ff";
         ctx.fillText(
             "Klicke irgendwo, um zurückzugehen",
             this.width / 2,
@@ -217,42 +217,53 @@ export class StartScreen {
         ctx.fillStyle = titleGradient;
         ctx.fillText("IMPRESSUM", this.width / 2, panelY + 45);
 
-        ctx.font = "bold 11px 'Press Start 2P', monospace";
+        ctx.font = "bold 20px 'Press Start 2P', monospace";
         ctx.fillStyle = "#00f0ff";
         ctx.fillText("Angaben gemäß § 5 DDG:", this.width / 2, panelY + 75);
 
-        ctx.font = "11px 'Press Start 2P', monospace";
+        ctx.font = "20px sans-serif";
         ctx.fillStyle = "#ffffff";
-        ctx.fillText("[Dein Vorname Nachname]", this.width / 2, panelY + 98);
-        ctx.fillText("[Straße und Hausnummer]", this.width / 2, panelY + 120);
-        ctx.fillText("[PLZ Ort]", this.width / 2, panelY + 142);
+        ctx.fillText("Marcel Schmitz", this.width / 2, panelY + 98);
+        ctx.fillText("[Straße und Hausnummer]", this.width / 2, panelY + 118);
+        ctx.fillText("[PLZ Ort]", this.width / 2, panelY + 138);
 
-        ctx.font = "bold 11px 'Press Start 2P', monospace";
+        ctx.font = "bold 20px 'Press Start 2P', monospace";
         ctx.fillStyle = "#00f0ff";
-        ctx.fillText("Kontakt:", this.width / 2, panelY + 172);
+        ctx.fillText("Kontakt:", this.width / 2, panelY + 165);
 
-        ctx.font = "11px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText("E-Mail: [Deine E-Mail]", this.width / 2, panelY + 195);
-
-        ctx.font = "bold 11px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#00f0ff";
-        ctx.fillText("Urheberrecht & Assets:", this.width / 2, panelY + 225);
-
-        ctx.font = "9px 'Press Start 2P', monospace";
+        ctx.font = "20px sans-serif";
         ctx.fillStyle = "#ffffff";
         ctx.fillText(
-            "Icons & Sounds f. Weiterbildung",
+            "E-Mail: m.schmitz.dev@gmail.com",
             this.width / 2,
-            panelY + 248,
+            panelY + 185,
         );
 
-        ctx.font = "italic 10px 'Press Start 2P', monospace";
+        ctx.font = "bold 20px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#00f0ff";
+        ctx.fillText("Urheberrecht & Assets:", this.width / 2, panelY + 212);
+
+        ctx.font = "20px sans-serif";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(
+            "Icons & Grafiken: KI (ChatGPT, Gemini)",
+            this.width / 2,
+            panelY + 232,
+        );
+        ctx.fillText("sowie Icons8 / Flaticon", this.width / 2, panelY + 250);
+        ctx.fillText(
+            "Sounds: KI (ChatGPT) & Pixabay",
+            this.width / 2,
+            panelY + 268,
+        );
+
+        // Mehr Abstand zum Zurück-Text unten
+        ctx.font = "italic 14px 'Press Start 2P', monospace";
         ctx.fillStyle = "#00f0ff";
         ctx.fillText(
             "Klicke irgendwo, um zurückzugehen",
             this.width / 2,
-            panelY + 310,
+            panelY + 315,
         );
 
         ctx.shadowBlur = 0;
@@ -323,7 +334,7 @@ export class StartScreen {
 
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
-        ctx.font = "bold 16px 'Press Start 2P', monospace";
+        ctx.font = "bold 22px 'Press Start 2P', monospace";
         ctx.fillStyle = startGradient;
         ctx.fillText("SPIEL STARTEN", this.width / 2, panelY + 160);
 
