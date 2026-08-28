@@ -7,15 +7,15 @@ export class AudioHub {
         this.gameOverSound.loop = true;
 
         this.backgroundMusic = new Audio(
-            "./assets/audio/background_sound5.wav",
+            "./assets/audio/background_sound5.mp3",
         );
         this.backgroundMusic.loop = true;
         this.backgroundMusic.load();
 
-        this.ambientMusic = new Audio("./assets/audio/boss_room_ambient.wav");
+        this.ambientMusic = new Audio("./assets/audio/boss_room_ambient.mp3");
         this.ambientMusic.loop = true;
 
-        this.bossMusic = new Audio("./assets/audio/boss_fight_.wav");
+        this.bossMusic = new Audio("./assets/audio/boss_fight_.mp3");
         this.bossMusic.loop = true;
 
         this.jumpSound = new Audio("./assets/audio/sprung.wav");
@@ -52,12 +52,9 @@ export class AudioHub {
      */
     setVolume(value) {
         if (value > 1) {
-            // Wenn der Wert vom Slider kommt (0 bis 100)
             let linear = value / 100;
-            // Quadratische Kurve für den "Laptop-Effekt" im leisen Bereich
             this.masterVolume = linear * linear;
         } else {
-            // Wenn direkt eine Dezimalzahl (0 bis 1) übergeben wird
             this.masterVolume = value;
         }
         this.updateAllVolumes();
@@ -250,7 +247,6 @@ export class AudioHub {
         this.gameOverSound.currentTime = 0;
         this.stopAllBackgroundMusic();
 
-        // Boss-Hit und andere Effekte sofort stoppen, damit nichts nachhallt oder stottert
         this.bossHitSound.pause();
         this.bossHitSound.currentTime = 0;
         this.playerHitSound.pause();

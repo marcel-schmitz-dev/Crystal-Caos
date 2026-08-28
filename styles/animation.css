@@ -1,6 +1,6 @@
 #body-snake {
     position: fixed;
-    left: 0px;
+    left: 100px;
     bottom: -120px;
     width: 2300px;
     z-index: -1;

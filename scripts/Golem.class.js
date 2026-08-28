@@ -74,7 +74,7 @@ export class Golem extends MovableObject {
         portal.y = y;
         portal.width = 150;
         portal.height = 200;
-        portal.loadImage("./assets/img/waffen/portal.png");
+        portal.loadImage("./assets/img/waffen/portal.webp");
         return portal;
     }
 }

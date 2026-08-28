@@ -33,14 +33,14 @@ export const level1 = new Level(
     ],
     [
         new BackgroundObjekt(
-            "assets/img/background/background_lvl1.png",
+            "assets/img/background/background_lvl1.webp",
             -1280,
         ),
-        new BackgroundObjekt("assets/img/background/background_lvl1.png", 0),
-        new BackgroundObjekt("assets/img/background/background_lvl1.png", 1280),
-        new BackgroundObjekt("assets/img/background/background_lvl1.png", 2560),
-        new BackgroundObjekt("assets/img/background/background_boss.png", 3840),
-        new BackgroundObjekt("assets/img/background/background_boss.png", 5120),
+        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 0),
+        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 1280),
+        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 2560),
+        new BackgroundObjekt("assets/img/background/background_boss.webp", 3840),
+        new BackgroundObjekt("assets/img/background/background_boss.webp", 5120),
     ],
     createRandomCoins(7),
 );

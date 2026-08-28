@@ -10,7 +10,7 @@ export class StartScreen {
     constructor(canvasWidth, canvasHeight) {
         this.width = canvasWidth;
         this.height = canvasHeight;
-        this.bgImage.src = "./assets/img/icon/Matzemon3.png";
+        this.bgImage.src = "./assets/img/icon/Matzemon3.webp";
         this.mousePos = { x: -1, y: -1 };
     }
 
