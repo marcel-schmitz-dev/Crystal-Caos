@@ -29,6 +29,7 @@ body {
 }
 
 h1 {
+    font-family: "Press Start 2P", monospace;
     background: linear-gradient(135deg, #00f0ff, #ff00ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

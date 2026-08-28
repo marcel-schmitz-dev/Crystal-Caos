@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CrystalCaos</title>
+        <title>Crystal Caos</title>
 
         <link rel="stylesheet" href="style.css" />
         <link rel="stylesheet" href="./styles/overlay.css" />
@@ -14,9 +14,14 @@
             href="assets/img/icon/favicon5.png"
             type="image/x-icon"
         />
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+            rel="stylesheet"
+        />
     </head>
     <body onload="init()">
-        <h1>Crystal Caos</h1>
+        <h1>CRYSTAL CAOS</h1>
 
         <img
             id="body-snake"
@@ -64,6 +69,40 @@
             <div class="warning-content">
                 <h2>Bitte drehe dein Gerät!</h2>
                 <p>Dieses Spiel funktioniert nur im Querformat (Landscape).</p>
+            </div>
+        </div>
+
+        <!-- Impressum Overlay / Sektion -->
+        <div id="impressum-modal" class="game-modal" style="display: none">
+            <div class="modal-content">
+                <h2>Impressum</h2>
+
+                <h3>Angaben gemäß § 5 DDG</h3>
+                <p>
+                    [Dein Vorname] [Dein Nachname]<br />
+                    [Straße und Hausnummer]<br />
+                    [PLZ] [Ort]
+                </p>
+
+                <h3>Kontakt</h3>
+                <p>
+                    Telefon: [Deine Telefonnummer, optional]<br />
+                    E-Mail: [Deine E-Mail-Adresse]
+                </p>
+
+                <h3>Vertreten durch</h3>
+                <p>[Dein Vorname] [Dein Nachname]</p>
+
+                <h3>Urheberrecht & verwendete Assets</h3>
+                <p>
+                    Icons created by Icons8 / Flaticon<br />
+                    Sounds & Grafiken im Rahmen des
+                    Weiterbildungs-Übungsprojekts genutzt.
+                </p>
+
+                <button id="close-impressum-btn" class="menu-btn">
+                    Zurück
+                </button>
             </div>
         </div>
 

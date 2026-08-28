@@ -115,7 +115,7 @@ export class StartScreen {
     }
 
     /**
-     * Draws either the options menu or the main menu content.
+     * Draws either the options menu, impressum or the main menu content.
      * @param {CanvasRenderingContext2D} ctx
      * @param {number} panelX
      * @param {number} panelY
@@ -125,6 +125,8 @@ export class StartScreen {
 
         if (this.activeSubMenu === "options") {
             this.drawOptionsMenu(ctx, panelY);
+        } else if (this.activeSubMenu === "impressum") {
+            this.drawImpressumMenu(ctx, panelY);
         } else {
             this.drawMainMenu(ctx, panelY);
         }
@@ -133,7 +135,7 @@ export class StartScreen {
     }
 
     /**
-     * Draws the options/controls menu with sharp, readable text and clean contrast.
+     * Draws the options/controls menu.
      * @param {CanvasRenderingContext2D} ctx
      * @param {number} panelY
      */
@@ -154,47 +156,103 @@ export class StartScreen {
         ctx.shadowOffsetY = 3;
         ctx.shadowBlur = 2;
 
-        ctx.font = "bold 32px Arial";
+        ctx.font = "bold 20px 'Press Start 2P', monospace";
         ctx.fillStyle = titleGradient;
-        ctx.fillText("TASTENBELEGUNG", this.width / 2, panelY + 50);
+        ctx.fillText("TASTENBELEGUNG", this.width / 2, panelY + 45);
 
-        let textGradient = ctx.createLinearGradient(
-            this.width / 2 - 200,
-            panelY + 80,
-            this.width / 2 + 200,
-            panelY + 330,
-        );
-        textGradient.addColorStop(0, "#00f0ff");
-        textGradient.addColorStop(1.0, "#ff00ff");
+        ctx.font = "11px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#00f0ff";
 
-        ctx.font = "bold 16px Arial";
-        ctx.fillStyle = textGradient;
-
+        ctx.fillText("A / D - Gehen", this.width / 2, panelY + 85);
+        ctx.fillText("W - Springen", this.width / 2, panelY + 115);
+        ctx.fillText("S - Ducken", this.width / 2, panelY + 145);
+        ctx.fillText("L - Core werfen", this.width / 2, panelY + 175);
         ctx.fillText(
-            "A / D - Nach links / rechts gehen",
+            "Auf Golems springen = Core",
             this.width / 2,
-            panelY + 85,
-        );
-        ctx.fillText("W - Springen", this.width / 2, panelY + 120);
-        ctx.fillText("S - Ducken / Ausweichen", this.width / 2, panelY + 155);
-        ctx.fillText("L - Core-Projektil werfen", this.width / 2, panelY + 190);
-        ctx.fillText(
-            "Auf Golems springen - Golem besiegen, Core einsammeln",
-            this.width / 2,
-            panelY + 225,
+            panelY + 210,
         );
         ctx.fillText(
-            "Core auf Ghost-Boss werfen - Boss besiegen",
+            "Core auf Ghost-Boss werfen",
             this.width / 2,
-            panelY + 260,
+            panelY + 240,
         );
 
-        ctx.font = "14px Arial";
+        ctx.font = "10px 'Press Start 2P', monospace";
         ctx.fillStyle = "#ffffff";
         ctx.fillText(
             "Klicke irgendwo, um zurückzugehen",
             this.width / 2,
-            panelY + 315,
+            panelY + 310,
+        );
+
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+    }
+
+    /**
+     * Draws the Impressum menu according to § 5 DDG.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelY
+     */
+    drawImpressumMenu(ctx, panelY) {
+        ctx.textAlign = "center";
+
+        let titleGradient = ctx.createLinearGradient(
+            this.width / 2 - 200,
+            panelY + 25,
+            this.width / 2 + 200,
+            panelY + 65,
+        );
+        titleGradient.addColorStop(0, "#00f0ff");
+        titleGradient.addColorStop(1.0, "#ff00ff");
+
+        ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+        ctx.shadowBlur = 4;
+
+        ctx.font = "bold 22px 'Press Start 2P', monospace";
+        ctx.fillStyle = titleGradient;
+        ctx.fillText("IMPRESSUM", this.width / 2, panelY + 45);
+
+        ctx.font = "bold 11px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#00f0ff";
+        ctx.fillText("Angaben gemäß § 5 DDG:", this.width / 2, panelY + 75);
+
+        ctx.font = "11px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("[Dein Vorname Nachname]", this.width / 2, panelY + 98);
+        ctx.fillText("[Straße und Hausnummer]", this.width / 2, panelY + 120);
+        ctx.fillText("[PLZ Ort]", this.width / 2, panelY + 142);
+
+        ctx.font = "bold 11px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#00f0ff";
+        ctx.fillText("Kontakt:", this.width / 2, panelY + 172);
+
+        ctx.font = "11px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("E-Mail: [Deine E-Mail]", this.width / 2, panelY + 195);
+
+        ctx.font = "bold 11px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#00f0ff";
+        ctx.fillText("Urheberrecht & Assets:", this.width / 2, panelY + 225);
+
+        ctx.font = "9px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(
+            "Icons & Sounds f. Weiterbildung",
+            this.width / 2,
+            panelY + 248,
+        );
+
+        ctx.font = "italic 10px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#00f0ff";
+        ctx.fillText(
+            "Klicke irgendwo, um zurückzugehen",
+            this.width / 2,
+            panelY + 310,
         );
 
         ctx.shadowBlur = 0;
@@ -222,36 +280,41 @@ export class StartScreen {
         ctx.shadowOffsetY = 4;
         ctx.shadowBlur = 10;
 
-        ctx.font = "bold 52px Arial";
+        ctx.font = "bold 32px 'Press Start 2P', monospace";
         ctx.fillStyle = titleGradient;
-        ctx.fillText("CRYSTAL CAOS", this.width / 2, panelY + 90);
+        ctx.fillText("CRYSTAL CAOS", this.width / 2, panelY + 80);
 
-        // Prüfen, ob die Maus über den Buttons ist
         const panelX = this.width / 2 - 300;
+
         const isHoverStart =
             this.mousePos.x > panelX + 100 &&
             this.mousePos.x < panelX + 500 &&
-            this.mousePos.y > panelY + 165 &&
-            this.mousePos.y < panelY + 210;
+            this.mousePos.y > panelY + 130 &&
+            this.mousePos.y < panelY + 175;
 
         const isHoverOptions =
             this.mousePos.x > panelX + 100 &&
             this.mousePos.x < panelX + 500 &&
-            this.mousePos.y > panelY + 245 &&
-            this.mousePos.y < panelY + 290;
+            this.mousePos.y > panelY + 195 &&
+            this.mousePos.y < panelY + 240;
+
+        const isHoverImpressum =
+            this.mousePos.x > panelX + 100 &&
+            this.mousePos.x < panelX + 500 &&
+            this.mousePos.y > panelY + 260 &&
+            this.mousePos.y < panelY + 305;
 
         // --- Button 1: SPIEL STARTEN ---
         let startGradient = ctx.createLinearGradient(
             this.width / 2 - 100,
-            panelY + 160,
+            panelY + 130,
             this.width / 2 + 100,
-            panelY + 210,
+            panelY + 175,
         );
         if (isHoverStart) {
-            // Neon-Hover-Effekt (z.B. umgedreht oder kräftiges Neongrün/-blau)
             startGradient.addColorStop(0, "#ff00ff");
             startGradient.addColorStop(1, "#00f0ff");
-            ctx.shadowBlur = 15; // Stärkeres Leuchten beim Hover
+            ctx.shadowBlur = 15;
         } else {
             startGradient.addColorStop(0, "#ffffff");
             startGradient.addColorStop(1, "#00f0ff");
@@ -260,16 +323,16 @@ export class StartScreen {
 
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
-        ctx.font = "bold 32px Arial";
+        ctx.font = "bold 16px 'Press Start 2P', monospace";
         ctx.fillStyle = startGradient;
-        ctx.fillText("SPIEL STARTEN", this.width / 2, panelY + 200);
+        ctx.fillText("SPIEL STARTEN", this.width / 2, panelY + 160);
 
         // --- Button 2: STEUERUNG ---
         let optionsGradient = ctx.createLinearGradient(
             this.width / 2 - 100,
-            panelY + 240,
+            panelY + 195,
             this.width / 2 + 100,
-            panelY + 290,
+            panelY + 240,
         );
         if (isHoverOptions) {
             optionsGradient.addColorStop(0, "#ff00ff");
@@ -282,7 +345,27 @@ export class StartScreen {
         }
 
         ctx.fillStyle = optionsGradient;
-        ctx.fillText("STEUERUNG", this.width / 2, panelY + 280);
+        ctx.fillText("STEUERUNG", this.width / 2, panelY + 225);
+
+        // --- Button 3: IMPRESSUM ---
+        let impressumGradient = ctx.createLinearGradient(
+            this.width / 2 - 100,
+            panelY + 260,
+            this.width / 2 + 100,
+            panelY + 305,
+        );
+        if (isHoverImpressum) {
+            impressumGradient.addColorStop(0, "#ff00ff");
+            impressumGradient.addColorStop(1, "#00f0ff");
+            ctx.shadowBlur = 15;
+        } else {
+            impressumGradient.addColorStop(0, "#ffffff");
+            impressumGradient.addColorStop(1, "#00f0ff");
+            ctx.shadowBlur = 6;
+        }
+
+        ctx.fillStyle = impressumGradient;
+        ctx.fillText("IMPRESSUM", this.width / 2, panelY + 290);
 
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
@@ -299,15 +382,18 @@ export class StartScreen {
         const panelX = this.width / 2 - 300;
         const panelY = this.height / 2 - 200;
 
-        if (this.activeSubMenu === "options") {
+        if (this.activeSubMenu !== null) {
             this.activeSubMenu = null;
         } else {
             if (x > panelX + 100 && x < panelX + 500) {
-                if (y > panelY + 165 && y < panelY + 210) {
+                if (y > panelY + 130 && y < panelY + 175) {
                     return "start";
                 }
-                if (y > panelY + 245 && y < panelY + 290) {
+                if (y > panelY + 195 && y < panelY + 240) {
                     this.activeSubMenu = "options";
+                }
+                if (y > panelY + 260 && y < panelY + 305) {
+                    this.activeSubMenu = "impressum";
                 }
             }
         }
