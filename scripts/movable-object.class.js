@@ -28,7 +28,9 @@ export class MovableObject extends DrawableObject {
         console.log("moving right");
     }
 
-    moveLeft() {}
+    moveLeft() {
+        this.x -= this.speed;
+    }
 
     playAnimation(images) {
         let i = this.currentImage % images.length;

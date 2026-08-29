@@ -1,5 +1,6 @@
 import { Golem } from "./Golem.class.js";
 import { Ghost } from "./Ghost.class.js";
+import { Spider } from "./spider.class.js";
 
 export class CollisionManager {
     constructor(world) {
@@ -50,6 +51,40 @@ export class CollisionManager {
                     console.log(
                         "Character wurde von Golem seitlich getroffen!",
                     );
+                }
+            }
+
+            if (enemy instanceof Spider) {
+                if (enemy.isDead) return;
+
+                // Sichtweite prüfen: Wenn der Charakter nahe genug ist, seilt sie sich ab
+                let distanceToSpider = enemy.x - this.world.character.x;
+                if (distanceToSpider < 700 && distanceToSpider > -200) {
+                    enemy.isActivated = true;
+                }
+
+                // Solange sie noch von der Decke fällt, passiert noch keine Kollision
+                if (!enemy.hasLanded) return;
+
+                let isJumpingOnSpider =
+                    this.world.character.isColliding(enemy) &&
+                    this.world.character.speedY < 0 &&
+                    this.world.character.y + this.world.character.height - 30 <=
+                        enemy.y + 20;
+
+                if (isJumpingOnSpider) {
+                    enemy.isDead = true;
+                    
+                    let drop = enemy.createDrop();
+                    this.world.crystalDrops.push(drop);
+
+                    this.world.enemies.splice(index, 1);
+                    this.world.character.speedY = 15;
+
+                } else if (this.world.character.isColliding(enemy)) {
+                    this.world.character.hit(1);
+                    this.world.audioHub.playPlayerHit();
+                    console.log("Character wurde von Spinne getroffen!");
                 }
             }
         });

@@ -24,7 +24,7 @@ export class Character extends MovableObject {
     currentJumpImage = 0;
     currentDodgeImage = 0;
     currentDeadImage = 0;
-    crystals = 3;
+    crystals = 0;
     deadAnimationStarted = false;
     isDodgeEnding = false;
     isThrowing = false;

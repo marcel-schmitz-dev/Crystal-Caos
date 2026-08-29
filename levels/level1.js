@@ -1,6 +1,7 @@
 import { Level } from "../scripts/level.class.js";
 import { Ghost } from "../scripts/Ghost.class.js";
 import { Golem } from "../scripts/Golem.class.js";
+import { Spider } from '../scripts/spider.class.js';
 import { Cloud } from "../scripts/cloud.class.js";
 import { BackgroundObjekt } from "../scripts/background.class.js";
 import { Coin } from "../scripts/coin.class.js";
@@ -21,8 +22,9 @@ function createRandomCoins(count = 7) {
 }
 
 export const level1 = new Level(
-    [new Ghost()],
+    [new Ghost(), new Spider(), new Spider(), new Spider(), new Spider(), new Spider()],
     [Golem.createPortal(900, 380), Golem.createPortal(2200, 380)],
+
     [
         new Cloud(),
         new Cloud(),
@@ -37,10 +39,22 @@ export const level1 = new Level(
             -1280,
         ),
         new BackgroundObjekt("assets/img/background/background_lvl1.webp", 0),
-        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 1280),
-        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 2560),
-        new BackgroundObjekt("assets/img/background/background_boss.webp", 3840),
-        new BackgroundObjekt("assets/img/background/background_boss.webp", 5120),
+        new BackgroundObjekt(
+            "assets/img/background/background_lvl1.webp",
+            1280,
+        ),
+        new BackgroundObjekt(
+            "assets/img/background/background_lvl1.webp",
+            2560,
+        ),
+        new BackgroundObjekt(
+            "assets/img/background/background_boss.webp",
+            3840,
+        ),
+        new BackgroundObjekt(
+            "assets/img/background/background_boss.webp",
+            5120,
+        ),
     ],
     createRandomCoins(7),
 );

@@ -73,6 +73,31 @@ export const ImageHub = {
         ],
     },
 
+    SPIDER: {
+        WALKING: [
+            "./assets/img/monster/spider/spider_walk0.png",
+            "./assets/img/monster/spider/spider_walk1.png",
+            "./assets/img/monster/spider/spider_walk2.png",
+            "./assets/img/monster/spider/spider_walk3.png",
+            "./assets/img/monster/spider/spider_walk4.png",
+            "./assets/img/monster/spider/spider_walk5.png",
+            "./assets/img/monster/spider/spider_walk6.png",
+        ],
+    },
+
+    GOLEM: {
+        WALKING: [
+            "./assets/img/monster/golem1.png",
+            "./assets/img/monster/golem2.png",
+            "./assets/img/monster/golem3.png",
+            "./assets/img/monster/golem4.png",
+            "./assets/img/monster/golem5.png",
+            "./assets/img/monster/golem6.png",
+            "./assets/img/monster/golem7.png",
+            "./assets/img/monster/golem8.png",
+        ],
+    },
+
     BOSS: {
         BOSS_HP_BARS: [
             "./assets/img/hud/hp_bar_boss0.png",
