@@ -6,7 +6,7 @@ export class Cloud extends MovableObject {
     height = 120;
 
     constructor(startX) {
-        super().loadImage("./assets/img/monster/qualle.png");
+        super().loadImage("./assets/img/monster/qualle.webp");
 
         this.x = startX !== undefined ? startX : Math.random() * 1200;
 

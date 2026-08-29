@@ -6,18 +6,18 @@ export class CrystalProjectile extends MovableObject {
     height = 50;
     speedX = 10;
     world;
-    isPlayerCore = false; 
+    isPlayerCore = false;
 
     constructor(x, y, world, direction = -1, isPlayerCore = false) {
         super();
-        this.isPlayerCore = isPlayerCore; 
+        this.isPlayerCore = isPlayerCore;
 
         if (this.isPlayerCore) {
-            this.loadImage("./assets/img/character/angreifen/core_flug.png");
+            this.loadImage("./assets/img/character/angreifen/core_flug.webp");
             this.width = 150;
             this.height = 150;
         } else {
-            this.loadImage("./assets/img/waffen/crystal_geschoss.png");
+            this.loadImage("./assets/img/waffen/crystal_geschoss.webp");
             this.width = 80;
             this.height = 50;
         }

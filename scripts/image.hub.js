@@ -68,8 +68,8 @@ export const ImageHub = {
             "./assets/img/character/dead/dead7.png",
         ],
         ATTACK: [
-            "./assets/img/character/angreifen/ausholen2.png",
-            "./assets/img/character/angreifen/angriff.png",
+            "./assets/img/character/angreifen/ausholen2.webp",
+            "./assets/img/character/angreifen/angriff.webp",
         ],
     },
 
@@ -84,7 +84,7 @@ export const ImageHub = {
         ],
         HURT: "./assets/img/monster/dmg_reaction_boss.png",
         DEAD: [
-            "./assets/img/monster/final_death0.png",
+            "./assets/img/monster/final_death0.webp",
             "./assets/img/monster/final_death1.png",
             "./assets/img/monster/final_death2.png",
             "./assets/img/monster/final_death3.png",

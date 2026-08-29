@@ -342,7 +342,7 @@ export class Character extends MovableObject {
         let startY = this.y + 70;
 
         let crystal = new CrystalProjectile(startX, startY, targetX, targetY);
-        crystal.loadImage("./assets/img/waffen/crystal_geschoss.png");
+        crystal.loadImage("./assets/img/character/angreifen/core_flug.webp");
 
         this.world.throwableObjects.push(crystal);
     }
