@@ -72,13 +72,12 @@ export class CollisionManager {
 
                 if (isJumpingOnSpider) {
                     enemy.isDead = true;
-                    
+
                     let drop = enemy.createDrop();
                     this.world.crystalDrops.push(drop);
 
                     this.world.enemies.splice(index, 1);
-                    this.world.character.speedY = 15;
-
+                    this.world.character.speedY = 20;
                 } else if (this.world.character.isColliding(enemy)) {
                     this.world.character.hit(1);
                     this.world.audioHub.playPlayerHit();

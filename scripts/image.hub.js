@@ -118,6 +118,18 @@ export const ImageHub = {
             "./assets/img/hud/hp_bar_boss4.png",
             "./assets/img/hud/hp_bar_boss5.png",
         ],
+        WALKING: [
+            "./assets/img/monster/ghost_walk0.png",
+            "./assets/img/monster/ghost_walk1.png",
+            "./assets/img/monster/ghost_walk2.png",
+            "./assets/img/monster/ghost_walk3.png",
+        ],
+        ATTACK: [
+            "./assets/img/monster/ghost_boss1.png",
+            "./assets/img/monster/ghost_boss2.png",
+            "./assets/img/monster/ghost_boss3.png",
+            "./assets/img/monster/ghost_boss.png",
+        ],
         HURT: "./assets/img/monster/dmg_reaction_boss.png",
         DEAD: [
             "./assets/img/monster/final_death0.webp",

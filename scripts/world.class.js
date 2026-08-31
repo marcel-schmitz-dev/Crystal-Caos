@@ -34,6 +34,7 @@ export class World {
 
     startScreen = new StartScreen(1280, 720);
     gameStarted = false;
+    bossBarUnlocked = false;
     collisionManager;
 
     statusBar = new StatusBar("hp", 10, 20, 300, 60);
@@ -270,11 +271,17 @@ export class World {
         this.coinStatusBar.draw(this.ctx);
 
         let boss = this.enemies.find((e) => e instanceof Ghost);
-        if (boss && boss.isActivated) {
-            this.bossStatusBar.x =
-                this.canvas.width / 2 - this.bossStatusBar.width / 2;
-            this.bossStatusBar.setPercentage(boss.energy);
-            this.bossStatusBar.draw(this.ctx);
+        if (boss) {
+            if (this.character.x > 3840) {
+                this.bossBarUnlocked = true;
+            }
+
+            if (this.bossBarUnlocked) {
+                this.bossStatusBar.x =
+                    this.canvas.width / 2 - this.bossStatusBar.width / 2;
+                this.bossStatusBar.setPercentage(boss.energy);
+                this.bossStatusBar.draw(this.ctx);
+            }
         }
     }
 
@@ -329,6 +336,7 @@ export class World {
         this.character.y = 220;
         this.character.coins = 0;
         this.character.crystals = 0;
+        this.bossBarUnlocked = false;
 
         this.level = level1;
         this.initLevelEntities();

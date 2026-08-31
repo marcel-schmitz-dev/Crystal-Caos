@@ -6,27 +6,25 @@ export class Ghost extends MovableObject {
     height = 450;
     width = 400;
     energy = 5;
+    speed = 2.5;
     isActivated = false;
     isHurt = false;
     isDead = false;
 
-    IMAGES_WALKING = [
-        "./assets/img/monster/ghost_boss1.png",
-        "./assets/img/monster/ghost_boss2.png",
-        "./assets/img/monster/ghost_boss3.png",
-        "./assets/img/monster/ghost_boss.png",
-    ];
-
+    IMAGES_WALKING = ImageHub.BOSS.WALKING;
+    IMAGES_ATTACK = ImageHub.BOSS.ATTACK;
     IMAGES_DEAD = ImageHub.BOSS.DEAD;
 
     attackToggle = false;
     world;
     lastImageIndex = -1;
     intervalId = null;
+    movementIntervalId = null;
 
     constructor(x, y) {
         super();
         this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImage("./assets/img/monster/ghost_boss.png");
 
@@ -37,25 +35,60 @@ export class Ghost extends MovableObject {
     }
 
     animate() {
+        // 1. Animations-Loop (schaltet die Bilder in gemütlichem Tempo durch)
         this.intervalId = setInterval(() => {
             if (!this.world || !this.world.gameStarted) return;
             if (this.isDead) return;
 
-            if (!this.isHurt) {
-                this.playAnimation(this.IMAGES_WALKING);
-                let currentIndex =
-                    this.currentImage % this.IMAGES_WALKING.length;
-
-                if (currentIndex === 2 && this.lastImageIndex !== 2) {
-                    this.throwCrystal();
-                }
-                this.lastImageIndex = currentIndex;
+            if (this.world.character && this.world.character.x > 2560) {
+                this.isActivated = true;
             }
-        }, 600);
+
+            if (!this.isHurt) {
+                if (this.energy <= 4) {
+                    this.playAnimation(this.IMAGES_WALKING);
+                } else {
+                    this.playAnimation(this.IMAGES_ATTACK);
+                    let currentIndex =
+                        this.currentImage % this.IMAGES_ATTACK.length;
+
+                    if (
+                        currentIndex === 2 &&
+                        this.lastImageIndex !== 2 &&
+                        this.isActivated
+                    ) {
+                        this.throwCrystal();
+                    }
+                    this.lastImageIndex = currentIndex;
+                }
+            }
+        }, 700);
+
+        // 2. Bewegungs-Loop (läuft flüssig mit 60 FPS, sobald Phase 2 aktiv ist)
+        this.movementIntervalId = setInterval(() => {
+            if (
+                !this.world ||
+                !this.world.gameStarted ||
+                this.isDead ||
+                this.isHurt
+            )
+                return;
+
+            if (this.isActivated && this.energy <= 4 && this.world.character) {
+                if (this.world.character.x < this.x) {
+                    this.x -= this.speed;
+                    this.otherDirection = false;
+                } else {
+                    this.x += this.speed;
+                    this.otherDirection = true;
+                }
+            }
+        }, 1000 / 60);
     }
 
     throwCrystal() {
-        if (!this.world || this.isDead) return;
+        if (!this.world || this.isDead || !this.isActivated || this.energy <= 4)
+            return;
         this.world.audioHub.playBossShoot();
 
         this.attackToggle = !this.attackToggle;
@@ -122,6 +155,10 @@ export class Ghost extends MovableObject {
         if (this.intervalId) {
             clearInterval(this.intervalId);
             this.intervalId = null;
+        }
+        if (this.movementIntervalId) {
+            clearInterval(this.movementIntervalId);
+            this.movementIntervalId = null;
         }
     }
 }
