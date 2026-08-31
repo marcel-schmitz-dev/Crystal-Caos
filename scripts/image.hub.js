@@ -1,6 +1,17 @@
 export const ImageHub = {
     CHARACTER: {
         STANDING: ["./assets/img/character/dodge/stehen.png"],
+        IDLE_0: "./assets/img/character/idle/idle0.png",
+        LONG_IDLE: [
+            "./assets/img/character/long_idle/long_idle0.webp",
+            "./assets/img/character/long_idle/long_idle1.webp",
+            "./assets/img/character/long_idle/long_idle2.png",
+            "./assets/img/character/long_idle/long_idle3.png",
+            "./assets/img/character/long_idle/long_idle4.png",
+            "./assets/img/character/long_idle/long_idle5.png",
+            "./assets/img/character/long_idle/long_idle6.png",
+            "./assets/img/character/long_idle/long_idle7.png",
+        ],
         WALKING: [
             "./assets/img/character/walk/walk1.png",
             "./assets/img/character/walk/walk2.png",

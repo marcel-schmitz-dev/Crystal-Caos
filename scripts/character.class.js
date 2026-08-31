@@ -14,6 +14,8 @@ export class Character extends MovableObject {
 
     IMAGES_STANDING = ImageHub.CHARACTER.STANDING;
     IMAGES_WALKING = ImageHub.CHARACTER.WALKING;
+    IMAGES_IDLE_0 = ImageHub.CHARACTER.IDLE_0;
+    IMAGES_LONG_IDLE = ImageHub.CHARACTER.LONG_IDLE;
     IMAGES_JUMPING = ImageHub.CHARACTER.JUMPING;
     IMAGES_DODGING = ImageHub.CHARACTER.DODGING;
     IMAGES_HURT = ImageHub.CHARACTER.HURT;
@@ -39,6 +41,10 @@ export class Character extends MovableObject {
         this.loadAllCharacterImages();
         this.applyGravity();
         this.animate();
+        this.idleTimer = 0;
+        this.idleThreshold = 24;
+        this.longIdleThreshold = 60;
+        this.currentLongIdleImage = 0;
     }
 
     /**
@@ -47,6 +53,8 @@ export class Character extends MovableObject {
     loadAllCharacterImages() {
         this.loadImage(this.IMAGES_STANDING[0]);
         this.loadImages(this.IMAGES_STANDING);
+        this.loadImage(this.IMAGES_IDLE_0);
+        this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DODGING);
@@ -257,18 +265,35 @@ export class Character extends MovableObject {
         this.currentJumpImage = 0;
         this.currentDodgeImage = 0;
 
-        if (keyboard.RIGHT || keyboard.LEFT) {
-            if (this.IMAGES_WALKING && this.IMAGES_WALKING.length > 0) {
-                let path = this.IMAGES_WALKING[this.currentImage];
-                if (path) {
-                    this.loadImage(path);
-                    this.currentImage =
-                        (this.currentImage + 1) % this.IMAGES_WALKING.length;
-                }
+        if (keyboard.RIGHT || keyboard.LEFT || keyboard.UP || keyboard.DOWN) {
+            this.idleTimer = 0;
+            this.currentLongIdleImage = 0;
+
+            let path = this.IMAGES_WALKING[this.currentImage];
+            if (path) {
+                this.loadImage(path);
+                this.currentImage =
+                    (this.currentImage + 1) % this.IMAGES_WALKING.length;
             }
         } else {
-            if (this.IMAGES_STANDING && this.IMAGES_STANDING[0]) {
-                this.loadImage(this.IMAGES_STANDING[0]);
+            this.idleTimer++;
+
+            if (this.idleTimer > this.longIdleThreshold) {
+                let path = this.IMAGES_LONG_IDLE[this.currentLongIdleImage];
+                this.loadImage(path);
+                if (Math.random() < 0.2) {
+                    this.currentLongIdleImage =
+                        (this.currentLongIdleImage + 1) %
+                        this.IMAGES_LONG_IDLE.length;
+                }
+            } else if (this.idleTimer > this.idleThreshold) {
+                if (this.IMAGES_IDLE_0) {
+                    this.loadImage(this.IMAGES_IDLE_0);
+                }
+            } else {
+                if (this.IMAGES_STANDING && this.IMAGES_STANDING[0]) {
+                    this.loadImage(this.IMAGES_STANDING[0]);
+                }
             }
             this.currentImage = 0;
         }

@@ -57,13 +57,11 @@ export class CollisionManager {
             if (enemy instanceof Spider) {
                 if (enemy.isDead) return;
 
-                // Sichtweite prüfen: Wenn der Charakter nahe genug ist, seilt sie sich ab
                 let distanceToSpider = enemy.x - this.world.character.x;
                 if (distanceToSpider < 700 && distanceToSpider > -200) {
                     enemy.isActivated = true;
                 }
 
-                // Solange sie noch von der Decke fällt, passiert noch keine Kollision
                 if (!enemy.hasLanded) return;
 
                 let isJumpingOnSpider =
