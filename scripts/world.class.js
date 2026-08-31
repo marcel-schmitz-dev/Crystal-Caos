@@ -55,28 +55,14 @@ export class World {
 
         this.initLevelEntities();
         this.initGameSystems();
-        this.initMenuClickListener();
-        this.initMenuTouchListener();
-        this.initMouseMoveListener();
+
+        // Menü-Listener über die Keyboard-Klasse initialisieren
+        this.keyboard.initMenuListeners(this.canvas, this.startScreen, () => {
+            this.startGameSession();
+        });
 
         this.run();
         this.draw();
-    }
-
-    /**
-     * Sets up the mouse move listener for hover effects on the start screen.
-     */
-    initMouseMoveListener() {
-        this.canvas.addEventListener("mousemove", (event) => {
-            if (this.gameStarted) return;
-            const rect = this.canvas.getBoundingClientRect();
-            let x = event.clientX - rect.left;
-            let y = event.clientY - rect.top;
-
-            if (this.startScreen) {
-                this.startScreen.handleMouseMove(x, y);
-            }
-        });
     }
 
     /**
@@ -101,77 +87,11 @@ export class World {
     }
 
     /**
-     * Sets up the start screen click listener.
-     */
-    initMenuClickListener() {
-        let menuClickListener = (event) => {
-            if (this.gameStarted) return;
-            let action = this.evaluateMenuClick(event);
-            if (action === "start") this.startGameSession(menuClickListener);
-            if (action === "exit") window.location.reload();
-        };
-        this.canvas.addEventListener("click", menuClickListener);
-    }
-
-    /**
-     * Sets up the start screen touch listener for mobile devices.
-     */
-    initMenuTouchListener() {
-        let menuTouchListener = (event) => {
-            if (this.gameStarted) return;
-            event.preventDefault();
-
-            const rect = this.canvas.getBoundingClientRect();
-            const touch = event.touches[0];
-
-            const clickX = touch.clientX - rect.left;
-            const clickY = touch.clientY - rect.top;
-
-            const scaleX = this.canvas.width / rect.width;
-            const scaleY = this.canvas.height / rect.height;
-
-            let action = this.startScreen.handleClick(
-                clickX * scaleX,
-                clickY * scaleY,
-            );
-
-            if (action === "start") {
-                this.startGameSession();
-                this.canvas.removeEventListener(
-                    "touchstart",
-                    menuTouchListener,
-                );
-            }
-            if (action === "exit") window.location.reload();
-        };
-
-        this.canvas.addEventListener("touchstart", menuTouchListener, {
-            passive: false,
-        });
-    }
-
-    /**
-     * Evaluates click coordinates on the start screen.
-     * @param {MouseEvent} event - The click event.
-     * @returns {string|null} The resulting action command.
-     */
-    evaluateMenuClick(event) {
-        const rect = this.canvas.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const clickY = event.clientY - rect.top;
-        return this.startScreen.handleClick(clickX, clickY);
-    }
-
-    /**
      * Starts the game session and cleans up menu listeners.
-     * @param {Function} listener - The listener to remove.
      */
-    startGameSession(listener) {
+    startGameSession() {
         this.gameStarted = true;
         this.level.setGolemSpawner();
-        if (listener) {
-            this.canvas.removeEventListener("click", listener);
-        }
         this.audioHub.playBackgroundMusic();
     }
 

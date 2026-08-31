@@ -33,6 +33,13 @@ function toggleMute() {
 function init() {
     canvas = document.getElementById("canvas");
     audioHub = new AudioHub();
+
+    // Prüfen, ob der AudioHub durch den LocalStorage stummgeschaltet wurde
+    let btn = document.getElementById("mute-btn");
+    if (btn) {
+        btn.innerHTML = audioHub.isMuted ? "🔇 Mute" : "🔊 Sound";
+    }
+
     audioHub.setVolume(0.3);
     window.audioHub = audioHub;
     world = new World(canvas, keyboard);

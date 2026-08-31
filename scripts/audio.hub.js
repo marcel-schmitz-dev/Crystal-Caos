@@ -6,7 +6,7 @@ export class AudioHub {
      * Initializes the audio hub with all sound effects and background tracks.
      */
     constructor() {
-        this.isMuted = false;
+        this.isMuted = localStorage.getItem("isMuted") === "true";
         this.masterVolume = 0.1;
         this.currentMusicTrack = null;
         this.initAudioElements();
@@ -92,11 +92,12 @@ export class AudioHub {
     }
 
     /**
-     * Toggles the mute state of all audio.
+     * Toggles the mute state of all audio and saves it to local storage.
      * @returns {boolean} The new mute state.
      */
     toggleMute() {
         this.isMuted = !this.isMuted;
+        localStorage.setItem("isMuted", this.isMuted);
         this.updateAllVolumes();
         return this.isMuted;
     }
@@ -155,7 +156,7 @@ export class AudioHub {
     playSound(audio) {
         audio.currentTime = 0;
         audio.volume = this.isMuted ? 0 : this.masterVolume;
-        audio.play().catch((e) => console.log("Audio play error:", e));
+        audio.play().catch(() => {});
     }
 
     playWin() {
@@ -186,7 +187,7 @@ export class AudioHub {
         if (isActive) {
             if (audio.paused) {
                 audio.volume = this.isMuted ? 0 : this.masterVolume;
-                audio.play().catch((e) => console.log(e));
+                audio.play().catch(() => {});
             } else {
                 audio.volume = this.isMuted ? 0 : this.masterVolume;
             }
@@ -213,9 +214,7 @@ export class AudioHub {
         if (this.gameOverSound.paused) {
             this.stopAllBackgroundMusic();
             this.gameOverSound.volume = this.isMuted ? 0 : this.masterVolume;
-            this.gameOverSound
-                .play()
-                .catch((error) => console.log("Audio error:", error));
+            this.gameOverSound.play().catch(() => {});
         }
     }
 
@@ -225,7 +224,7 @@ export class AudioHub {
     playBackgroundMusic() {
         if (this.backgroundMusic.paused) {
             this.backgroundMusic.volume = this.isMuted ? 0 : this.masterVolume;
-            this.backgroundMusic.play().catch((e) => console.log(e));
+            this.backgroundMusic.play().catch(() => {});
         }
     }
 
@@ -255,9 +254,7 @@ export class AudioHub {
         this.stopAllBackgroundMusic();
         this.currentMusicTrack = targetTrack;
         this.currentMusicTrack.volume = this.isMuted ? 0 : this.masterVolume;
-        this.currentMusicTrack
-            .play()
-            .catch((error) => console.log("Audio play blocked:", error));
+        this.currentMusicTrack.play().catch(() => {});
     }
 
     /**

@@ -1,3 +1,6 @@
+import { MenuContentHelper } from "./menu-content.helper.js";
+import { StartScreenRenderer } from "./start-screen-renderer.helper.js";
+
 export class StartScreen {
     activeSubMenu = null;
     bgImage = new Image();
@@ -28,123 +31,19 @@ export class StartScreen {
      * @param {CanvasRenderingContext2D} ctx
      */
     draw(ctx) {
-        this.drawBackgroundOverlay(ctx);
+        StartScreenRenderer.drawBackgroundAndPanel(
+            ctx,
+            this.width,
+            this.height,
+            this.bgImage,
+        );
 
         const panelWidth = 600;
         const panelHeight = 400;
         const panelX = this.width / 2 - panelWidth / 2;
         const panelY = this.height / 2 - panelHeight / 2;
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(panelX, panelY, panelWidth, panelHeight);
-        ctx.clip();
-
-        this.drawImagePanel(ctx, panelX, panelY, panelWidth, panelHeight);
-        ctx.restore();
-
-        this.drawPanelBorder(ctx, panelX, panelY, panelWidth, panelHeight);
         this.drawMenuContent(ctx, panelX, panelY);
-    }
-
-    /**
-     * Draws the dark background overlay.
-     * @param {CanvasRenderingContext2D} ctx
-     */
-    drawBackgroundOverlay(ctx) {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
-        ctx.fillRect(0, 0, this.width, this.height);
-    }
-
-    /**
-     * Draws the background image inside the panel.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {number} panelX
-     * @param {number} panelY
-     * @param {number} panelWidth
-     * @param {number} panelHeight
-     */
-    drawImagePanel(ctx, panelX, panelY, panelWidth, panelHeight) {
-        if (this.bgImage.complete && this.bgImage.naturalWidth !== 0) {
-            this.drawCompleteImagePanel(
-                ctx,
-                panelX,
-                panelY,
-                panelWidth,
-                panelHeight,
-            );
-        } else {
-            this.drawFallbackImagePanel(
-                ctx,
-                panelX,
-                panelY,
-                panelWidth,
-                panelHeight,
-            );
-        }
-
-        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-        ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
-    }
-
-    /**
-     * Draws the loaded background image scaled into the panel.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {number} panelX
-     * @param {number} panelY
-     * @param {number} panelWidth
-     * @param {number} panelHeight
-     */
-    drawCompleteImagePanel(ctx, panelX, panelY, panelWidth, panelHeight) {
-        const imgWidth = this.bgImage.naturalWidth;
-        const imgHeight = this.bgImage.naturalHeight;
-        const imgRatio = imgWidth / imgHeight;
-        const panelRatio = panelWidth / panelHeight;
-
-        let drawWidth = panelWidth;
-        let drawHeight = panelHeight;
-        let offsetX = panelX;
-        let offsetY = panelY;
-
-        if (imgRatio > panelRatio) {
-            drawWidth = panelHeight * imgRatio;
-            offsetX = panelX - (drawWidth - panelWidth) / 2;
-        } else {
-            drawHeight = panelWidth / imgRatio;
-            offsetY = panelY - (drawHeight - panelHeight) / 2;
-        }
-
-        ctx.drawImage(this.bgImage, offsetX, offsetY, drawWidth, drawHeight);
-    }
-
-    /**
-     * Draws a fallback color when the image is not yet loaded.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {number} panelX
-     * @param {number} panelY
-     * @param {number} panelWidth
-     * @param {number} panelHeight
-     */
-    drawFallbackImagePanel(ctx, panelX, panelY, panelWidth, panelHeight) {
-        ctx.fillStyle = "#1a0033";
-        ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
-    }
-
-    /**
-     * Draws the neon border around the panel.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {number} panelX
-     * @param {number} panelY
-     * @param {number} panelWidth
-     * @param {number} panelHeight
-     */
-    drawPanelBorder(ctx, panelX, panelY, panelWidth, panelHeight) {
-        ctx.strokeStyle = "#00f0ff";
-        ctx.lineWidth = 4;
-        ctx.shadowColor = "#00f0ff";
-        ctx.shadowBlur = 15;
-        ctx.strokeRect(panelX, panelY, panelWidth, panelHeight);
-        ctx.shadowBlur = 0;
     }
 
     /**
@@ -157,9 +56,23 @@ export class StartScreen {
         ctx.textAlign = "center";
 
         if (this.activeSubMenu === "options") {
-            this.drawOptionsMenu(ctx, panelY);
+            MenuContentHelper.drawOptionsMenu(
+                ctx,
+                panelY,
+                this.width,
+                (c, p) => this.createTitleGradient(c, p),
+                (c, b) => this.setHeadingShadow(c, b),
+                (c) => this.resetShadow(c),
+            );
         } else if (this.activeSubMenu === "impressum") {
-            this.drawImpressumMenu(ctx, panelY);
+            MenuContentHelper.drawImpressumMenu(
+                ctx,
+                panelY,
+                this.width,
+                (c, p) => this.createTitleGradient(c, p),
+                (c, b) => this.setHeadingShadow(c, b),
+                (c) => this.resetShadow(c),
+            );
         } else {
             this.drawMainMenu(ctx, panelY);
         }
@@ -205,127 +118,6 @@ export class StartScreen {
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
-    }
-
-    /**
-     * Draws the options/controls menu.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {number} panelY
-     */
-    drawOptionsMenu(ctx, panelY) {
-        ctx.textAlign = "center";
-        let titleGradient = this.createTitleGradient(ctx, panelY);
-
-        this.setHeadingShadow(ctx, 2);
-
-        ctx.font = "bold 22px 'Press Start 2P', monospace";
-        ctx.fillStyle = titleGradient;
-        ctx.fillText("TASTENBELEGUNG", this.width / 2, panelY + 45);
-
-        ctx.font = "bold 20px sans-serif";
-        ctx.fillStyle = "#ffffff";
-
-        ctx.fillText("A / D – Gehen", this.width / 2, panelY + 75);
-        ctx.fillText("W – Springen", this.width / 2, panelY + 98);
-        ctx.fillText("S – Ducken", this.width / 2, panelY + 121);
-        ctx.fillText("S + A – Links krabbeln", this.width / 2, panelY + 144);
-        ctx.fillText("S + D – Rechts krabbeln", this.width / 2, panelY + 167);
-        ctx.fillText("L – Core werfen", this.width / 2, panelY + 190);
-        ctx.fillText(
-            "Auf Golems springen = Core",
-            this.width / 2,
-            panelY + 210,
-        );
-        ctx.fillText(
-            "Core auf Ghost-Boss werfen",
-            this.width / 2,
-            panelY + 240,
-        );
-
-        ctx.font = "italic 14px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#00f0ff";
-        ctx.fillText(
-            "Klicke irgendwo, um zurückzugehen",
-            this.width / 2,
-            panelY + 310,
-        );
-
-        this.resetShadow(ctx);
-    }
-
-    /**
-     * Draws the Impressum menu according to § 5 DDG.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {number} panelY
-     */
-    drawImpressumMenu(ctx, panelY) {
-        ctx.textAlign = "center";
-        let titleGradient = this.createTitleGradient(ctx, panelY);
-
-        this.setHeadingShadow(ctx, 4);
-
-        ctx.font = "bold 22px 'Press Start 2P', monospace";
-        ctx.fillStyle = titleGradient;
-        ctx.fillText("IMPRESSUM", this.width / 2, panelY + 45);
-
-        this.drawImpressumTextContent(ctx, panelY);
-
-        ctx.font = "italic 14px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#00f0ff";
-        ctx.fillText(
-            "Klicke irgendwo, um zurückzugehen",
-            this.width / 2,
-            panelY + 315,
-        );
-
-        this.resetShadow(ctx);
-    }
-
-    /**
-     * Draws the text sections of the impressum menu.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {number} panelY
-     */
-    drawImpressumTextContent(ctx, panelY) {
-        ctx.font = "bold 20px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#00f0ff";
-        ctx.fillText("Angaben gemäß § 5 DDG:", this.width / 2, panelY + 75);
-
-        ctx.font = "20px sans-serif";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText("Marcel Schmitz", this.width / 2, panelY + 98);
-        ctx.fillText("[Straße und Hausnummer]", this.width / 2, panelY + 118);
-        ctx.fillText("[PLZ Ort]", this.width / 2, panelY + 138);
-
-        ctx.font = "bold 20px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#00f0ff";
-        ctx.fillText("Kontakt:", this.width / 2, panelY + 165);
-
-        ctx.font = "20px sans-serif";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(
-            "E-Mail: m.schmitz.dev@gmail.com",
-            this.width / 2,
-            panelY + 185,
-        );
-
-        ctx.font = "bold 20px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#00f0ff";
-        ctx.fillText("Urheberrecht & Assets:", this.width / 2, panelY + 212);
-
-        ctx.font = "20px sans-serif";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(
-            "Icons & Grafiken: KI (ChatGPT, Gemini)",
-            this.width / 2,
-            panelY + 232,
-        );
-        ctx.fillText("sowie Icons8 / Flaticon", this.width / 2, panelY + 250);
-        ctx.fillText(
-            "Sounds: KI (ChatGPT) & Pixabay",
-            this.width / 2,
-            panelY + 268,
-        );
     }
 
     /**
@@ -401,15 +193,36 @@ export class StartScreen {
     /**
      * Prepares gradient and shadow styles for a menu button.
      * @param {CanvasRenderingContext2D} ctx
-     * @param {number} startX
-     * @param {number} startY
-     * @param {number} endX
-     * @param {number} endY
+     * @param {number} textX
+     * @param {number} textY
      * @param {boolean} isHover
      * @returns {CanvasGradient}
      */
-    setupButtonStyles(ctx, startX, startY, endX, endY, isHover) {
-        let gradient = ctx.createLinearGradient(startX, startY, endX, endY);
+    setupButtonStyles(ctx, textX, textY, isHover) {
+        let btnWidth = 360;
+        let btnHeight = 46;
+        let btnX = textX - btnWidth / 2;
+        let btnY = textY - 32;
+
+        ctx.save();
+        ctx.fillStyle = isHover
+            ? "rgba(0, 240, 255, 0.15)"
+            : "rgba(20, 20, 35, 0.65)";
+        ctx.fillRect(btnX, btnY, btnWidth, btnHeight);
+
+        ctx.strokeStyle = isHover ? "#ff00ff" : "#00f0ff";
+        ctx.lineWidth = 2;
+        ctx.shadowColor = isHover ? "#ff00ff" : "#00f0ff";
+        ctx.shadowBlur = isHover ? 12 : 6;
+        ctx.strokeRect(btnX, btnY, btnWidth, btnHeight);
+        ctx.restore();
+
+        let gradient = ctx.createLinearGradient(
+            textX - 100,
+            textY,
+            textX + 100,
+            textY,
+        );
         if (isHover) {
             gradient.addColorStop(0, "#ff00ff");
             gradient.addColorStop(1, "#00f0ff");
@@ -422,7 +235,7 @@ export class StartScreen {
 
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
-        ctx.font = "bold 22px 'Press Start 2P', monospace";
+        ctx.font = "bold 20px 'Press Start 2P', monospace";
         return gradient;
     }
 
@@ -433,16 +246,11 @@ export class StartScreen {
      * @param {boolean} isHover
      */
     drawButtonStart(ctx, panelY, isHover) {
-        let startGradient = this.setupButtonStyles(
-            ctx,
-            this.width / 2 - 100,
-            panelY + 130,
-            this.width / 2 + 100,
-            panelY + 175,
-            isHover,
-        );
+        let textX = this.width / 2;
+        let textY = panelY + 160;
+        let startGradient = this.setupButtonStyles(ctx, textX, textY, isHover);
         ctx.fillStyle = startGradient;
-        ctx.fillText("SPIEL STARTEN", this.width / 2, panelY + 160);
+        ctx.fillText("SPIEL STARTEN", textX, textY);
     }
 
     /**
@@ -452,16 +260,16 @@ export class StartScreen {
      * @param {boolean} isHover
      */
     drawButtonOptions(ctx, panelY, isHover) {
+        let textX = this.width / 2;
+        let textY = panelY + 225;
         let optionsGradient = this.setupButtonStyles(
             ctx,
-            this.width / 2 - 100,
-            panelY + 195,
-            this.width / 2 + 100,
-            panelY + 240,
+            textX,
+            textY,
             isHover,
         );
         ctx.fillStyle = optionsGradient;
-        ctx.fillText("STEUERUNG", this.width / 2, panelY + 225);
+        ctx.fillText("STEUERUNG", textX, textY);
     }
 
     /**
@@ -471,16 +279,16 @@ export class StartScreen {
      * @param {boolean} isHover
      */
     drawButtonImpressum(ctx, panelY, isHover) {
+        let textX = this.width / 2;
+        let textY = panelY + 290;
         let impressumGradient = this.setupButtonStyles(
             ctx,
-            this.width / 2 - 100,
-            panelY + 260,
-            this.width / 2 + 100,
-            panelY + 305,
+            textX,
+            textY,
             isHover,
         );
         ctx.fillStyle = impressumGradient;
-        ctx.fillText("IMPRESSUM", this.width / 2, panelY + 290);
+        ctx.fillText("IMPRESSUM", textX, textY);
     }
 
     /**

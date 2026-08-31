@@ -8,6 +8,10 @@ export class Keyboard {
     DOWN = false;
     ENTER = false;
     SPACE = false;
+    D = false;
+
+    // Menü-Steuerung
+    mousePos = { x: -1, y: -1 };
 
     /**
      * Initializes keyboard state and touch listener bindings.
@@ -93,5 +97,49 @@ export class Keyboard {
     deactivateKey(e, property) {
         e.preventDefault();
         this[property] = false;
+    }
+
+    /**
+     * Initializes mouse and touch listeners for the start screen on the canvas.
+     * @param {HTMLCanvasElement} canvas
+     * @param {StartScreen} startScreen
+     * @param {Function} onStartCallback
+     */
+    initMenuListeners(canvas, startScreen, onStartCallback) {
+        canvas.addEventListener("mousemove", (event) => {
+            const rect = canvas.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            let y = event.clientY - rect.top;
+            this.mousePos = { x, y };
+            if (startScreen) startScreen.handleMouseMove(x, y);
+        });
+
+        const handleMenuClick = (event, isTouch = false) => {
+            const rect = canvas.getBoundingClientRect();
+            let clientX = isTouch ? event.touches[0].clientX : event.clientX;
+            let clientY = isTouch ? event.touches[0].clientY : event.clientY;
+            
+            let clickX = clientX - rect.left;
+            let clickY = clientY - rect.top;
+
+            if (isTouch) {
+                clickX *= canvas.width / rect.width;
+                clickY *= canvas.height / rect.height;
+            }
+
+            let action = startScreen.handleClick(clickX, clickY);
+            if (action === "start") {
+                onStartCallback();
+            }
+            if (action === "exit") {
+                window.location.reload();
+            }
+        };
+
+        canvas.addEventListener("click", (e) => handleMenuClick(e, false));
+        canvas.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            handleMenuClick(e, true);
+        }, { passive: false });
     }
 }
