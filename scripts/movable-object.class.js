@@ -1,10 +1,16 @@
 import { DrawableObject } from "./drawable-object.class.js";
 
+/**
+ * Base class for all movable entities featuring physics, gravity, and collision logic.
+ */
 export class MovableObject extends DrawableObject {
     speedY = 0;
     acceleration = 2.5;
     otherDirection = false;
 
+    /**
+     * Applies gravity physics to the object in an interval loop.
+     */
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -17,6 +23,10 @@ export class MovableObject extends DrawableObject {
         }, 1000 / 25);
     }
 
+    /**
+     * Checks if the object is currently airborne.
+     * @returns {boolean} True if above ground level.
+     */
     isAboveGround() {
         if (this.constructor.name === "Character") {
             return this.y < 380;
@@ -24,14 +34,17 @@ export class MovableObject extends DrawableObject {
         return true;
     }
 
-    moveRight() {
-        console.log("moving right");
-    }
-
+    /**
+     * Moves object to the left by speed value.
+     */
     moveLeft() {
         this.x -= this.speed;
     }
 
+    /**
+     * Cycles through animation image frames.
+     * @param {string[]} images - Array of image paths.
+     */
     playAnimation(images) {
         let i = this.currentImage % images.length;
         let path = images[i];
@@ -39,6 +52,11 @@ export class MovableObject extends DrawableObject {
         this.currentImage++;
     }
 
+    /**
+     * Checks collision bounds with another movable object.
+     * @param {DrawableObject} mo - Target object to check against.
+     * @returns {boolean} True if bounding boxes intersect.
+     */
     isColliding(mo) {
         return (
             this.x + this.width > mo.x &&
@@ -48,6 +66,11 @@ export class MovableObject extends DrawableObject {
         );
     }
 
+    /**
+     * Checks if landing top-down onto another object (e.g. jumping on enemies).
+     * @param {DrawableObject} mo - Target object.
+     * @returns {boolean} True if landing on top.
+     */
     isCollidingTop(mo) {
         return (
             this.isColliding(mo) &&

@@ -21,40 +21,71 @@ function createRandomCoins(count = 7) {
     return coinsArray;
 }
 
-export const level1 = new Level(
-    [new Ghost(), new Spider(), new Spider(), new Spider(), new Spider(), new Spider()],
-    [Golem.createPortal(900, 380), Golem.createPortal(2200, 380)],
 
-    [
+/**
+ * Creates the background objects array for level 1.
+ * @returns {BackgroundObjekt[]} Array of background objects.
+ */
+function createBackgroundObjects() {
+    return [
+        new BackgroundObjekt("assets/img/background/background_lvl1.webp", -1280),
+        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 0),
+        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 1280),
+        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 2560),
+        new BackgroundObjekt("assets/img/background/background_boss.webp", 3840),
+        new BackgroundObjekt("assets/img/background/background_boss.webp", 5120),
+    ];
+}
+
+
+/**
+ * Creates the cloud objects array for level 1.
+ * @returns {Cloud[]} Array of cloud objects.
+ */
+function createClouds() {
+    return [
         new Cloud(),
         new Cloud(),
         new Cloud(),
         new Cloud(1500),
         new Cloud(2000),
         new Cloud(2600),
-    ],
-    [
-        new BackgroundObjekt(
-            "assets/img/background/background_lvl1.webp",
-            -1280,
-        ),
-        new BackgroundObjekt("assets/img/background/background_lvl1.webp", 0),
-        new BackgroundObjekt(
-            "assets/img/background/background_lvl1.webp",
-            1280,
-        ),
-        new BackgroundObjekt(
-            "assets/img/background/background_lvl1.webp",
-            2560,
-        ),
-        new BackgroundObjekt(
-            "assets/img/background/background_boss.webp",
-            3840,
-        ),
-        new BackgroundObjekt(
-            "assets/img/background/background_boss.webp",
-            5120,
-        ),
-    ],
-    createRandomCoins(7),
+    ];
+}
+
+
+/**
+ * Creates the initial enemy array for level 1.
+ * @returns {Array} Array of enemy instances.
+ */
+function createEnemies() {
+    return [
+        new Ghost(),
+        new Spider(),
+        new Spider(),
+        new Spider(),
+        new Spider(),
+        new Spider()
+    ];
+}
+
+
+/**
+ * Creates the portal array for level 1.
+ * @returns {Array} Array of portal instances.
+ */
+function createPortals() {
+    return [
+        Golem.createPortal(900, 380),
+        Golem.createPortal(2200, 380)
+    ];
+}
+
+
+export const level1 = new Level(
+    createEnemies(),
+    createPortals(),
+    createClouds(),
+    createBackgroundObjects(),
+    createRandomCoins(7)
 );

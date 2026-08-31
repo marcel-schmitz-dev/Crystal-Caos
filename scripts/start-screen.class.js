@@ -14,6 +14,11 @@ export class StartScreen {
         this.mousePos = { x: -1, y: -1 };
     }
 
+    /**
+     * Updates the current mouse position.
+     * @param {number} x
+     * @param {number} y
+     */
     handleMouseMove(x, y) {
         this.mousePos = { x, y };
     }
@@ -61,37 +66,67 @@ export class StartScreen {
      */
     drawImagePanel(ctx, panelX, panelY, panelWidth, panelHeight) {
         if (this.bgImage.complete && this.bgImage.naturalWidth !== 0) {
-            const imgWidth = this.bgImage.naturalWidth;
-            const imgHeight = this.bgImage.naturalHeight;
-            const imgRatio = imgWidth / imgHeight;
-            const panelRatio = panelWidth / panelHeight;
-
-            let drawWidth = panelWidth;
-            let drawHeight = panelHeight;
-            let offsetX = panelX;
-            let offsetY = panelY;
-
-            if (imgRatio > panelRatio) {
-                drawWidth = panelHeight * imgRatio;
-                offsetX = panelX - (drawWidth - panelWidth) / 2;
-            } else {
-                drawHeight = panelWidth / imgRatio;
-                offsetY = panelY - (drawHeight - panelHeight) / 2;
-            }
-
-            ctx.drawImage(
-                this.bgImage,
-                offsetX,
-                offsetY,
-                drawWidth,
-                drawHeight,
+            this.drawCompleteImagePanel(
+                ctx,
+                panelX,
+                panelY,
+                panelWidth,
+                panelHeight,
             );
         } else {
-            ctx.fillStyle = "#1a0033";
-            ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+            this.drawFallbackImagePanel(
+                ctx,
+                panelX,
+                panelY,
+                panelWidth,
+                panelHeight,
+            );
         }
 
         ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+    }
+
+    /**
+     * Draws the loaded background image scaled into the panel.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelX
+     * @param {number} panelY
+     * @param {number} panelWidth
+     * @param {number} panelHeight
+     */
+    drawCompleteImagePanel(ctx, panelX, panelY, panelWidth, panelHeight) {
+        const imgWidth = this.bgImage.naturalWidth;
+        const imgHeight = this.bgImage.naturalHeight;
+        const imgRatio = imgWidth / imgHeight;
+        const panelRatio = panelWidth / panelHeight;
+
+        let drawWidth = panelWidth;
+        let drawHeight = panelHeight;
+        let offsetX = panelX;
+        let offsetY = panelY;
+
+        if (imgRatio > panelRatio) {
+            drawWidth = panelHeight * imgRatio;
+            offsetX = panelX - (drawWidth - panelWidth) / 2;
+        } else {
+            drawHeight = panelWidth / imgRatio;
+            offsetY = panelY - (drawHeight - panelHeight) / 2;
+        }
+
+        ctx.drawImage(this.bgImage, offsetX, offsetY, drawWidth, drawHeight);
+    }
+
+    /**
+     * Draws a fallback color when the image is not yet loaded.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelX
+     * @param {number} panelY
+     * @param {number} panelWidth
+     * @param {number} panelHeight
+     */
+    drawFallbackImagePanel(ctx, panelX, panelY, panelWidth, panelHeight) {
+        ctx.fillStyle = "#1a0033";
         ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
     }
 
@@ -133,13 +168,12 @@ export class StartScreen {
     }
 
     /**
-     * Draws the options/controls menu.
+     * Creates a standard title gradient for menus.
      * @param {CanvasRenderingContext2D} ctx
      * @param {number} panelY
+     * @returns {CanvasGradient}
      */
-    drawOptionsMenu(ctx, panelY) {
-        ctx.textAlign = "center";
-
+    createTitleGradient(ctx, panelY) {
         let titleGradient = ctx.createLinearGradient(
             this.width / 2 - 200,
             panelY + 25,
@@ -148,11 +182,41 @@ export class StartScreen {
         );
         titleGradient.addColorStop(0, "#00f0ff");
         titleGradient.addColorStop(1.0, "#ff00ff");
+        return titleGradient;
+    }
 
+    /**
+     * Configures shadow settings for headings.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} [blur=2]
+     */
+    setHeadingShadow(ctx, blur = 2) {
         ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
         ctx.shadowOffsetX = 3;
         ctx.shadowOffsetY = 3;
-        ctx.shadowBlur = 2;
+        ctx.shadowBlur = blur;
+    }
+
+    /**
+     * Resets shadow settings.
+     * @param {CanvasRenderingContext2D} ctx
+     */
+    resetShadow(ctx) {
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+    }
+
+    /**
+     * Draws the options/controls menu.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelY
+     */
+    drawOptionsMenu(ctx, panelY) {
+        ctx.textAlign = "center";
+        let titleGradient = this.createTitleGradient(ctx, panelY);
+
+        this.setHeadingShadow(ctx, 2);
 
         ctx.font = "bold 22px 'Press Start 2P', monospace";
         ctx.fillStyle = titleGradient;
@@ -186,9 +250,7 @@ export class StartScreen {
             panelY + 310,
         );
 
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
+        this.resetShadow(ctx);
     }
 
     /**
@@ -198,25 +260,33 @@ export class StartScreen {
      */
     drawImpressumMenu(ctx, panelY) {
         ctx.textAlign = "center";
+        let titleGradient = this.createTitleGradient(ctx, panelY);
 
-        let titleGradient = ctx.createLinearGradient(
-            this.width / 2 - 200,
-            panelY + 25,
-            this.width / 2 + 200,
-            panelY + 65,
-        );
-        titleGradient.addColorStop(0, "#00f0ff");
-        titleGradient.addColorStop(1.0, "#ff00ff");
-
-        ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
-        ctx.shadowOffsetX = 3;
-        ctx.shadowOffsetY = 3;
-        ctx.shadowBlur = 4;
+        this.setHeadingShadow(ctx, 4);
 
         ctx.font = "bold 22px 'Press Start 2P', monospace";
         ctx.fillStyle = titleGradient;
         ctx.fillText("IMPRESSUM", this.width / 2, panelY + 45);
 
+        this.drawImpressumTextContent(ctx, panelY);
+
+        ctx.font = "italic 14px 'Press Start 2P', monospace";
+        ctx.fillStyle = "#00f0ff";
+        ctx.fillText(
+            "Klicke irgendwo, um zurückzugehen",
+            this.width / 2,
+            panelY + 315,
+        );
+
+        this.resetShadow(ctx);
+    }
+
+    /**
+     * Draws the text sections of the impressum menu.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelY
+     */
+    drawImpressumTextContent(ctx, panelY) {
         ctx.font = "bold 20px 'Press Start 2P', monospace";
         ctx.fillStyle = "#00f0ff";
         ctx.fillText("Angaben gemäß § 5 DDG:", this.width / 2, panelY + 75);
@@ -256,19 +326,6 @@ export class StartScreen {
             this.width / 2,
             panelY + 268,
         );
-
-        // Mehr Abstand zum Zurück-Text unten
-        ctx.font = "italic 14px 'Press Start 2P', monospace";
-        ctx.fillStyle = "#00f0ff";
-        ctx.fillText(
-            "Klicke irgendwo, um zurückzugehen",
-            this.width / 2,
-            panelY + 315,
-        );
-
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
     }
 
     /**
@@ -277,6 +334,23 @@ export class StartScreen {
      * @param {number} panelY
      */
     drawMainMenu(ctx, panelY) {
+        this.drawMainMenuTitle(ctx, panelY);
+        const panelX = this.width / 2 - 300;
+        const hovers = this.calculateMainHoverStates(panelX, panelY);
+
+        this.drawButtonStart(ctx, panelY, hovers.isHoverStart);
+        this.drawButtonOptions(ctx, panelY, hovers.isHoverOptions);
+        this.drawButtonImpressum(ctx, panelY, hovers.isHoverImpressum);
+
+        this.resetShadow(ctx);
+    }
+
+    /**
+     * Draws the main menu title.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelY
+     */
+    drawMainMenuTitle(ctx, panelY) {
         let titleGradient = ctx.createLinearGradient(
             this.width / 2 - 150,
             panelY + 40,
@@ -294,9 +368,15 @@ export class StartScreen {
         ctx.font = "bold 32px 'Press Start 2P', monospace";
         ctx.fillStyle = titleGradient;
         ctx.fillText("CRYSTAL CAOS", this.width / 2, panelY + 80);
+    }
 
-        const panelX = this.width / 2 - 300;
-
+    /**
+     * Calculates the hover states for main menu buttons.
+     * @param {number} panelX
+     * @param {number} panelY
+     * @returns {Object}
+     */
+    calculateMainHoverStates(panelX, panelY) {
         const isHoverStart =
             this.mousePos.x > panelX + 100 &&
             this.mousePos.x < panelX + 500 &&
@@ -315,72 +395,92 @@ export class StartScreen {
             this.mousePos.y > panelY + 260 &&
             this.mousePos.y < panelY + 305;
 
-        // --- Button 1: SPIEL STARTEN ---
-        let startGradient = ctx.createLinearGradient(
-            this.width / 2 - 100,
-            panelY + 130,
-            this.width / 2 + 100,
-            panelY + 175,
-        );
-        if (isHoverStart) {
-            startGradient.addColorStop(0, "#ff00ff");
-            startGradient.addColorStop(1, "#00f0ff");
+        return { isHoverStart, isHoverOptions, isHoverImpressum };
+    }
+
+    /**
+     * Prepares gradient and shadow styles for a menu button.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} startX
+     * @param {number} startY
+     * @param {number} endX
+     * @param {number} endY
+     * @param {boolean} isHover
+     * @returns {CanvasGradient}
+     */
+    setupButtonStyles(ctx, startX, startY, endX, endY, isHover) {
+        let gradient = ctx.createLinearGradient(startX, startY, endX, endY);
+        if (isHover) {
+            gradient.addColorStop(0, "#ff00ff");
+            gradient.addColorStop(1, "#00f0ff");
             ctx.shadowBlur = 15;
         } else {
-            startGradient.addColorStop(0, "#ffffff");
-            startGradient.addColorStop(1, "#00f0ff");
+            gradient.addColorStop(0, "#ffffff");
+            gradient.addColorStop(1, "#00f0ff");
             ctx.shadowBlur = 6;
         }
 
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
         ctx.font = "bold 22px 'Press Start 2P', monospace";
+        return gradient;
+    }
+
+    /**
+     * Draws the start game menu button.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelY
+     * @param {boolean} isHover
+     */
+    drawButtonStart(ctx, panelY, isHover) {
+        let startGradient = this.setupButtonStyles(
+            ctx,
+            this.width / 2 - 100,
+            panelY + 130,
+            this.width / 2 + 100,
+            panelY + 175,
+            isHover,
+        );
         ctx.fillStyle = startGradient;
         ctx.fillText("SPIEL STARTEN", this.width / 2, panelY + 160);
+    }
 
-        // --- Button 2: STEUERUNG ---
-        let optionsGradient = ctx.createLinearGradient(
+    /**
+     * Draws the options menu button.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelY
+     * @param {boolean} isHover
+     */
+    drawButtonOptions(ctx, panelY, isHover) {
+        let optionsGradient = this.setupButtonStyles(
+            ctx,
             this.width / 2 - 100,
             panelY + 195,
             this.width / 2 + 100,
             panelY + 240,
+            isHover,
         );
-        if (isHoverOptions) {
-            optionsGradient.addColorStop(0, "#ff00ff");
-            optionsGradient.addColorStop(1, "#00f0ff");
-            ctx.shadowBlur = 15;
-        } else {
-            optionsGradient.addColorStop(0, "#ffffff");
-            optionsGradient.addColorStop(1, "#00f0ff");
-            ctx.shadowBlur = 6;
-        }
-
         ctx.fillStyle = optionsGradient;
         ctx.fillText("STEUERUNG", this.width / 2, panelY + 225);
+    }
 
-        // --- Button 3: IMPRESSUM ---
-        let impressumGradient = ctx.createLinearGradient(
+    /**
+     * Draws the impressum menu button.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} panelY
+     * @param {boolean} isHover
+     */
+    drawButtonImpressum(ctx, panelY, isHover) {
+        let impressumGradient = this.setupButtonStyles(
+            ctx,
             this.width / 2 - 100,
             panelY + 260,
             this.width / 2 + 100,
             panelY + 305,
+            isHover,
         );
-        if (isHoverImpressum) {
-            impressumGradient.addColorStop(0, "#ff00ff");
-            impressumGradient.addColorStop(1, "#00f0ff");
-            ctx.shadowBlur = 15;
-        } else {
-            impressumGradient.addColorStop(0, "#ffffff");
-            impressumGradient.addColorStop(1, "#00f0ff");
-            ctx.shadowBlur = 6;
-        }
-
         ctx.fillStyle = impressumGradient;
         ctx.fillText("IMPRESSUM", this.width / 2, panelY + 290);
-
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
     }
 
     /**
@@ -396,16 +496,29 @@ export class StartScreen {
         if (this.activeSubMenu !== null) {
             this.activeSubMenu = null;
         } else {
-            if (x > panelX + 100 && x < panelX + 500) {
-                if (y > panelY + 130 && y < panelY + 175) {
-                    return "start";
-                }
-                if (y > panelY + 195 && y < panelY + 240) {
-                    this.activeSubMenu = "options";
-                }
-                if (y > panelY + 260 && y < panelY + 305) {
-                    this.activeSubMenu = "impressum";
-                }
+            return this.handleMainMenuClick(x, y, panelX, panelY);
+        }
+        return null;
+    }
+
+    /**
+     * Handles clicks specifically within the main menu state.
+     * @param {number} x
+     * @param {number} y
+     * @param {number} panelX
+     * @param {number} panelY
+     * @returns {string|null}
+     */
+    handleMainMenuClick(x, y, panelX, panelY) {
+        if (x > panelX + 100 && x < panelX + 500) {
+            if (y > panelY + 130 && y < panelY + 175) {
+                return "start";
+            }
+            if (y > panelY + 195 && y < panelY + 240) {
+                this.activeSubMenu = "options";
+            }
+            if (y > panelY + 260 && y < panelY + 305) {
+                this.activeSubMenu = "impressum";
             }
         }
         return null;

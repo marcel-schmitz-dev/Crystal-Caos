@@ -1,3 +1,6 @@
+/**
+ * Central repository dictionary containing all image paths for game assets.
+ */
 export const ImageHub = {
     CHARACTER: {
         STANDING: ["./assets/img/character/dodge/stehen.png"],
@@ -51,7 +54,6 @@ export const ImageHub = {
             "./assets/img/character/crawling/crawl6.png",
             "./assets/img/character/crawling/crawl7.png",
         ],
-
         HURT: [
             "./assets/img/character/hurt/hurt1.png",
             "./assets/img/character/hurt/hurt2.png",
@@ -83,7 +85,6 @@ export const ImageHub = {
             "./assets/img/character/angreifen/angriff.webp",
         ],
     },
-
     SPIDER: {
         WALKING: [
             "./assets/img/monster/spider/spider_walk0.png",
@@ -95,7 +96,6 @@ export const ImageHub = {
             "./assets/img/monster/spider/spider_walk6.png",
         ],
     },
-
     GOLEM: {
         WALKING: [
             "./assets/img/monster/golem1.png",
@@ -108,7 +108,6 @@ export const ImageHub = {
             "./assets/img/monster/golem8.png",
         ],
     },
-
     BOSS: {
         BOSS_HP_BARS: [
             "./assets/img/hud/hp_bar_boss0.png",
@@ -141,7 +140,6 @@ export const ImageHub = {
             "./assets/img/monster/final_death6.png",
         ],
     },
-
     HUD: {
         CORE_BARS: [
             "./assets/img/hud/core_bar0.png",
@@ -160,7 +158,6 @@ export const ImageHub = {
             "./assets/img/hud/coin_bar5.png",
         ],
     },
-
     COINS: [
         "./assets/img/drops/coin0.png",
         "./assets/img/drops/coin1.png",

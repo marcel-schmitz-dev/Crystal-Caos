@@ -1,54 +1,85 @@
+/**
+ * Manages all game audio tracks, sound effects, volume levels, and music zones.
+ */
 export class AudioHub {
+    /**
+     * Initializes the audio hub with all sound effects and background tracks.
+     */
     constructor() {
         this.isMuted = false;
         this.masterVolume = 0.1;
-
-        this.gameOverSound = new Audio("./assets/audio/character_death.mp3");
-        this.gameOverSound.loop = true;
-
-        this.backgroundMusic = new Audio(
-            "./assets/audio/background_sound5.mp3",
-        );
-        this.backgroundMusic.loop = true;
-        this.backgroundMusic.load();
-
-        this.ambientMusic = new Audio("./assets/audio/boss_room_ambient.mp3");
-        this.ambientMusic.loop = true;
-
-        this.bossMusic = new Audio("./assets/audio/boss_fight_.mp3");
-        this.bossMusic.loop = true;
-
-        this.jumpSound = new Audio("./assets/audio/sprung.wav");
-        this.crawlingSound = new Audio("./assets/audio/krabbeln.wav");
-        this.crawlingSound.loop = true;
-
-        this.playerHitSound = new Audio("./assets/audio/spieler_getroffen.wav");
-        this.bossHitSound = new Audio("./assets/audio/boss_getroffen.wav");
-
         this.currentMusicTrack = null;
-
-        this.playerThrowSound = new Audio(
-            "./assets/audio/character_core_abfeuern.wav",
-        );
-        this.bossShootSound = new Audio(
-            "./assets/audio/boss_crystal_abfeuern.wav",
-        );
-        this.golemWalkSound = new Audio("./assets/audio/golem_walk.wav");
-        this.golemWalkSound.loop = true;
-
-        this.winSound = new Audio("./assets/audio/you_win.mp3");
-
-        this.characterWalkSound = new Audio(
-            "./assets/audio/character_walk.wav",
-        );
-        this.characterWalkSound.loop = true;
-
+        this.initAudioElements();
         this.updateAllVolumes();
     }
 
     /**
-     * Setzt die Lautstärke.
-     * Erwartet entweder 0-100 (vom Slider) oder 0-1 (direkt per Code).
+     * Instantiates all audio objects used in the game.
+     */
+    initAudioElements() {
+        this.gameOverSound = this.createAudio(
+            "./assets/audio/character_death.mp3",
+            true,
+        );
+        this.backgroundMusic = this.createAudio(
+            "./assets/audio/background_sound5.mp3",
+            true,
+            true,
+        );
+        this.ambientMusic = this.createAudio(
+            "./assets/audio/boss_room_ambient.mp3",
+            true,
+        );
+        this.bossMusic = this.createAudio(
+            "./assets/audio/boss_fight_.mp3",
+            true,
+        );
+        this.crawlingSound = this.createAudio(
+            "./assets/audio/krabbeln.wav",
+            true,
+        );
+        this.golemWalkSound = this.createAudio(
+            "./assets/audio/golem_walk.wav",
+            true,
+        );
+        this.characterWalkSound = this.createAudio(
+            "./assets/audio/character_walk.mp3",
+            true,
+        );
+
+        this.jumpSound = this.createAudio("./assets/audio/sprung.wav");
+        this.playerHitSound = this.createAudio(
+            "./assets/audio/spieler_getroffen.wav",
+        );
+        this.bossHitSound = this.createAudio(
+            "./assets/audio/boss_getroffen.wav",
+        );
+        this.playerThrowSound = this.createAudio(
+            "./assets/audio/character_core_abfeuern.wav",
+        );
+        this.bossShootSound = this.createAudio(
+            "./assets/audio/boss_crystal_abfeuern.wav",
+        );
+        this.winSound = this.createAudio("./assets/audio/you_win.mp3");
+    }
+
+    /**
+     * Helper to create and configure an audio element.
+     * @param {string} path - Path to the audio file.
+     * @param {boolean} [isLoop=false] - Whether the audio should loop.
+     * @param {boolean} [shouldLoad=false] - Whether to call load explicitly.
+     * @returns {HTMLAudioElement} The configured audio element.
+     */
+    createAudio(path, isLoop = false, shouldLoad = false) {
+        let audio = new Audio(path);
+        audio.loop = isLoop;
+        if (shouldLoad) audio.load();
+        return audio;
+    }
+
+    /**
+     * Sets the master volume level.
+     * @param {number} value - Volume value (0-100 from slider or 0-1 direct).
      */
     setVolume(value) {
         if (value > 1) {
@@ -60,16 +91,22 @@ export class AudioHub {
         this.updateAllVolumes();
     }
 
+    /**
+     * Toggles the mute state of all audio.
+     * @returns {boolean} The new mute state.
+     */
     toggleMute() {
         this.isMuted = !this.isMuted;
         this.updateAllVolumes();
         return this.isMuted;
     }
 
+    /**
+     * Updates volume and mute properties for all audio instances.
+     */
     updateAllVolumes() {
         const currentVol = this.isMuted ? 0 : this.masterVolume;
         const isMuteActive = this.isMuted;
-
         const audioObjects = [
             this.gameOverSound,
             this.backgroundMusic,
@@ -86,109 +123,92 @@ export class AudioHub {
             this.characterWalkSound,
         ];
 
-        audioObjects.forEach((audio) => {
-            if (audio) {
-                audio.volume = currentVol;
-                audio.muted = isMuteActive;
-            }
-        });
-
+        audioObjects.forEach((audio) =>
+            this.applyVolumeToAudio(audio, currentVol, isMuteActive),
+        );
         if (this.currentMusicTrack) {
-            this.currentMusicTrack.volume = currentVol;
-            this.currentMusicTrack.muted = isMuteActive;
+            this.applyVolumeToAudio(
+                this.currentMusicTrack,
+                currentVol,
+                isMuteActive,
+            );
         }
+    }
+
+    /**
+     * Applies volume and mute settings to a single audio element.
+     * @param {HTMLAudioElement} audio - The audio element.
+     * @param {number} volume - Target volume.
+     * @param {boolean} isMuted - Target mute state.
+     */
+    applyVolumeToAudio(audio, volume, isMuted) {
+        if (audio) {
+            audio.volume = volume;
+            audio.muted = isMuted;
+        }
+    }
+
+    /**
+     * Plays a specific sound effect safely, catching playback block errors.
+     * @param {HTMLAudioElement} audio - The sound to play.
+     */
+    playSound(audio) {
+        audio.currentTime = 0;
+        audio.volume = this.isMuted ? 0 : this.masterVolume;
+        audio.play().catch((e) => console.log("Audio play error:", e));
     }
 
     playWin() {
-        this.winSound.currentTime = 0;
-        this.winSound.volume = this.isMuted ? 0 : this.masterVolume;
-        this.winSound.play().catch((e) => console.log(e));
+        this.playSound(this.winSound);
+    }
+    playJump() {
+        this.playSound(this.jumpSound);
+    }
+    playPlayerThrow() {
+        this.playSound(this.playerThrowSound);
+    }
+    playBossShoot() {
+        this.playSound(this.bossShootSound);
+    }
+    playPlayerHit() {
+        this.playSound(this.playerHitSound);
+    }
+    playBossHit() {
+        this.playSound(this.bossHitSound);
+    }
+
+    /**
+     * Manages looping movement sound playback (e.g. walking or crawling).
+     * @param {HTMLAudioElement} audio - The loop audio element.
+     * @param {boolean} isActive - Whether movement is active.
+     */
+    handleLoopingSound(audio, isActive) {
+        if (isActive) {
+            if (audio.paused) {
+                audio.volume = this.isMuted ? 0 : this.masterVolume;
+                audio.play().catch((e) => console.log(e));
+            } else {
+                audio.volume = this.isMuted ? 0 : this.masterVolume;
+            }
+        } else {
+            audio.pause();
+            audio.currentTime = 0;
+        }
     }
 
     playCharacterWalk(isWalking) {
-        if (isWalking) {
-            if (this.characterWalkSound.paused) {
-                this.characterWalkSound.volume = this.isMuted
-                    ? 0
-                    : this.masterVolume;
-                this.characterWalkSound.play().catch((e) => console.log(e));
-            } else {
-                this.characterWalkSound.volume = this.isMuted
-                    ? 0
-                    : this.masterVolume;
-            }
-        } else {
-            this.characterWalkSound.pause();
-            this.characterWalkSound.currentTime = 0;
-        }
+        this.handleLoopingSound(this.characterWalkSound, isWalking);
     }
-
-    playPlayerThrow() {
-        this.playerThrowSound.currentTime = 0;
-        this.playerThrowSound.volume = this.isMuted ? 0 : this.masterVolume;
-        this.playerThrowSound.play().catch((e) => console.log(e));
-    }
-
-    playBossShoot() {
-        this.bossShootSound.currentTime = 0;
-        this.bossShootSound.volume = this.isMuted ? 0 : this.masterVolume;
-        this.bossShootSound.play().catch((e) => console.log(e));
-    }
-
     playGolemWalk(isMoving) {
-        if (isMoving) {
-            if (this.golemWalkSound.paused) {
-                this.golemWalkSound.volume = this.isMuted
-                    ? 0
-                    : this.masterVolume;
-                this.golemWalkSound.play().catch((e) => console.log(e));
-            } else {
-                this.golemWalkSound.volume = this.isMuted
-                    ? 0
-                    : this.masterVolume;
-            }
-        } else {
-            this.golemWalkSound.pause();
-            this.golemWalkSound.currentTime = 0;
-        }
+        this.handleLoopingSound(this.golemWalkSound, isMoving);
     }
-
-    playJump() {
-        this.jumpSound.currentTime = 0;
-        this.jumpSound.volume = this.isMuted ? 0 : this.masterVolume;
-        this.jumpSound.play().catch((e) => console.log(e));
-    }
-
     playCrawling(isCrawling) {
-        if (isCrawling) {
-            if (this.crawlingSound.paused) {
-                this.crawlingSound.volume = this.isMuted
-                    ? 0
-                    : this.masterVolume;
-                this.crawlingSound.play().catch((e) => console.log(e));
-            } else {
-                this.crawlingSound.volume = this.isMuted
-                    ? 0
-                    : this.masterVolume;
-            }
-        } else {
-            this.crawlingSound.pause();
-            this.crawlingSound.currentTime = 0;
-        }
+        this.handleLoopingSound(this.crawlingSound, isCrawling);
     }
 
-    playPlayerHit() {
-        this.playerHitSound.currentTime = 0;
-        this.playerHitSound.volume = this.isMuted ? 0 : this.masterVolume;
-        this.playerHitSound.play().catch((e) => console.log(e));
-    }
-
-    playBossHit() {
-        this.bossHitSound.currentTime = 0;
-        this.bossHitSound.volume = this.isMuted ? 0 : this.masterVolume;
-        this.bossHitSound.play().catch((e) => console.log(e));
-    }
-
+    /**
+     * Plays the game over sound sequence.
+     */
     playGameOver() {
         if (this.gameOverSound.paused) {
             this.stopAllBackgroundMusic();
@@ -199,6 +219,9 @@ export class AudioHub {
         }
     }
 
+    /**
+     * Plays the default background music track.
+     */
     playBackgroundMusic() {
         if (this.backgroundMusic.paused) {
             this.backgroundMusic.volume = this.isMuted ? 0 : this.masterVolume;
@@ -206,54 +229,64 @@ export class AudioHub {
         }
     }
 
+    /**
+     * Changes background tracks depending on the character's map position.
+     * @param {number} characterX - Current X coordinate of the character.
+     */
     checkMusicZone(characterX) {
         let targetTrack = this.backgroundMusic;
-
-        if (characterX >= 3840) {
-            targetTrack = this.bossMusic;
-        } else if (characterX >= 2560) {
-            targetTrack = this.ambientMusic;
-        }
+        if (characterX >= 3840) targetTrack = this.bossMusic;
+        else if (characterX >= 2560) targetTrack = this.ambientMusic;
 
         if (this.currentMusicTrack !== targetTrack) {
-            this.stopAllBackgroundMusic();
-            this.currentMusicTrack = targetTrack;
-            this.currentMusicTrack.volume = this.isMuted
-                ? 0
-                : this.masterVolume;
-            this.currentMusicTrack.play().catch((error) => {
-                console.log("Audio play blocked by browser policies:", error);
-            });
-        } else {
+            this.switchMusicTrack(targetTrack);
+        } else if (this.currentMusicTrack) {
             this.currentMusicTrack.volume = this.isMuted
                 ? 0
                 : this.masterVolume;
         }
     }
 
-    stopAllBackgroundMusic() {
-        this.backgroundMusic.pause();
-        this.backgroundMusic.currentTime = 0;
-
-        this.ambientMusic.pause();
-        this.ambientMusic.currentTime = 0;
-
-        this.bossMusic.pause();
-        this.bossMusic.currentTime = 0;
+    /**
+     * Switches the active background track.
+     * @param {HTMLAudioElement} targetTrack - The track to switch to.
+     */
+    switchMusicTrack(targetTrack) {
+        this.stopAllBackgroundMusic();
+        this.currentMusicTrack = targetTrack;
+        this.currentMusicTrack.volume = this.isMuted ? 0 : this.masterVolume;
+        this.currentMusicTrack
+            .play()
+            .catch((error) => console.log("Audio play blocked:", error));
     }
 
+    /**
+     * Pauses and resets all background music tracks.
+     */
+    stopAllBackgroundMusic() {
+        [this.backgroundMusic, this.ambientMusic, this.bossMusic].forEach(
+            (track) => {
+                track.pause();
+                track.currentTime = 0;
+            },
+        );
+    }
+
+    /**
+     * Stops all sounds and music across the entire game.
+     */
     stopAll() {
         this.gameOverSound.pause();
         this.gameOverSound.currentTime = 0;
         this.stopAllBackgroundMusic();
-
-        this.bossHitSound.pause();
-        this.bossHitSound.currentTime = 0;
-        this.playerHitSound.pause();
-        this.playerHitSound.currentTime = 0;
-        this.golemWalkSound.pause();
-        this.golemWalkSound.currentTime = 0;
-        this.crawlingSound.pause();
-        this.crawlingSound.currentTime = 0;
+        [
+            this.bossHitSound,
+            this.playerHitSound,
+            this.golemWalkSound,
+            this.crawlingSound,
+        ].forEach((sound) => {
+            sound.pause();
+            sound.currentTime = 0;
+        });
     }
 }

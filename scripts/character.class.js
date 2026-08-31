@@ -4,8 +4,7 @@ import { CrystalProjectile } from "./crystal-projectile.class.js";
 import { Ghost } from "./Ghost.class.js";
 
 /**
- * Represents the main player character in the game.
- * Handles movement, animations, gravity, health, and actions.
+ * Represents the main player character, managing movement, health, and animations.
  */
 export class Character extends MovableObject {
     width = 180;
@@ -34,13 +33,20 @@ export class Character extends MovableObject {
     lastHit = 0;
 
     /**
-     * Initializes the character, loads images, applies gravity and starts loops.
+     * Initializes character assets, gravity, and animation/game loops.
      */
     constructor() {
         super();
         this.loadAllCharacterImages();
         this.applyGravity();
         this.animate();
+        this.initIdleProperties();
+    }
+
+    /**
+     * Sets initial values for the idle timer states.
+     */
+    initIdleProperties() {
         this.idleTimer = 0;
         this.idleThreshold = 24;
         this.longIdleThreshold = 60;
@@ -48,7 +54,7 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Loads all sprite arrays required for the character animations.
+     * Loads all required animation sprite arrays.
      */
     loadAllCharacterImages() {
         this.loadImage(this.IMAGES_STANDING[0]);
@@ -64,7 +70,7 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Starts the main animation and control loops.
+     * Starts game loop and animation loop intervals.
      */
     animate() {
         setInterval(() => this.runGameLoop(), 1000 / 60);
@@ -72,11 +78,10 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Handles movement and input logic per frame.
+     * Handles movement and input execution per frame.
      */
     runGameLoop() {
         if (!this.isGameActive()) return;
-
         let keyboard = this.world.keyboard;
         if (!keyboard) return;
 
@@ -86,16 +91,16 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Checks if the game is active and character can move.
-     * @returns {boolean} True if game has started and character is alive.
+     * Checks if the game is running and character is alive.
+     * @returns {boolean} True if active.
      */
     isGameActive() {
         return this.world && this.world.gameStarted && this.energy > 0;
     }
 
     /**
-     * Processes left and right movement and direction changes, including crawling.
-     * @param {Object} keyboard - The current keyboard state.
+     * Processes horizontal movement, crawling, and audio triggers.
+     * @param {Object} keyboard - Active keyboard state.
      */
     handleHorizontalMovement(keyboard) {
         let isCrawling = keyboard.DOWN && !this.isAboveGround();
@@ -108,37 +113,50 @@ export class Character extends MovableObject {
         this.world.audioHub.playCharacterWalk(isMovingHorizontally);
 
         let moveSpeed = isCrawling ? 2 : 5;
+        this.applyRightMovement(keyboard, moveSpeed);
+        this.applyLeftMovement(keyboard, moveSpeed);
+    }
 
+    /**
+     * Moves character right if input is given.
+     * @param {Object} keyboard - Keyboard state.
+     * @param {number} speed - Movement speed.
+     */
+    applyRightMovement(keyboard, speed) {
         if (keyboard.RIGHT && !this.isDodgeEnding) {
             this.otherDirection = false;
             if (!this.isThrowing && this.x < this.world.level.level_end_x) {
-                this.x += moveSpeed;
-            }
-        }
-        if (keyboard.LEFT && !this.isDodgeEnding) {
-            this.otherDirection = true;
-            if (!this.isThrowing && this.x > 0) {
-                this.x -= moveSpeed;
+                this.x += speed;
             }
         }
     }
 
     /**
-     * Processes jumping and dodging inputs.
-     * @param {Object} keyboard - The current keyboard state.
+     * Moves character left if input is given.
+     * @param {Object} keyboard - Keyboard state.
+     * @param {number} speed - Movement speed.
+     */
+    applyLeftMovement(keyboard, speed) {
+        if (keyboard.LEFT && !this.isDodgeEnding) {
+            this.otherDirection = true;
+            if (!this.isThrowing && this.x > 0) {
+                this.x -= speed;
+            }
+        }
+    }
+
+    /**
+     * Processes jump and dodge inputs.
+     * @param {Object} keyboard - Keyboard state.
      */
     handleVerticalMovement(keyboard) {
         if (this.isThrowing) return;
-
         if (keyboard.UP && !this.isAboveGround() && !this.isDodgeEnding) {
             this.jump();
-            if (this.world && this.world.audioHub) {
-                this.world.audioHub.playJump();
-            }
+            if (this.world?.audioHub) this.world.audioHub.playJump();
         }
-
         if (keyboard.DOWN && !this.isAboveGround()) {
-            this.ausweichen();
+            this.dodge();
         } else if (
             !keyboard.DOWN &&
             this.currentDodgeImage > 0 &&
@@ -149,85 +167,69 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Updates the camera position based on character coordinates.
+     * Updates camera position based on character location.
      */
     updateCamera() {
-        if (this.x > 400) {
-            this.world.camera_x = Math.floor(this.x - 400);
-        } else {
-            this.world.camera_x = 0;
-        }
+        this.world.camera_x = this.x > 400 ? Math.floor(this.x - 400) : 0;
     }
 
     /**
-     * Selects and plays the correct animation based on character state.
+     * Selects appropriate animation sequence based on state.
      */
     runAnimationLoop() {
         if (!this.world || !this.world.gameStarted) return;
-
         let keyboard = this.world.keyboard;
         if (!keyboard || this.isThrowing) return;
 
-        if (this.energy <= 0) {
-            this.playDeadAnimation();
-        } else if (this.isHurtAnimationActive()) {
+        if (this.energy <= 0) this.playDeadAnimation();
+        else if (this.isHurtAnimationActive())
             this.playAnimation(this.IMAGES_HURT);
-        } else if (this.isAboveGround()) {
-            this.playJumpAnimation();
-        } else if (this.isDodgeEnding) {
-            this.finishDodgeAnimation();
-        } else if (keyboard.DOWN && (keyboard.LEFT || keyboard.RIGHT)) {
+        else if (this.isAboveGround()) this.playJumpAnimation();
+        else if (this.isDodgeEnding) this.finishDodgeAnimation();
+        else if (keyboard.DOWN && (keyboard.LEFT || keyboard.RIGHT))
             this.playCrawlAnimation();
-        } else if (keyboard.DOWN) {
-            this.playDodgeAnimation();
-        } else {
-            this.playStandardAnimation(keyboard);
-        }
+        else if (keyboard.DOWN) this.playDodgeAnimation();
+        else this.playStandardAnimation(keyboard);
     }
 
     /**
-     * Checks if the hurt animation should be shown.
-     * @returns {boolean} True if character is currently hurt.
+     * Checks if hurt animation is ready to play.
+     * @returns {boolean} True if hurt.
      */
     isHurtAnimationActive() {
-        return this.isHurt() && this.IMAGES_HURT && this.IMAGES_HURT.length > 0;
+        return this.isHurt() && this.IMAGES_HURT?.length > 0;
     }
 
     /**
-     * Handles the sequence of death animations.
+     * Plays death sequence animation frames.
      */
     playDeadAnimation() {
         if (!this.deadAnimationStarted) {
             this.currentDeadImage = 0;
             this.deadAnimationStarted = true;
         }
-        if (this.IMAGES_DEAD && this.IMAGES_DEAD[this.currentDeadImage]) {
+        if (this.IMAGES_DEAD[this.currentDeadImage]) {
             this.loadImage(this.IMAGES_DEAD[this.currentDeadImage]);
-            if (this.currentDeadImage < this.IMAGES_DEAD.length - 1) {
+            if (this.currentDeadImage < this.IMAGES_DEAD.length - 1)
                 this.currentDeadImage++;
-            }
         }
     }
 
     /**
-     * Progresses through the jumping animation frames.
+     * Plays jump animation frame.
      */
     playJumpAnimation() {
-        let path = this.IMAGES_JUMPING[this.currentJumpImage];
-        this.loadImage(path);
-        if (this.currentJumpImage < this.IMAGES_JUMPING.length - 1) {
+        this.loadImage(this.IMAGES_JUMPING[this.currentJumpImage]);
+        if (this.currentJumpImage < this.IMAGES_JUMPING.length - 1)
             this.currentJumpImage++;
-        }
     }
 
     /**
-     * Progresses through the crawling animation frames.
+     * Plays crawling animation frames.
      */
     playCrawlAnimation() {
-        if (!this.IMAGES_CROUCHING || this.IMAGES_CROUCHING.length === 0) {
+        if (!this.IMAGES_CROUCHING?.length)
             this.IMAGES_CROUCHING = ImageHub.CHARACTER.CROUCHING;
-        }
-
         let path =
             this.IMAGES_CROUCHING[
                 this.currentImage % this.IMAGES_CROUCHING.length
@@ -238,7 +240,7 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Resets state after dodge sequence completes.
+     * Finalizes the dodge action sequence.
      */
     finishDodgeAnimation() {
         this.loadImage(this.IMAGES_DODGING[5]);
@@ -247,65 +249,68 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Progresses through the dodging animation frames.
+     * Plays dodge sequence animation frames.
      */
     playDodgeAnimation() {
-        let path = this.IMAGES_DODGING[this.currentDodgeImage];
-        this.loadImage(path);
-        if (this.currentDodgeImage < 4) {
-            this.currentDodgeImage++;
-        }
+        this.loadImage(this.IMAGES_DODGING[this.currentDodgeImage]);
+        if (this.currentDodgeImage < 4) this.currentDodgeImage++;
     }
 
     /**
-     * Plays walking or standing animations depending on input.
-     * @param {Object} keyboard - The current keyboard state.
+     * Plays standing, idle, or walking animations.
+     * @param {Object} keyboard - Keyboard state.
      */
     playStandardAnimation(keyboard) {
         this.currentJumpImage = 0;
         this.currentDodgeImage = 0;
-
         if (keyboard.RIGHT || keyboard.LEFT || keyboard.UP || keyboard.DOWN) {
-            this.idleTimer = 0;
-            this.currentLongIdleImage = 0;
-
-            let path = this.IMAGES_WALKING[this.currentImage];
-            if (path) {
-                this.loadImage(path);
-                this.currentImage =
-                    (this.currentImage + 1) % this.IMAGES_WALKING.length;
-            }
+            this.handleWalkingAnimation();
         } else {
-            this.idleTimer++;
-
-            if (this.idleTimer > this.longIdleThreshold) {
-                let path = this.IMAGES_LONG_IDLE[this.currentLongIdleImage];
-                this.loadImage(path);
-                if (Math.random() < 0.2) {
-                    this.currentLongIdleImage =
-                        (this.currentLongIdleImage + 1) %
-                        this.IMAGES_LONG_IDLE.length;
-                }
-            } else if (this.idleTimer > this.idleThreshold) {
-                if (this.IMAGES_IDLE_0) {
-                    this.loadImage(this.IMAGES_IDLE_0);
-                }
-            } else {
-                if (this.IMAGES_STANDING && this.IMAGES_STANDING[0]) {
-                    this.loadImage(this.IMAGES_STANDING[0]);
-                }
-            }
-            this.currentImage = 0;
+            this.handleIdleAnimation();
         }
     }
 
     /**
-     * Applies damage to the character if cooldown allows it.
-     * @param {number} [damage=1] - The amount of damage to take.
+     * Handles walking sprite frame progression.
+     */
+    handleWalkingAnimation() {
+        this.idleTimer = 0;
+        this.currentLongIdleImage = 0;
+        let path = this.IMAGES_WALKING[this.currentImage];
+        if (path) {
+            this.loadImage(path);
+            this.currentImage =
+                (this.currentImage + 1) % this.IMAGES_WALKING.length;
+        }
+    }
+
+    /**
+     * Handles idle and long idle timeouts and sprite switches.
+     */
+    handleIdleAnimation() {
+        this.idleTimer++;
+        if (this.idleTimer > this.longIdleThreshold) {
+            this.loadImage(this.IMAGES_LONG_IDLE[this.currentLongIdleImage]);
+            if (Math.random() < 0.2) {
+                this.currentLongIdleImage =
+                    (this.currentLongIdleImage + 1) %
+                    this.IMAGES_LONG_IDLE.length;
+            }
+        } else if (this.idleTimer > this.idleThreshold) {
+            if (this.IMAGES_IDLE_0) this.loadImage(this.IMAGES_IDLE_0);
+        } else {
+            if (this.IMAGES_STANDING[0])
+                this.loadImage(this.IMAGES_STANDING[0]);
+        }
+        this.currentImage = 0;
+    }
+
+    /**
+     * Applies damage to character if hit cooldown has passed.
+     * @param {number} [damage=1] - Damage value.
      */
     hit(damage = 1) {
         if (this.energy <= 0) return;
-
         let timePassed = (new Date().getTime() - this.lastHit) / 1000;
         if (timePassed > 1) {
             this.energy -= damage;
@@ -315,18 +320,14 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Triggers the crystal throwing action if available.
-     * @returns {boolean} True if throw was successfully executed.
+     * Triggers crystal throwing action if crystals are available.
+     * @returns {boolean} True if throw started successfully.
      */
     throwCrystal() {
         if (this.crystals > 0 && !this.isThrowing) {
             this.isThrowing = true;
             this.crystals--;
-
-            if (this.world && this.world.audioHub) {
-                this.world.audioHub.playPlayerThrow();
-            }
-
+            if (this.world?.audioHub) this.world.audioHub.playPlayerThrow();
             this.executeThrowSequence();
             return true;
         }
@@ -334,15 +335,13 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Iterates through attack images during a crystal throw.
+     * Runs attack sprite frames during a throw action.
      */
     executeThrowSequence() {
         let currentThrowImage = 0;
         let throwInterval = setInterval(() => {
-            let path = this.IMAGES_ATTACK[currentThrowImage];
-            this.loadImage(path);
+            this.loadImage(this.IMAGES_ATTACK[currentThrowImage]);
             currentThrowImage++;
-
             if (currentThrowImage >= this.IMAGES_ATTACK.length) {
                 clearInterval(throwInterval);
                 setTimeout(() => {
@@ -353,33 +352,33 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Spawns a crystal projectile aimed at the center of the boss.
+     * Spawns a crystal projectile targeting the boss.
      */
     throwCrystalAtBoss() {
         let boss = this.world.enemies.find((e) => e instanceof Ghost);
-
         let targetX = boss
             ? boss.x + boss.width / 2
             : this.x + (this.otherDirection ? -500 : 500);
         let targetY = boss ? boss.y + boss.height / 2 : this.y;
-
         let startX = this.otherDirection ? this.x - 20 : this.x + this.width;
-        let startY = this.y + 70;
 
-        let crystal = new CrystalProjectile(startX, startY, targetX, targetY);
+        let crystal = new CrystalProjectile(
+            startX,
+            this.y + 70,
+            targetX,
+            targetY,
+        );
         crystal.loadImage("./assets/img/character/angreifen/core_flug.webp");
-
         this.world.throwableObjects.push(crystal);
     }
 
     /**
-     * Checks if character is currently in a hurt state window.
-     * @returns {boolean} True if hurt timer is active.
+     * Checks if character is currently in hurt window.
+     * @returns {boolean} True if hurt active.
      */
     isHurt() {
         if (this.energy <= 0) return false;
-        let timepassed = (new Date().getTime() - this.lastHit) / 1000;
-        return timepassed < 0.5;
+        return (new Date().getTime() - this.lastHit) / 1000 < 0.5;
     }
 
     /**
@@ -391,12 +390,12 @@ export class Character extends MovableObject {
     }
 
     /**
-     * Placeholder method for dodging behavior.
+     * Placeholder method for character dodge action.
      */
-    ausweichen() {}
+    dodge() {}
 
     /**
-     * Flags the end of a dodge action.
+     * Flags the end state of a dodge action.
      */
     startDodgeEnd() {
         this.isDodgeEnding = true;
