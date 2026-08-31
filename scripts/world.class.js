@@ -8,6 +8,7 @@ import { CollisionManager } from "./collision-manager.class.js";
 import { ImageHub } from "./image.hub.js";
 import { StatusBar } from "./status-bar.class.js";
 import { AudioHub } from "./audio.hub.js";
+import { CrystalProjectile } from "./crystal-projectile.class.js";
 
 /**
  * Manages the game world, rendering loop, entities, and UI elements.
@@ -55,6 +56,7 @@ export class World {
         this.initLevelEntities();
         this.initGameSystems();
         this.initMenuClickListener();
+        this.initMenuTouchListener();
         this.initMouseMoveListener();
 
         this.run();
@@ -112,6 +114,43 @@ export class World {
     }
 
     /**
+     * Sets up the start screen touch listener for mobile devices.
+     */
+    initMenuTouchListener() {
+        let menuTouchListener = (event) => {
+            if (this.gameStarted) return;
+            event.preventDefault();
+
+            const rect = this.canvas.getBoundingClientRect();
+            const touch = event.touches[0];
+
+            const clickX = touch.clientX - rect.left;
+            const clickY = touch.clientY - rect.top;
+
+            const scaleX = this.canvas.width / rect.width;
+            const scaleY = this.canvas.height / rect.height;
+
+            let action = this.startScreen.handleClick(
+                clickX * scaleX,
+                clickY * scaleY,
+            );
+
+            if (action === "start") {
+                this.startGameSession();
+                this.canvas.removeEventListener(
+                    "touchstart",
+                    menuTouchListener,
+                );
+            }
+            if (action === "exit") window.location.reload();
+        };
+
+        this.canvas.addEventListener("touchstart", menuTouchListener, {
+            passive: false,
+        });
+    }
+
+    /**
      * Evaluates click coordinates on the start screen.
      * @param {MouseEvent} event - The click event.
      * @returns {string|null} The resulting action command.
@@ -130,8 +169,9 @@ export class World {
     startGameSession(listener) {
         this.gameStarted = true;
         this.level.setGolemSpawner();
-        this.canvas.removeEventListener("click", listener);
-
+        if (listener) {
+            this.canvas.removeEventListener("click", listener);
+        }
         this.audioHub.playBackgroundMusic();
     }
 
@@ -144,16 +184,50 @@ export class World {
             this.audioHub.checkMusicZone(this.character.x);
             this.collisionManager.checkAllCollisions();
             this.checkCoinCollisions();
+            this.checkThrowObjects();
             this.checkGameWin();
             this.checkGameOver();
         }, 1000 / 60);
     }
 
+    lastThrowTime = 0;
+
     /**
      * Checks if the character wants to throw a core projectile (using SPACE).
      */
     checkThrowObjects() {
-        if (this.keyboard.SPACE && this.character.crystals > 0) {
+        if (this.keyboard.SPACE) {
+            let currentTime = new Date().getTime();
+            if (currentTime - this.lastThrowTime < 500) return;
+
+            if (
+                this.character &&
+                typeof this.character.throwCrystal === "function"
+            ) {
+                let success = this.character.throwCrystal();
+                if (success) {
+                    this.lastThrowTime = currentTime;
+                    setTimeout(() => {
+                        let direction = this.character.otherDirection ? -1 : 1;
+
+                        let projectileX =
+                            direction === 1
+                                ? this.character.x + this.character.width + 20
+                                : this.character.x - 70;
+                        let projectileY = this.character.y + 60;
+
+                        let throwable = new CrystalProjectile(
+                            projectileX,
+                            projectileY,
+                            this,
+                            direction,
+                            true,
+                        );
+
+                        this.throwableObjects.push(throwable);
+                    }, 250);
+                }
+            }
         }
     }
 

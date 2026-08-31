@@ -69,6 +69,11 @@ window.addEventListener("keydown", (e) => {
         keyboard.ENTER = true;
     }
 
+    if (e.code === "Space") {
+        e.preventDefault();
+        keyboard.SPACE = true;
+    }
+
     if (e.key === "l" || e.key === "L") {
         if (world && world.character) {
             let success = world.character.throwCrystal();
@@ -105,6 +110,10 @@ window.addEventListener("keyup", (e) => {
 
     if (e.key === "Enter") {
         keyboard.ENTER = false;
+    }
+
+    if (e.code === "Space") {
+        keyboard.SPACE = false;
     }
 });
 

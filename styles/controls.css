@@ -22,6 +22,11 @@
     }
 }
 
+/* GRUNDSÄTZLICH AUF DESKTOP AUSBLENDEN */
+#mobile-controls {
+    display: none !important;
+}
+
 #fullscreen-btn,
 #mute-btn {
     font-family: "Press Start 2P", monospace;
@@ -52,13 +57,10 @@
     transform: translateY(1px);
 }
 
-#mobile-controls {
-    display: none;
-}
-
-@media screen and (max-width: 1024px), (pointer: coarse) {
+/* NUR BEI MOBILE / TABLET ODER TOUCH EINBLENDEN */
+@media screen and (max-width: 1024px) {
     #mobile-controls {
-        display: flex;
+        display: flex !important;
         justify-content: space-between;
         position: fixed;
         bottom: 15px;
@@ -121,10 +123,6 @@
         0 0 10px rgba(0, 240, 255, 0.3),
         0 0 20px rgba(255, 0, 255, 0.2);
     backdrop-filter: blur(4px);
-}
-
-#mute-btn:active {
-    transform: translateY(1px);
 }
 
 #volume-slider {
