@@ -17,13 +17,17 @@ function changeVolume(val) {
 }
 
 /**
- * Toggles global audio mute state and updates UI button text.
+ * Toggles global audio mute state and updates UI button text & active state.
  */
 function toggleMute() {
     if (window.audioHub) {
         let muted = window.audioHub.toggleMute();
         let btn = document.getElementById("mute-btn");
-        if (btn) btn.innerHTML = muted ? "🔇 Mute" : "🔊 Sound";
+        if (btn) {
+            btn.innerHTML = muted ? "🔇 Mute" : "🔊 Sound";
+            // Neon-Cyan Hintergrund umschalten
+            btn.classList.toggle("active", muted);
+        }
     }
 }
 
@@ -38,6 +42,7 @@ function init() {
     let btn = document.getElementById("mute-btn");
     if (btn) {
         btn.innerHTML = audioHub.isMuted ? "🔇 Mute" : "🔊 Sound";
+        if (audioHub.isMuted) btn.classList.add("active");
     }
 
     audioHub.setVolume(0.3);
@@ -47,7 +52,7 @@ function init() {
 }
 
 /**
- * Sets up fullscreen toggle event listener.
+ * Sets up fullscreen toggle event listener and active state.
  */
 function initFullscreen() {
     const fullscreenBtn = document.getElementById("fullscreen-btn");
@@ -56,11 +61,21 @@ function initFullscreen() {
             if (!document.fullscreenElement) {
                 document.documentElement
                     .requestFullscreen()
+                    .then(() => {
+                        fullscreenBtn.classList.add("active");
+                    })
                     .catch((err) =>
                         console.error("Fullscreen error:", err.message),
                     );
             } else if (document.exitFullscreen) {
                 document.exitFullscreen();
+            }
+        });
+
+        // Event-Listener, falls der User Vollbild über ESC oder Browser-Shortcuts verlässt
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.classList.remove("active");
             }
         });
     }
