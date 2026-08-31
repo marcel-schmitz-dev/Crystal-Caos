@@ -90,11 +90,18 @@ canvas {
 }
 
 .game-footer a {
-    color: var(--primary-color, #de85ff);
-    text-decoration: none;
+    color: #00f0ff;
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 240, 255, 0.6);
+    text-underline-offset: 4px;
+    text-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
     font-family: "Press Start 2P", monospace;
+    transition: all 0.2s ease-in-out;
 }
 
 .game-footer a:hover {
-    text-decoration: underline;
+    color: #ff00ff;
+    text-decoration-color: #ff00ff;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+    transform: translateY(-1px);
 }
