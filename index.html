@@ -33,6 +33,9 @@
             <canvas id="canvas" width="1280" height="720"></canvas>
 
             <div id="sound-controls">
+                <button id="fullscreen-btn" title="Vollbild umschalten">
+                    ⛶ Vollbild
+                </button>
                 <button id="mute-btn" onclick="toggleMute()">🔊 Sound</button>
                 <input
                     type="range"
@@ -72,9 +75,14 @@
             </div>
         </div>
 
-                <button id="close-impressum-btn" class="menu-btn">
-                    Zurück
-                </button>
+        <div id="mobile-controls" class="mobile-controls">
+            <div class="control-group-left">
+                <button id="btn-left" class="touch-btn">◀</button>
+                <button id="btn-right" class="touch-btn">▶</button>
+            </div>
+            <div class="control-group-right">
+                <button id="btn-jump" class="touch-btn">⬆</button>
+                <button id="btn-throw" class="touch-btn">💥</button>
             </div>
         </div>
 

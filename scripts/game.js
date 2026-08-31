@@ -32,6 +32,28 @@ function init() {
     window.audioHub = audioHub;
 
     world = new World(canvas, keyboard);
+
+    // Vollbild-Logik hier integriert
+    initFullscreen();
+}
+
+function initFullscreen() {
+    const fullscreenBtn = document.getElementById("fullscreen-btn");
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener("click", () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch((err) => {
+                    console.error(
+                        `Fehler beim Aktivieren des Vollbilds: ${err.message}`,
+                    );
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+    }
 }
 
 window.init = init;
